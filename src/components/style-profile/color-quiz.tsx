@@ -108,7 +108,7 @@ export function ColorQuiz({
     <div className="fixed inset-0 z-50 bg-background flex items-center justify-center p-0 sm:p-4">
       <div className="bg-card w-full sm:border sm:border-border max-w-2xl h-full sm:h-auto sm:max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl">
         <div className="px-6 py-4 border-b-[0.5px] border-border flex items-center justify-between shrink-0">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--atelier-gold)]">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-(--atelier-gold)">
             Color Quiz · Step {step + 1} of 8
           </p>
           <button
@@ -274,7 +274,7 @@ export function ColorQuiz({
                       setHairDepth(h);
                       setStep(5);
                     }}
-                    className="border-[0.5px] border-border p-4 text-xs font-medium uppercase tracking-wider text-left rounded-none hover:bg-foreground/[0.02] transition-all"
+                    className="border-[0.5px] border-border p-4 text-xs font-medium uppercase tracking-wider text-left rounded-none hover:bg-foreground/2 transition-all"
                   >
                     {h}
                   </button>
@@ -434,7 +434,7 @@ export function LightingStep({ onConfirm }: { onConfirm: () => void }) {
           I'm currently in soft, indirect natural daylight.
         </span>
       </label>
-      <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--atelier-gold)] leading-relaxed">
+      <p className="text-[10px] uppercase tracking-[0.22em] text-(--atelier-gold) leading-relaxed">
         Prefer a live AI scan? Close this quiz and tap{" "}
         <span className="text-foreground">Run Visual Diagnostic</span> on the studio dossier to
         launch the camera viewfinder.
@@ -467,7 +467,7 @@ export function DetailedColorResultView({
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-foreground text-background text-[9px] uppercase tracking-widest font-medium">
           <ShieldCheck className="h-3.5 w-3.5" /> SEOUL DIGITAL DIAGNOSTIC REUSE
         </div>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--atelier-gold)] mt-5 mb-1">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-(--atelier-gold) mt-5 mb-1">
           Your Diagnostic Palette
         </p>
         <h3 className="font-serif text-3xl sm:text-4xl tracking-tight font-medium">
@@ -478,7 +478,7 @@ export function DetailedColorResultView({
         </p>
         {profile.stylistNote && (
           <div className="mt-5 border-l-2 border-foreground/40 pl-3 text-left max-w-md mx-auto">
-            <p className="text-[9px] uppercase tracking-[0.25em] text-[var(--atelier-gold)] mb-1">
+            <p className="text-[9px] uppercase tracking-[0.25em] text-(--atelier-gold) mb-1">
               Stylist Note
               {typeof profile.aiConfidence === "number"
                 ? ` · ${Math.round(profile.aiConfidence)}% confidence`
@@ -492,13 +492,13 @@ export function DetailedColorResultView({
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <div className="border-[0.5px] border-border p-3 bg-foreground/[0.01]">
+        <div className="border-[0.5px] border-border p-3 bg-foreground/1">
           <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Tone Type</p>
           <p className="font-medium text-xs uppercase mt-0.5">
             {profile.axes.chroma === "Muted" ? "Soft / Muted Tone" : "Clear / Vivid Tone"}
           </p>
         </div>
-        <div className="border-[0.5px] border-border p-3 bg-foreground/[0.01]">
+        <div className="border-[0.5px] border-border p-3 bg-foreground/1">
           <p className="text-[9px] uppercase tracking-wider text-destructive">
             Grave Color (Worst Tone)
           </p>
@@ -509,7 +509,7 @@ export function DetailedColorResultView({
       </div>
 
       <div>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--atelier-gold)] font-semibold mb-3">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-(--atelier-gold) font-semibold mb-3">
           I. Best Draping Swatches
         </p>
         <div className="grid grid-cols-4 gap-2">
@@ -519,7 +519,7 @@ export function DetailedColorResultView({
                 className="h-12 border-[0.5px] border-border"
                 style={{ backgroundColor: s.hex }}
               />
-              <p className="text-[9px] uppercase tracking-wide text-[var(--atelier-gold)] truncate">
+              <p className="text-[9px] uppercase tracking-wide text-(--atelier-gold) truncate">
                 {s.name}
               </p>
             </div>
@@ -527,7 +527,7 @@ export function DetailedColorResultView({
         </div>
       </div>
 
-      <div className="border border-foreground/10 bg-foreground/[0.02] p-5 space-y-3">
+      <div className="border border-foreground/10 bg-foreground/2 p-5 space-y-3">
         <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-foreground">
           II. K-Beauty Studio Prescription
         </p>
@@ -546,7 +546,7 @@ export function DetailedColorResultView({
         </ul>
       </div>
 
-      <div className="border border-destructive/10 bg-destructive/[0.01] p-4">
+      <div className="border border-destructive/10 bg-destructive/1 p-4">
         <p className="text-[10px] uppercase text-destructive tracking-widest mb-2 flex items-center gap-1">
           <XIcon className="h-3 w-3" /> Grave Tone Exclusions
         </p>

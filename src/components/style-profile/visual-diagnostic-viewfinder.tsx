@@ -345,7 +345,7 @@ export function VisualDiagnosticViewfinder({
   return !calibrated ? (
     <div className="fixed inset-0 z-50 bg-background flex flex-col">
       <div className="flex items-center justify-between px-5 py-4 border-b-[0.5px] border-border">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--atelier-gold)]">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-(--atelier-gold)">
           Seoul Atelier · Find your light
         </span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
@@ -354,7 +354,7 @@ export function VisualDiagnosticViewfinder({
       </div>
       <div className="flex-1 overflow-y-auto flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-lg border-[0.5px] border-border bg-card text-card-foreground px-7 py-9">
-          <p className="text-[9px] uppercase tracking-[0.42em] text-[var(--atelier-gold)] text-center">
+          <p className="text-[9px] uppercase tracking-[0.42em] text-(--atelier-gold) text-center">
             Let's find your light
           </p>
           <h3 className="mt-3 font-serif text-3xl tracking-tight text-center text-foreground">
@@ -404,7 +404,7 @@ export function VisualDiagnosticViewfinder({
           >
             Open the camera
           </button>
-          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.32em] text-[var(--atelier-gold)]">
+          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold)">
             Your camera stays off until you're ready.
           </p>
         </div>
@@ -412,7 +412,7 @@ export function VisualDiagnosticViewfinder({
     </div>
   ) : (
     <div className="fixed inset-0 z-50 bg-black flex flex-col">
-      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-5 py-4 bg-gradient-to-b from-black/70 to-transparent">
+      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-5 py-4 bg-linear-to-b from-black/70 to-transparent">
         <span className="text-[10px] uppercase tracking-[0.3em] text-white/90">
           Seoul Atelier · Studio Camera
         </span>
@@ -490,7 +490,7 @@ export function VisualDiagnosticViewfinder({
         </svg>
 
         {/* Studio Telemetry Logs — collapsible workspace anchored beside the viewfinder */}
-        <div className="absolute top-16 right-4 z-30 w-[280px] max-w-[78vw] hidden sm:block">
+        <div className="absolute top-16 right-4 z-30 w-70 max-w-[78vw] hidden sm:block">
           <div className="border-[0.5px] border-white/20 bg-black/55 backdrop-blur-md text-white">
             <button
               type="button"
@@ -506,7 +506,7 @@ export function VisualDiagnosticViewfinder({
               />
             </button>
             {telemetryOpen && (
-              <pre className="max-h-64 overflow-y-auto px-3 pb-3 pt-0 font-mono text-[9px] leading-relaxed text-white/75 whitespace-pre-wrap break-words">
+              <pre className="max-h-64 overflow-y-auto px-3 pb-3 pt-0 font-mono text-[9px] leading-relaxed text-white/75 whitespace-pre-wrap wrap-break-word">
                 {pipelineLog.length ? pipelineLog.join("\n") : "Waiting…"}
               </pre>
             )}
@@ -647,7 +647,7 @@ export function VisualDiagnosticViewfinder({
                       key={k.key}
                       type="button"
                       onClick={() => void applyManualCalibration(k.key, k.label)}
-                      className="group text-left border border-white/15 hover:border-white/60 bg-white/[0.02] hover:bg-white/[0.06] px-4 py-3 transition-colors"
+                      className="group text-left border border-white/15 hover:border-white/60 bg-white/2 hover:bg-white/6 px-4 py-3 transition-colors"
                     >
                       <p className="text-[11px] uppercase tracking-[0.22em] text-white">
                         {k.label}

@@ -475,7 +475,7 @@ function StyleProfile() {
                 <p className="atelier-kicker">Digital Style Dossier · Atelier Record</p>
               </div>
               <h1 className="atelier-title mt-4">Your signature blueprint.</h1>
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--atelier-gold)] font-semibold mt-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-(--atelier-gold) font-semibold mt-4">
                 A living portrait — kept in sync, automatically.
               </p>
             </div>
@@ -624,7 +624,7 @@ function StyleProfile() {
             </div>
             <div className="mb-10">
               {/* Option 1 — Known Color Profile */}
-              <div className="bg-card rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] p-6 sm:p-8">
+              <div className="bg-card rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] p-6 sm:p-8">
                 <div className="text-center">
                   <p className="atelier-kicker">Path 01 · Know Your Season</p>
                   <h2 className="font-serif text-2xl sm:text-3xl tracking-tight mt-2">
@@ -662,9 +662,9 @@ function StyleProfile() {
                               style={
                                 active ? undefined : { backgroundColor: groupTint[group.season] }
                               }
-                              className={`group text-left border px-3 py-3 transition-all min-h-[68px] ${
+                              className={`group text-left border px-3 py-3 transition-all min-h-17 ${
                                 active
-                                  ? "border-foreground bg-foreground/[0.04] -translate-y-[1px] shadow-[0_0_0_1px_hsl(var(--foreground))]"
+                                  ? "border-foreground bg-foreground/4 -translate-y-px shadow-[0_0_0_1px_hsl(var(--foreground))]"
                                   : "border-border hover:border-foreground/40"
                               }`}
                             >
@@ -707,7 +707,7 @@ function StyleProfile() {
                     )}
                     Confirm Selection
                   </Button>
-                  <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-[var(--atelier-gold)] text-center">
+                  <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-(--atelier-gold) text-center">
                     {knownTileId
                       ? "Loads from our atelier library · Saved to your profile"
                       : "Select a season above to confirm."}
@@ -720,7 +720,7 @@ function StyleProfile() {
                 <Accordion
                   type="single"
                   collapsible
-                  className="bg-card rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]"
+                  className="bg-card rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]"
                 >
                   <AccordionItem value="studio-camera" className="border-b-0">
                     <AccordionTrigger className="px-6 sm:px-8 py-5 hover:no-underline">
@@ -745,14 +745,14 @@ function StyleProfile() {
                         </Button>
                         <button
                           onClick={() => setManualOpen((v) => !v)}
-                          className="mt-4 text-[10px] uppercase tracking-[0.28em] text-[var(--atelier-gold)] hover:text-foreground transition-colors underline-offset-4 hover:underline"
+                          className="mt-4 text-[10px] uppercase tracking-[0.28em] text-(--atelier-gold) hover:text-foreground transition-colors underline-offset-4 hover:underline"
                         >
                           {manualOpen ? "Hide manual override" : "Or set your season by hand"}
                         </button>
                       </div>
                       {manualOpen && (
                         <div className="mt-6 animate-fade-in space-y-8 px-1 sm:px-2">
-                          <div className="bg-card p-8 rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] max-w-2xl mx-auto space-y-8">
+                          <div className="bg-card p-8 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] max-w-2xl mx-auto space-y-8">
                             <div className="text-center space-y-2">
                               <span className="text-[0.18em] uppercase tracking-[0.3em] text-stone text-xs block">
                                 Private Consultation
@@ -917,7 +917,7 @@ function StyleProfile() {
                 <button
                   type="button"
                   onClick={() => setDashCalibrateOpen(true)}
-                  className="text-[10px] uppercase tracking-[0.42em] text-[var(--atelier-gold)] hover:text-foreground transition-colors underline-offset-[6px] hover:underline"
+                  className="text-[10px] uppercase tracking-[0.42em] text-(--atelier-gold) hover:text-foreground transition-colors underline-offset-[6px] hover:underline"
                 >
                   Fine-tune your palette
                 </button>
@@ -963,8 +963,8 @@ function StyleProfile() {
                               onClick={() => void applyDashboardCalibration(k.key, k.label)}
                               className={`group text-left border px-4 py-3 transition-colors ${
                                 active
-                                  ? "border-white bg-white/[0.10]"
-                                  : "border-white/15 hover:border-white/60 bg-white/[0.02] hover:bg-white/[0.06]"
+                                  ? "border-white bg-white/10"
+                                  : "border-white/15 hover:border-white/60 bg-white/2 hover:bg-white/6"
                               }`}
                             >
                               <p className="text-[11px] uppercase tracking-[0.22em] text-white flex items-center justify-between gap-2">
