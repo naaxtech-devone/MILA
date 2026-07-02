@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
+import { queryKeys } from "@/constants/query-keys";
 import {
   adminListUsers,
   adminSetAdminRole,
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 function AdminPage() {
   const checkAdmin = useServerFn(adminAmIAdmin);
   const { data: gate, isLoading } = useQuery({
-    queryKey: ["isAdmin:gate"],
+    queryKey: queryKeys.isAdminGate,
     queryFn: () => checkAdmin(),
   });
 
@@ -99,7 +100,7 @@ function UsersPanel() {
   const [search, setSearch] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin:users"],
+    queryKey: queryKeys.adminUsers,
     queryFn: () => list(),
   });
 
@@ -117,7 +118,7 @@ function UsersPanel() {
     try {
       await setRole({ data: { user_id: id, grant } });
       toast.success(grant ? "Steward role granted." : "Steward role revoked.");
-      qc.invalidateQueries({ queryKey: ["admin:users"] });
+      qc.invalidateQueries({ queryKey: queryKeys.adminUsers });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't update role.");
     }
@@ -127,7 +128,7 @@ function UsersPanel() {
     try {
       await setSuspended({ data: { user_id: id, suspended } });
       toast.success(suspended ? "Member suspended." : "Member reinstated.");
-      qc.invalidateQueries({ queryKey: ["admin:users"] });
+      qc.invalidateQueries({ queryKey: queryKeys.adminUsers });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't update status.");
     }
@@ -213,7 +214,7 @@ function ModerationPanel() {
   const del = useServerFn(adminDeletePost);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin:posts"],
+    queryKey: queryKeys.adminPosts,
     queryFn: () => list(),
   });
 
@@ -222,7 +223,7 @@ function ModerationPanel() {
       const reason = hidden ? (window.prompt("Reason for hiding (optional):") ?? null) : null;
       await hide({ data: { post_id: id, hidden, reason } });
       toast.success(hidden ? "Post hidden from feed." : "Post restored.");
-      qc.invalidateQueries({ queryKey: ["admin:posts"] });
+      qc.invalidateQueries({ queryKey: queryKeys.adminPosts });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't update post.");
     }
@@ -233,7 +234,7 @@ function ModerationPanel() {
     try {
       await del({ data: { post_id: id } });
       toast.success("Post deleted.");
-      qc.invalidateQueries({ queryKey: ["admin:posts"] });
+      qc.invalidateQueries({ queryKey: queryKeys.adminPosts });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't delete.");
     }

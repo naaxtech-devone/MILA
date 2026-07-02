@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FACE_SHAPES, HAIR_TYPES, updateHolisticProfile } from "@/lib/profile.functions";
 import { cn } from "@/lib/utils";
+import { queryKeys } from "@/constants/query-keys";
 
 const schema = z.object({
   face_shape: z.enum(FACE_SHAPES, { message: "Select a face shape" }),
@@ -46,8 +47,7 @@ export function HolisticProfileForm({ userId, initial }: Props) {
     mutationFn: (values: FormValues) => saveFn({ data: values }),
     onSuccess: () => {
       toast.success("Your holistic profile is saved.");
-      qc.invalidateQueries({ queryKey: ["profile", userId] });
-      qc.invalidateQueries({ queryKey: ["holistic-profile", userId] });
+      qc.invalidateQueries({ queryKey: queryKeys.profile(userId) });
     },
     onError: (err: unknown) => {
       toast.error(err instanceof Error ? err.message : "Could not save.");

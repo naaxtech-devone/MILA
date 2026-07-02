@@ -1,22 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { requireEnv } from "@/lib/env";
 
 function createSupabaseClient() {
   // import.meta.env for the browser (Vite build-time replacement),
   // process.env fallback for SSR.
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY =
-    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ["SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Set them in .env (see .env.example).`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
-  }
+  const { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } = requireEnv({
+    SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY:
+      import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY,
+  });
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {

@@ -24,6 +24,7 @@ import { isInsufficientCreditsError } from "@/lib/credits";
 import { deriveColorMetrics } from "@/lib/profile-color";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
+import { queryKeys } from "@/constants/query-keys";
 
 const cardContainerVariants: Variants = {
   hidden: { opacity: 1 },
@@ -61,7 +62,7 @@ function Dashboard() {
   const { user } = useAuth();
 
   const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: queryKeys.profile(user?.id),
     queryFn: async () => {
       if (!user) return null;
       const { data } = await supabase

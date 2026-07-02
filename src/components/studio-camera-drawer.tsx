@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { findDupes, type DupeHuntResult } from "@/lib/dupe-hunter.functions";
 import { createPost } from "@/lib/posts.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
+import { queryKeys } from "@/constants/query-keys";
 
 export type StudioCameraMode = "look-analysis" | "dupe-hunter";
 
@@ -149,7 +150,7 @@ export function StudioCameraDrawer({
         },
       });
       toast.success("Today's OOTD posted — feed unlocked.");
-      await queryClient.invalidateQueries({ queryKey: ["feed", userId] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.feed(userId) });
       setPostingOpen(false);
       onClose();
       navigate({ to: "/feed" });

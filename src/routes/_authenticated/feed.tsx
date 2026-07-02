@@ -16,6 +16,7 @@ import { getFeed, createPost } from "@/lib/posts.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { queryKeys } from "@/constants/query-keys";
 
 export const Route = createFileRoute("/_authenticated/feed")({
   component: FeedPage,
@@ -30,7 +31,7 @@ function FeedPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["feed", user?.id],
+    queryKey: queryKeys.feed(user?.id),
     queryFn: () => fetchFeed(),
     enabled: !!user,
     staleTime: 30_000,
@@ -64,7 +65,7 @@ function FeedPage() {
       });
       toast.success("Today's OOTD posted — feed unlocked.");
       setIsPostOpen(false);
-      await queryClient.invalidateQueries({ queryKey: ["feed", user.id] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.feed(user.id) });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't post today's OOTD.");
     } finally {

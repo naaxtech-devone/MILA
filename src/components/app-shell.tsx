@@ -16,6 +16,7 @@ import { UpgradeSlotsDialog } from "@/components/upgrade-slots-dialog";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { deriveColorMetrics } from "@/lib/profile-color";
+import { queryKeys } from "@/constants/query-keys";
 
 const topNavItems: { to: string; label: string }[] = [
   { to: "/dashboard", label: "Dashboard" },
@@ -40,7 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   // Shared queries — keyed identically to dashboard/style-profile so cache is reused.
   const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: queryKeys.profile(user?.id),
     queryFn: async () => {
       if (!user) return null;
       const { data } = await supabase
