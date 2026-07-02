@@ -59,7 +59,7 @@ export function MilaPremiumModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden rounded-none border-[0.5px] border-border bg-[#F5F5F0] text-[#1A1A1A] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.25)]">
+      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden rounded-none border-[0.5px] border-border bg-[#F5F5F0] text-[#1A1A1A] dark:bg-card dark:text-card-foreground shadow-[0_30px_90px_-20px_rgba(0,0,0,0.25)]">
         {/* Hairline frame */}
         <div className="absolute inset-3 pointer-events-none border-[0.5px] border-foreground/15" />
 
@@ -109,7 +109,7 @@ export function MilaPremiumModal({
           <button
             type="button"
             onClick={onSubscribe}
-            className="w-full bg-[#1A1A1A] text-[#F5F5F0] font-semibold uppercase tracking-[0.3em] text-[11px] py-4 rounded-none hover:bg-[#1A1A1A]/90 transition"
+            className="w-full bg-[#1A1A1A] text-[#F5F5F0] dark:bg-[#F5F5F0] dark:text-[#1A1A1A] font-semibold uppercase tracking-[0.3em] text-[11px] py-4 rounded-none hover:bg-[#1A1A1A]/90 dark:hover:bg-[#F5F5F0]/90 transition"
           >
             Unlock Unlimited Access
           </button>

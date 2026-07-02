@@ -482,7 +482,7 @@ function SyncBadge({ status }: { status: "idle" | "syncing" | "synced" | "error"
           ? "bg-emerald-600"
           : "bg-foreground/30";
   return (
-    <div className="hidden sm:flex items-center gap-2 px-3 py-2 backdrop-blur-xl bg-white/40 border border-foreground/10 rounded-full shrink-0">
+    <div className="hidden sm:flex items-center gap-2 px-3 py-2 backdrop-blur-xl bg-white/40 dark:bg-white/5 border border-foreground/10 rounded-full shrink-0">
       <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
       <span className="text-[9px] uppercase tracking-[0.34em] text-foreground/75">{label}</span>
     </div>
@@ -501,7 +501,7 @@ function PerspectiveSwitcher({
     { id: "detailed", label: "Detailed Dossier" },
   ];
   return (
-    <div className="inline-flex relative p-1 rounded-full backdrop-blur-xl bg-white/45 border border-foreground/10 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset]">
+    <div className="inline-flex relative p-1 rounded-full backdrop-blur-xl bg-white/45 dark:bg-white/5 border border-foreground/10 shadow-[0_1px_0_rgba(255,255,255,0.6)_inset] dark:shadow-none">
       {opts.map((o) => {
         const active = value === o.id;
         return (
@@ -578,7 +578,7 @@ function DossierAccordion({
   return (
     <AccordionItem
       value={value}
-      className="border-[0.5px] border-border bg-white/40 backdrop-blur-xl rounded-none px-5 sm:px-8"
+      className="border-[0.5px] border-border bg-white/40 dark:bg-white/5 backdrop-blur-xl rounded-none px-5 sm:px-8"
     >
       <AccordionTrigger className="py-6 hover:no-underline">
         <div className="flex items-center justify-between w-full gap-3">
@@ -637,7 +637,7 @@ function PillRow({
               "text-[11px] uppercase tracking-[0.22em] rounded-full",
               active
                 ? "bg-[var(--atelier-gold-light)] border-[var(--atelier-gold)] text-[#2B2320]"
-                : "bg-[#FAF8F5] border-[#EDE8E0] text-[#6B6259] hover:text-[#2B2320] hover:border-[#C9A96E]/40",
+                : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >
             <span>{o}</span>
@@ -675,8 +675,8 @@ function DisruptiveToneCard({ name, height = 56 }: { name: string; height?: numb
   const hex = hexForTone(name);
   return (
     <div
-      className="w-full rounded-xl overflow-hidden flex items-stretch border border-destructive/20"
-      style={{ backgroundColor: "#FFF0F0", minHeight: height }}
+      className="w-full rounded-xl overflow-hidden flex items-stretch border border-destructive/20 bg-[#FFF0F0] dark:bg-destructive/10"
+      style={{ minHeight: height }}
     >
       <div className="w-1/4 shrink-0" style={{ backgroundColor: hex }} />
       <div className="flex-1 flex items-center justify-between gap-3 px-4 py-3">
@@ -712,7 +712,7 @@ function BeautyPillTray({
               "text-[11px] uppercase tracking-[0.22em]",
               isActive
                 ? "bg-[var(--atelier-gold-light)] border-[var(--atelier-gold)] text-[#2B2320]"
-                : "bg-[#FAF8F5] border-[#EDE8E0] text-[#6B6259] hover:text-[#2B2320] hover:border-[#C9A96E]/40",
+                : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >
             <span>{tag}</span>
@@ -1135,7 +1135,7 @@ function StyleProfile() {
   }
 
   return (
-    <div className="bg-[#F5F5F0] text-[#6B6259] min-h-screen">
+    <div className="bg-[#F5F5F0] text-[#6B6259] dark:bg-background dark:text-muted-foreground min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-12 py-10 md:py-20">
         <header className="mb-12 pb-8 border-b-[0.5px] border-border">
           <div className="flex items-start justify-between gap-6">
@@ -1469,7 +1469,7 @@ function StyleProfile() {
                                         key={season.id}
                                         type="button"
                                         onClick={() => pickSeason(season.id)}
-                                        className={`p-4 text-left rounded-xl border transition-all duration-300 group ${active ? "bg-white border-stone/40 shadow-atelier-soft" : "border-stone/10 bg-porcelain/30 hover:bg-white hover:border-stone/30 hover:shadow-atelier-soft"}`}
+                                        className={`p-4 text-left rounded-xl border transition-all duration-300 group ${active ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft" : "border-stone/10 bg-porcelain/30 hover:bg-white dark:hover:bg-secondary hover:border-stone/30 hover:shadow-atelier-soft"}`}
                                       >
                                         <span className="font-serif text-base text-ink block group-hover:text-rose transition-colors">
                                           {season.title}
@@ -1514,7 +1514,7 @@ function StyleProfile() {
                                         key={contrast.id}
                                         type="button"
                                         onClick={() => pickContrast(contrast.id)}
-                                        className={`p-3 text-center rounded-lg border transition-all duration-300 ${active ? "bg-white border-stone/40 shadow-atelier-soft" : "border-stone/10 bg-porcelain/20 hover:bg-white"}`}
+                                        className={`p-3 text-center rounded-lg border transition-all duration-300 ${active ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft" : "border-stone/10 bg-porcelain/20 hover:bg-white dark:hover:bg-secondary"}`}
                                       >
                                         <span className="text-xs uppercase tracking-wider font-semibold text-ink block">
                                           {contrast.name}
@@ -3674,7 +3674,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
           ].map((denim, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-4 p-3 rounded-2xl bg-white border border-stone/10 shadow-atelier-soft"
+              className="flex items-center gap-4 p-3 rounded-2xl bg-white dark:bg-card border border-stone/10 shadow-atelier-soft"
             >
               <div
                 className="w-16 h-16 rounded-full shrink-0 relative overflow-hidden shadow-inner border border-stone/10"

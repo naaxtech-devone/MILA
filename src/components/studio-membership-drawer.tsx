@@ -127,7 +127,7 @@ export function StudioMembershipDrawer({
 
                     <button
                       onClick={onWatchEditorial}
-                      className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-white transition-colors flex items-center justify-center gap-3"
+                      className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-white dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-3"
                     >
                       <span>View Partner Editorial</span>
                       <span className="text-[9px] text-stone normal-case tracking-normal">

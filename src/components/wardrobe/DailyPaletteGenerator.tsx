@@ -107,7 +107,9 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
         <button
           onClick={() => setSaved((s) => !s)}
           className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${
-            saved ? "bg-[#2B2B2F] text-white" : "bg-[#F2EDE6] text-[#2B2B2F]"
+            saved
+              ? "bg-[#2B2B2F] text-white dark:bg-zinc-100 dark:text-zinc-900"
+              : "bg-[#F2EDE6] text-[#2B2B2F] dark:bg-secondary dark:text-foreground"
           }`}
           aria-label={saved ? "Unsave palette" : "Save palette"}
         >

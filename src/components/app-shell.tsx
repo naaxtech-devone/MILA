@@ -9,6 +9,7 @@ import { useIsAdmin } from "@/hooks/use-is-admin";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { StudioMembershipDrawer } from "@/components/studio-membership-drawer";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { StudioCameraDrawer, type StudioCameraMode } from "@/components/studio-camera-drawer";
 import { StylistConciergeDrawer } from "@/components/stylist-concierge-drawer";
 import { UpgradeSlotsDialog } from "@/components/upgrade-slots-dialog";
@@ -181,6 +182,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setIsLensOpen(true)}
