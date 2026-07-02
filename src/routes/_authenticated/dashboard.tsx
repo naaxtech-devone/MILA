@@ -346,8 +346,8 @@ function Dashboard() {
                 </>
               ) : (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate
-                  look — {climate.tempC}°C{" "}
+                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate look —{" "}
+                  {climate.tempC}°C{" "}
                   {climate.label.replace(/^[-\d.]+\s*°[CF]\s*/i, "").split(/[\s,]+/)[0] ||
                     climate.condition}
                 </>
@@ -364,10 +364,7 @@ function Dashboard() {
             {generating ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-3/4 rounded-2xl bg-foreground/6 animate-pulse"
-                  />
+                  <div key={i} className="aspect-3/4 rounded-2xl bg-foreground/6 animate-pulse" />
                 ))}
               </div>
             ) : look ? (

@@ -155,9 +155,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               to="/style-profile"
               className={cn(
                 "text-xs uppercase tracking-[0.2em] transition-colors",
-                path === "/style-profile"
-                  ? "text-(--atelier-gold)"
-                  : "text-stone hover:text-ink",
+                path === "/style-profile" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
               )}
             >
               Studio

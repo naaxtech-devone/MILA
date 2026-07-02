@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChatCompletion, isAiConfigured } from "./ai.server";
-import { SEASON_HEX_MATRIX } from "@/routes/_authenticated/style-profile-constants";
+import { SEASON_HEX_MATRIX } from "@/constants/style-profile";
 
 const SEASONS = ["Spring", "Summer", "Autumn", "Winter"] as const;
 const TONE_TYPES = ["Warm Tone (Yellow Base)", "Cool Tone (Blue Base)"] as const;

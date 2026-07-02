@@ -1,3 +1,5 @@
+import type { SEASONS_MASTER_DATA } from "@/lib/analyzePersonalColor.functions";
+
 export type Season = "Spring" | "Summer" | "Autumn" | "Winter";
 
 export type BodyType = "Hourglass" | "Rectangle" | "Pear" | "Inverted Triangle" | "Apple";
@@ -697,3 +699,385 @@ export const MOOD_COLLECT_DEFAULT: DetailedColorProfile = {
 
   fullPalette: SEASON_HEX_MATRIX.SPRING_LIGHT,
 };
+
+export type StudioTelemetry = {
+  pass1Raw: { ambientLighting: string; biologicalUndertone: string; computedContrast: string };
+  interceptTriggered: boolean;
+  gatekeeperNotes: string[];
+  pass2OverrideInputs: {
+    ambientLighting: string;
+    biologicalUndertone: string;
+    computedContrast: string;
+    sensorClippingEvent: boolean;
+  };
+  forcedDiagnostic: boolean;
+  source?: "live" | "stress-test" | "manual";
+};
+export const SEASON_PALETTES: Record<Season, { tagline: string }> = {
+  Spring: { tagline: "Warm, luminous clarity — sunlit honey, fresh coral, lifted apricot." },
+  Summer: { tagline: "Cool, ash-filtered softness — dusty rose, fog blue, mineral lilac." },
+  Autumn: { tagline: "Warm, grounded saturation — burnished gold, terracotta, deep olive." },
+  Winter: { tagline: "Cool, high-pigment clarity — true crimson, ink navy, glacial white." },
+};
+
+export const SEASON_EDUCATION: Record<Season, string> = {
+  Spring:
+    "Spring complexions glow under warm, light-filled palettes. Embrace clarity over darkness, and let sun-kissed pastels lift your features.",
+  Summer:
+    "Summer skin reads best in cool, muted, and softly blended tones. Think misted lavender, ash rose, and powder blue.",
+  Autumn:
+    "Autumn thrives on rich, earthy depth. Ground yourself in burnished gold, warm olive, and spiced rust.",
+  Winter:
+    "Winter demands crisp, high-contrast drama. True jewel tones and stark blacks and whites create unforgettable impact.",
+};
+
+export const SEASON_DETAIL: Record<
+  Season,
+  { primary: Swatch[]; secondary: Swatch[]; accent: Swatch[]; avoid: string[]; beauty: string[] }
+> = {
+  Spring: {
+    primary: [
+      { hex: "#FFE5A8", name: "Light Cream" },
+      { hex: "#F7B7A3", name: "Peach Pastel" },
+      { hex: "#FFE0B2", name: "Milky Apricot" },
+      { hex: "#C8E6C9", name: "Soft Mint" },
+    ],
+    secondary: [
+      { hex: "#F5F5F0", name: "Dull Ivory" },
+      { hex: "#B0BEC5", name: "Soft Fog Grey" },
+      { hex: "#D7CCC8", name: "Chalk Camel" },
+      { hex: "#E0F2F1", name: "Clear Ice Aqua" },
+    ],
+    accent: [
+      { hex: "#FF8C61", name: "Warm Coral" },
+      { hex: "#4DB6AC", name: "Sage Teal" },
+      { hex: "#FFB74D", name: "Pastel Mandarin" },
+    ],
+    avoid: ["High-Contrast Black", "Bleached White", "Vivid Primaries"],
+    beauty: [
+      "Hair: Warm Honey Blonde, Soft Chestnut, Golden Brown",
+      "Lip: Peach Gloss, Warm Coral Tint, Apricot Balm",
+      "Base: No. 21 Warm Dewy Foundation, Luminous BB Cream",
+    ],
+  },
+  Summer: {
+    primary: [
+      { hex: "#B0BEC5", name: "Fog Blue" },
+      { hex: "#D8BFD8", name: "Dusty Lilac" },
+      { hex: "#F5F5F0", name: "Soft Ivory" },
+      { hex: "#A5D6A7", name: "Powder Sage" },
+    ],
+    secondary: [
+      { hex: "#E0F2F1", name: "Ice Aqua" },
+      { hex: "#F8BBD0", name: "Rose Quartz" },
+      { hex: "#CFD8DC", name: "Silver Mist" },
+      { hex: "#E1BEE7", name: "Muted Orchid" },
+    ],
+    accent: [
+      { hex: "#7986CB", name: "Periwinkle" },
+      { hex: "#80CBC4", name: "Seafoam" },
+      { hex: "#CE93D8", name: "Soft Amethyst" },
+    ],
+    avoid: ["Orange-Red Saturated Tones", "Warm Earth Brown", "Neon or Highly Fluorescent Hues"],
+    beauty: [
+      "Hair: Ash Blonde, Soft Pearl Brown, Cool Espresso",
+      "Lip: Dusty Rose, Cool Pink, Mauve Tint",
+      "Base: No. 21 Cool Porcelain Foundation, Matte Velvet Finish",
+    ],
+  },
+  Autumn: {
+    primary: [
+      { hex: "#D4A24C", name: "Burnished Gold" },
+      { hex: "#C97B3D", name: "Terracotta" },
+      { hex: "#8D6E63", name: "Deep Camel" },
+      { hex: "#5B7053", name: "Olive Moss" },
+    ],
+    secondary: [
+      { hex: "#3E2723", name: "Coffee Bean" },
+      { hex: "#5D4037", name: "Rich Umber" },
+      { hex: "#A1887F", name: "Taupe Stone" },
+      { hex: "#D7CCC8", name: "Warm Sand" },
+    ],
+    accent: [
+      { hex: "#BF360C", name: "Burnt Sienna" },
+      { hex: "#F9A825", name: "Antique Gold" },
+      { hex: "#33691E", name: "Forest Pine" },
+    ],
+    avoid: ["Cool Pastel Pink", "Icy Blue Tones", "Bright White Near the Face"],
+    beauty: [
+      "Hair: Rich Auburn, Warm Chocolate, Caramel Highlights",
+      "Lip: Brick Red, Warm Berry, Cinnamon Tint",
+      "Base: No. 23 Warm Beige Foundation, Satin Finish",
+    ],
+  },
+  Winter: {
+    primary: [
+      { hex: "#1A237E", name: "Ink Navy" },
+      { hex: "#B71C1C", name: "True Crimson" },
+      { hex: "#FFFFFF", name: "Glacial White" },
+      { hex: "#4A148C", name: "Deep Amethyst" },
+    ],
+    secondary: [
+      { hex: "#212121", name: "Charcoal" },
+      { hex: "#C0C0C0", name: "Platinum" },
+      { hex: "#000000", name: "Pure Black" },
+      { hex: "#880E4F", name: "Burgundy" },
+    ],
+    accent: [
+      { hex: "#00BCD4", name: "Electric Turquoise" },
+      { hex: "#E91E63", name: "Fuchsia" },
+      { hex: "#FFEA00", name: "Citrine" },
+    ],
+    avoid: ["Muted Beige or Camel", "Soft Pastel Orange", "Dusty or Washed-Out Tones"],
+    beauty: [
+      "Hair: Jet Black, Platinum Silver, Cool Ash Brown",
+      "Lip: True Red, Fuchsia, Berry Stain",
+      "Base: No. 17 - No. 19 Cool Ivory Foundation, Full Coverage Matte",
+    ],
+  },
+};
+
+export const AESTHETIC_MOODS: Array<{ id: string; name: string; desc: string; img: string }> = [
+  {
+    id: "minimal",
+    name: "Quiet Minimal",
+    desc: "Clean lines, restrained palette, architectural silhouettes.",
+    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&h=300&fit=crop",
+  },
+  {
+    id: "romantic",
+    name: "Soft Romantic",
+    desc: "Flowing fabrics, delicate details, muted florals.",
+    img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=200&h=300&fit=crop",
+  },
+  {
+    id: "edgy",
+    name: "Urban Edge",
+    desc: "Leather, hardware, monochrome, confident structure.",
+    img: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=200&h=300&fit=crop",
+  },
+  {
+    id: "preppy",
+    name: "Classic Preppy",
+    desc: "Tailored blazers, crisp shirts, timeless polish.",
+    img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=200&h=300&fit=crop",
+  },
+  {
+    id: "boho",
+    name: "Modern Boho",
+    desc: "Layered textures, earth tones, effortless movement.",
+    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&h=300&fit=crop",
+  },
+  {
+    id: "glam",
+    name: "Old Hollywood Glam",
+    desc: "Silk, satin, statement accessories, dramatic elegance.",
+    img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=200&h=300&fit=crop",
+  },
+];
+
+export const BODY_TYPE_INFO: Record<BodyType, { tagline: string; description: string }> = {
+  Hourglass: {
+    tagline: "Balanced curves with a defined waist.",
+    description:
+      "Your shoulders and hips are roughly equal, with a noticeably narrower waist. Emphasize your waistline with fitted styles, wrap dresses, and belted silhouettes. Avoid boxy cuts that hide your natural curve.",
+  },
+  Rectangle: {
+    tagline: "A straight, athletic silhouette.",
+    description:
+      "Your shoulders, waist, and hips are fairly aligned. Create curves with ruffles, peplum, and structured jackets. High-waisted bottoms and layered tops add dimension to your frame.",
+  },
+  Pear: {
+    tagline: "Narrower shoulders, fuller hips.",
+    description:
+      "Your hips are wider than your shoulders. Balance your silhouette by drawing attention upward with statement necklines, structured shoulders, and eye-catching tops. A-line skirts work beautifully.",
+  },
+  "Inverted Triangle": {
+    tagline: "Broader shoulders, narrower hips.",
+    description:
+      "Your shoulders are wider than your hips. Soften the upper body with V-necks and fluid fabrics, while adding volume below with flared pants and A-line skirts.",
+  },
+  Apple: {
+    tagline: "Weight centered in the midsection.",
+    description:
+      "Your midsection is your fullest area with slimmer legs and hips. Draw the eye upward with empire waists and open necklines, while highlighting your legs with straight or slim-cut trousers.",
+  },
+};
+
+export const UNDERTONES = ["Cool", "Warm", "Neutral"] as const;
+export const SEASONS = ["Spring", "Summer", "Autumn", "Winter"] as const;
+export const BODIES = ["Hourglass", "Rectangle", "Pear", "Inverted Triangle", "Apple"] as const;
+
+export const FACE_SHORT_TO_FULL: Record<string, DetailedColorProfile["faceShape"]> = {
+  Oval: "Oval Frame",
+  Diamond: "Diamond Geometry",
+  Square: "Square Frame",
+  Round: "Round Frame",
+  Heart: "Heart Frame",
+  Long: "Long Frame",
+};
+export const FACE_FULL_TO_SHORT: Record<string, string> = Object.fromEntries(
+  Object.entries(FACE_SHORT_TO_FULL).map(([k, v]) => [v, k]),
+);
+export const CONTRAST_SHORT_TO_FULL: Record<string, DetailedColorProfile["contrastScale"]> = {
+  "Low Contrast": "Low Contrast",
+  "Medium Contrast": "Medium Contrast",
+  "High Contrast": "High Contrast",
+};
+export const CONTRAST_FULL_TO_SHORT: Record<string, string> = {
+  "Low Contrast": "Low Contrast",
+  "Medium Contrast": "Medium Contrast",
+  "High Contrast": "High Contrast",
+};
+
+export function seasonTone(s: Season): DetailedColorProfile["toneType"] {
+  return (["Spring", "Autumn"] as Season[]).includes(s)
+    ? "Warm Tone (Yellow Base)"
+    : "Cool Tone (Blue Base)";
+}
+export function seasonBrightness(s: Season): DetailedColorProfile["brightness"] {
+  if (s === "Spring" || s === "Summer") return "High Lightness";
+  if (s === "Winter") return "Medium Lightness";
+  return "Low Lightness";
+}
+export function seasonSaturation(s: Season): DetailedColorProfile["saturation"] {
+  return s === "Winter" ? "High Saturation" : "Low-Mid Saturation";
+}
+
+export function splitBeauty(b: string, fallback: string): string {
+  const idx = b.indexOf(":");
+  return idx >= 0 ? b.slice(idx + 1).trim() : b || fallback;
+}
+export type MatrixOption = { value: string; title: string; description: string };
+
+export const BODY_OPTIONS: MatrixOption[] = [
+  {
+    value: "Inverted Triangle",
+    title: "Inverted Triangle",
+    description: "A confident shoulder line that softens gently toward the hip.",
+  },
+  {
+    value: "Hourglass",
+    title: "Hourglass",
+    description: "Shoulders and hips that echo each other, drawn in at the waist.",
+  },
+  {
+    value: "Pear",
+    title: "Pear",
+    description: "A graceful lower silhouette with a softer shoulder line.",
+  },
+  {
+    value: "Rectangle",
+    title: "Rectangle",
+    description: "A long, even line from shoulder to hip — clean and architectural.",
+  },
+  {
+    value: "Apple",
+    title: "Apple",
+    description:
+      "Volume that sits beautifully through the middle, balanced by slim wrists and ankles.",
+  },
+];
+
+export const BEAUTY_PREFERENCE_TAGS = [
+  "Dewy Base",
+  "Glass Skin",
+  "Monochromatic Peach",
+  "Minimalist",
+  "Bold Lip",
+  "Blurred Velvet Finish",
+  "Soft Smoke",
+  "Editorial Brow",
+  "Lacquered Lash",
+  "Skin-First",
+] as const;
+export type Tone = "Cool" | "Warm" | "Neutral";
+/* Manual studio override — grouped 12 sub-seasons. Tapping bypasses the
+   vision pipeline and hydrates state directly from SEASONS_MASTER_DATA. */
+export const MANUAL_SEASON_GROUPS: {
+  season: Season;
+  keys: { key: keyof typeof SEASONS_MASTER_DATA; label: string }[];
+}[] = [
+  {
+    season: "Spring",
+    keys: [
+      { key: "SPRING_LIGHT", label: "Spring Light" },
+      { key: "SPRING_BRIGHT", label: "Spring Bright" },
+      { key: "SPRING_WARM", label: "Spring Warm" },
+    ],
+  },
+  {
+    season: "Summer",
+    keys: [
+      { key: "SUMMER_LIGHT", label: "Summer Light" },
+      { key: "SUMMER_MUTED", label: "Summer Muted" },
+      { key: "SUMMER_COOL", label: "Summer Cool" },
+    ],
+  },
+  {
+    season: "Autumn",
+    keys: [
+      { key: "AUTUMN_SOFT", label: "Autumn Soft" },
+      { key: "AUTUMN_TRUE", label: "Autumn True" },
+      { key: "AUTUMN_DEEP", label: "Autumn Deep" },
+      { key: "AUTUMN_WARM", label: "Autumn Warm" },
+    ],
+  },
+  {
+    season: "Winter",
+    keys: [
+      { key: "WINTER_DEEP", label: "Winter Deep" },
+      { key: "WINTER_CLEAR", label: "Winter Clear" },
+      { key: "WINTER_TRUE", label: "Winter True" },
+      { key: "WINTER_COOL", label: "Winter Cool" },
+    ],
+  },
+];
+
+/**
+ * KNOWN_SEASON_GROUPS — 16-season presentation layer mapped onto our 12
+ * canonical PCCS hydration keys. Some labels (e.g. Spring True / Spring Warm)
+ * share the same underlying key because the certified atelier dictionary
+ * stores 12 master matrices.
+ */
+export const KNOWN_SEASON_GROUPS: {
+  season: Season;
+  tiles: { id: string; label: string; key: keyof typeof SEASONS_MASTER_DATA }[];
+}[] = [
+  {
+    season: "Spring",
+    tiles: [
+      { id: "spring-light", label: "Light Spring", key: "SPRING_LIGHT" },
+      { id: "spring-true", label: "True Spring", key: "SPRING_TRUE" },
+      { id: "spring-bright", label: "Bright Spring", key: "SPRING_BRIGHT" },
+      { id: "spring-warm", label: "Warm Spring", key: "SPRING_WARM" },
+    ],
+  },
+  {
+    season: "Summer",
+    tiles: [
+      { id: "summer-light", label: "Light Summer", key: "SUMMER_LIGHT" },
+      { id: "summer-true", label: "True Summer", key: "SUMMER_TRUE" },
+      { id: "summer-muted", label: "Muted Summer", key: "SUMMER_MUTED" },
+      { id: "summer-cool", label: "Cool Summer", key: "SUMMER_COOL" },
+    ],
+  },
+  {
+    season: "Autumn",
+    tiles: [
+      { id: "autumn-soft", label: "Soft Autumn", key: "AUTUMN_SOFT" },
+      { id: "autumn-true", label: "True Autumn", key: "AUTUMN_TRUE" },
+      { id: "autumn-deep", label: "Deep Autumn", key: "AUTUMN_DEEP" },
+      { id: "autumn-warm", label: "Warm Autumn", key: "AUTUMN_WARM" },
+    ],
+  },
+  {
+    season: "Winter",
+    tiles: [
+      { id: "winter-clear", label: "Clear Winter", key: "WINTER_CLEAR" },
+      { id: "winter-true", label: "True Winter", key: "WINTER_TRUE" },
+      { id: "winter-deep", label: "Deep Winter", key: "WINTER_DEEP" },
+      { id: "winter-cool", label: "Cool Winter", key: "WINTER_COOL" },
+    ],
+  },
+];
