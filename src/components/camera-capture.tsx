@@ -93,7 +93,7 @@ export function CameraCapture({
   // Frozen preview + analyzing overlay
   if (frozenPreview) {
     return (
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-black">
+      <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-white/15 bg-black">
         <img
           src={frozenPreview}
           alt="captured outfit"
@@ -116,7 +116,7 @@ export function CameraCapture({
           type="button"
           onClick={start}
           disabled={disabled || starting}
-          className={`group relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-dashed border-white/25 bg-gradient-to-br from-foreground/[0.04] via-accent/[0.05] to-foreground/[0.02] backdrop-blur-xl transition-colors ${disabled ? "opacity-50 cursor-not-allowed" : "hover:border-foreground/60 cursor-pointer"}`}
+          className={`group relative w-full aspect-4/3 rounded-2xl overflow-hidden border border-dashed border-white/25 bg-linear-to-br from-foreground/4 via-accent/5 to-foreground/2 backdrop-blur-xl transition-colors ${disabled ? "opacity-50 cursor-not-allowed" : "hover:border-foreground/60 cursor-pointer"}`}
         >
           <div className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
@@ -156,7 +156,7 @@ export function CameraCapture({
   }
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-black">
+    <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-white/15 bg-black">
       <video
         ref={videoRef}
         playsInline
@@ -180,7 +180,7 @@ export function CameraCapture({
       >
         <X className="h-4 w-4" />
       </button>
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-gradient-to-t from-black/70 to-transparent">
+      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-linear-to-t from-black/70 to-transparent">
         <button
           type="button"
           onClick={start}

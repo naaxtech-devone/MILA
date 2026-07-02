@@ -99,7 +99,7 @@ export function StudioMembershipDrawer({
               </div>
 
               {/* Concierge Wallet */}
-              <div className="relative overflow-hidden rounded-2xl border border-porcelain/50 bg-gradient-to-br from-atelier-champagne/30 via-background to-porcelain/20 p-6 shadow-atelier-soft">
+              <div className="relative overflow-hidden rounded-2xl border border-porcelain/50 bg-linear-to-br from-atelier-champagne/30 via-background to-porcelain/20 p-6 shadow-atelier-soft">
                 <div
                   aria-hidden
                   className="absolute -top-16 -right-16 h-44 w-44 rounded-full bg-atelier-champagne/30 blur-3xl pointer-events-none"

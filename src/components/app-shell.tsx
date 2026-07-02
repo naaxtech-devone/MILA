@@ -137,7 +137,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   to={it.to}
                   className={cn(
                     "text-xs uppercase tracking-[0.2em] transition-colors",
-                    active ? "text-[var(--atelier-gold)]" : "text-stone hover:text-ink",
+                    active ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
                   )}
                 >
                   {it.label}
@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className={cn(
                 "text-xs uppercase tracking-[0.2em] transition-colors",
                 path === "/style-profile"
-                  ? "text-[var(--atelier-gold)]"
+                  ? "text-(--atelier-gold)"
                   : "text-stone hover:text-ink",
               )}
             >
@@ -174,7 +174,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 to="/admin"
                 className={cn(
                   "text-xs uppercase tracking-[0.2em] transition-colors",
-                  path === "/admin" ? "text-[var(--atelier-gold)]" : "text-stone hover:text-ink",
+                  path === "/admin" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
                 )}
               >
                 Admin
@@ -196,7 +196,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => setIsMembershipOpen(true)}
               aria-label="Open membership"
-              className="h-10 w-10 rounded-full border border-porcelain/60 bg-gradient-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
+              className="h-10 w-10 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
             >
               {initial}
             </button>
@@ -228,10 +228,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               to={it.to}
               className={cn(
                 "relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] transition-colors",
-                active ? "text-[var(--atelier-gold)]" : "text-white/45",
+                active ? "text-(--atelier-gold)" : "text-white/45",
               )}
             >
-              <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+              <Icon className="h-4.5 w-4.5" strokeWidth={1.5} />
               <span>{it.label}</span>
             </Link>
           );
@@ -241,17 +241,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           onClick={() => setIsLensOpen(true)}
           className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-white/45"
         >
-          <Camera className="h-[18px] w-[18px]" strokeWidth={1.5} />
+          <Camera className="h-4.5 w-4.5" strokeWidth={1.5} />
           <span>Lens</span>
         </button>
         <Link
           to="/style-profile"
           className={cn(
             "relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] transition-colors",
-            path === "/style-profile" ? "text-[var(--atelier-gold)]" : "text-white/45",
+            path === "/style-profile" ? "text-(--atelier-gold)" : "text-white/45",
           )}
         >
-          <Palette className="h-[18px] w-[18px]" strokeWidth={1.5} />
+          <Palette className="h-4.5 w-4.5" strokeWidth={1.5} />
           <span>Studio</span>
         </Link>
         <button
@@ -259,7 +259,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           onClick={() => setIsConciergeOpen(true)}
           className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-white/45"
         >
-          <MessageCircle className="h-[18px] w-[18px]" strokeWidth={1.5} />
+          <MessageCircle className="h-4.5 w-4.5" strokeWidth={1.5} />
           <span>Concierge</span>
         </button>
       </nav>

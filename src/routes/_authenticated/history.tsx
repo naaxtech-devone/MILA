@@ -69,11 +69,11 @@ function History() {
             <button
               key={o.id}
               onClick={() => setSelected(o)}
-              className="atelier-hairline-card aspect-[3/4] relative overflow-hidden text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="atelier-hairline-card aspect-3/4 relative overflow-hidden text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <img src={o.image_url} alt="outfit" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-atelier-ink/0 group-hover:bg-atelier-ink/20 transition-colors" />
-              <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-atelier-ink/70 to-transparent text-atelier-ivory">
+              <div className="absolute bottom-0 inset-x-0 p-4 bg-linear-to-t from-atelier-ink/70 to-transparent text-atelier-ivory">
                 <p className="font-serif text-2xl">{o.match_score ?? "—"}</p>
                 <p className="text-[10px] uppercase tracking-widest opacity-70">
                   {new Date(o.created_at).toLocaleDateString()}

@@ -22,7 +22,7 @@ export function PostCanvas({ post }: { post: FeedPost }) {
     <article className="rounded-3xl border border-porcelain/60 bg-background/70 backdrop-blur-xl shadow-atelier-soft overflow-hidden">
       <header className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full border border-porcelain/60 bg-gradient-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink">
+          <div className="h-9 w-9 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink">
             {initial}
           </div>
           <div className="min-w-0">
@@ -39,7 +39,7 @@ export function PostCanvas({ post }: { post: FeedPost }) {
         )}
       </header>
 
-      <div className="relative w-full aspect-[3/4] bg-atelier-ivory/60 overflow-hidden">
+      <div className="relative w-full aspect-3/4 bg-atelier-ivory/60 overflow-hidden">
         {post.image_url_back ? (
           <img
             src={post.image_url_back}

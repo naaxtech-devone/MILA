@@ -255,9 +255,9 @@ export function StylistConciergeDrawer({
           {sending && (
             <div className="flex gap-3 items-start">
               <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-[var(--atelier-gold)]" strokeWidth={1.5} />
+                <Sparkles className="h-4 w-4 text-(--atelier-gold)" strokeWidth={1.5} />
               </div>
-              <div className="rounded-2xl bg-secondary/70 text-foreground px-4 py-2.5 text-sm flex items-center gap-2 text-muted-foreground shadow-sm">
+              <div className="rounded-2xl bg-secondary/70 text-muted-foreground px-4 py-2.5 text-sm flex items-center gap-2 text-muted-foreground shadow-sm">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Mila is composing…
               </div>
             </div>
@@ -325,7 +325,7 @@ function MessageBubble({ msg }: { msg: Msg }) {
     <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
         <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-[var(--atelier-gold)]" strokeWidth={1.5} />
+          <Sparkles className="h-4 w-4 text-(--atelier-gold)" strokeWidth={1.5} />
         </div>
       )}
       <div className={cn("max-w-[80%] flex flex-col gap-1", isUser && "items-end")}>

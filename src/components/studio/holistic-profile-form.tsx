@@ -91,7 +91,7 @@ export function HolisticProfileForm({ userId, initial }: Props) {
                 className={cn(
                   "px-3 py-3 text-left rounded-xl border transition-all duration-300",
                   active
-                    ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft -translate-y-[1px]"
+                    ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft -translate-y-px"
                     : "border-stone/10 bg-porcelain/30 hover:bg-white dark:hover:bg-secondary hover:border-stone/30",
                 )}
               >
@@ -126,7 +126,7 @@ export function HolisticProfileForm({ userId, initial }: Props) {
                 className={cn(
                   "px-3 py-3 text-left rounded-xl border transition-all duration-300",
                   active
-                    ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft -translate-y-[1px]"
+                    ? "bg-white dark:bg-secondary border-stone/40 shadow-atelier-soft -translate-y-px"
                     : "border-stone/10 bg-porcelain/30 hover:bg-white dark:hover:bg-secondary hover:border-stone/30",
                 )}
               >

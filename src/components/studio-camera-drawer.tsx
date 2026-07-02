@@ -213,7 +213,7 @@ export function StudioCameraDrawer({
             <button
               type="button"
               onClick={() => setPostingOpen(true)}
-              className="group mx-auto mb-6 flex max-w-md w-full items-center justify-between gap-4 rounded-2xl border border-porcelain/70 bg-gradient-to-r from-atelier-ivory via-background to-atelier-ivory/70 backdrop-blur-xl px-5 py-4 text-left shadow-atelier-soft hover:shadow-atelier-float transition-shadow"
+              className="group mx-auto mb-6 flex max-w-md w-full items-center justify-between gap-4 rounded-2xl border border-porcelain/70 bg-linear-to-r from-atelier-ivory via-background to-atelier-ivory/70 backdrop-blur-xl px-5 py-4 text-left shadow-atelier-soft hover:shadow-atelier-float transition-shadow"
             >
               <span className="flex items-center gap-3">
                 <span className="h-10 w-10 rounded-full border border-porcelain/70 bg-background flex items-center justify-center">
@@ -374,7 +374,7 @@ export function StudioCameraDrawer({
                           {dupeResult.dupes.map((d) => (
                             <CarouselItem key={d.id} className="pl-3 basis-[78%] sm:basis-[52%]">
                               <div className="h-full rounded-2xl border border-porcelain/60 bg-background/70 backdrop-blur overflow-hidden flex flex-col shadow-atelier-soft">
-                                <div className="aspect-[3/4] bg-atelier-ivory/60 overflow-hidden">
+                                <div className="aspect-3/4 bg-atelier-ivory/60 overflow-hidden">
                                   {d.image_url ? (
                                     <img
                                       src={d.image_url}

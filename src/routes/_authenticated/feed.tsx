@@ -96,7 +96,7 @@ function FeedPage() {
                 className="rounded-3xl border border-porcelain/60 bg-background/60 backdrop-blur overflow-hidden"
               >
                 <div className="h-16 bg-porcelain/30" />
-                <div className="aspect-[3/4] bg-porcelain/20 animate-pulse" />
+                <div className="aspect-3/4 bg-porcelain/20 animate-pulse" />
               </div>
             ))}
           </div>
@@ -142,7 +142,7 @@ function FeedPage() {
                   className="rounded-3xl border border-porcelain/60 bg-background/70 overflow-hidden"
                 >
                   <div className="h-16 bg-porcelain/40" />
-                  <div className="aspect-[3/4] bg-gradient-to-br from-porcelain/40 via-atelier-ivory/60 to-porcelain/30" />
+                  <div className="aspect-3/4 bg-linear-to-br from-porcelain/40 via-atelier-ivory/60 to-porcelain/30" />
                 </div>
               ))}
             </div>

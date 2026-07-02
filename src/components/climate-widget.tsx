@@ -223,7 +223,7 @@ function ClimateGlyph({ icon, className }: { icon: ClimateIcon; className?: stri
 
 export function ClimateSyncChip({ value }: { value: ClimateState }) {
   return (
-    <div className="inline-flex items-center gap-3 rounded-full border border-atelier-champagne/40 bg-gradient-to-r from-atelier-ivory/70 via-background/60 to-atelier-champagne/20 backdrop-blur px-4 py-2 shadow-[0_2px_18px_-8px_rgba(0,0,0,0.25)]">
+    <div className="inline-flex items-center gap-3 rounded-full border border-atelier-champagne/40 bg-linear-to-r from-atelier-ivory/70 via-background/60 to-atelier-champagne/20 backdrop-blur px-4 py-2 shadow-[0_2px_18px_-8px_rgba(0,0,0,0.25)]">
       <span className="grid place-items-center h-7 w-7 rounded-full border border-atelier-champagne/50 bg-background/70 text-foreground">
         <ClimateGlyph icon={value.icon} className="h-3.5 w-3.5" />
       </span>
@@ -288,9 +288,9 @@ export function ClimateWidget({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 rounded-2xl border border-white/20 bg-background/40 backdrop-blur px-4 py-3 min-w-[220px]">
+    <div className="flex flex-col gap-2 rounded-2xl border border-white/20 bg-background/40 backdrop-blur px-4 py-3 min-w-55">
       <div className="flex items-center gap-3">
-        <span className="grid place-items-center h-8 w-8 rounded-full border border-white/20 bg-foreground/[0.04] text-foreground">
+        <span className="grid place-items-center h-8 w-8 rounded-full border border-white/20 bg-foreground/4 text-foreground">
           <ClimateGlyph icon={value.icon} className="h-4 w-4" />
         </span>
         <div className="leading-tight">

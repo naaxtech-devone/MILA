@@ -16,9 +16,9 @@ export const ColorDossierSection: React.FC<StyleProfileProps> = ({ profile }) =>
 
   if (!seasonData) {
     return (
-      <div className="rounded-[20px] bg-card border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] p-8 text-center max-w-2xl">
-        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.06]">
-          <Sparkles className="h-5 w-5 text-[var(--atelier-gold)]" />
+      <div className="rounded-4xl bg-card border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] p-8 text-center max-w-2xl">
+        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-foreground/6">
+          <Sparkles className="h-5 w-5 text-(--atelier-gold)" />
         </div>
         <h3 className="font-serif text-xl text-foreground tracking-tight">
           Your Color Dossier Awaits
@@ -44,7 +44,7 @@ export const ColorDossierSection: React.FC<StyleProfileProps> = ({ profile }) =>
   const sisterSeason = SEASONS_DATA[seasonData.sisterSeasonId];
 
   return (
-    <div className="space-y-6 max-w-2xl bg-card p-6 rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]">
+    <div className="space-y-6 max-w-2xl bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]">
       <div>
         <h2 className="text-xl font-bold text-slate-900">{seasonData.name} Dossier</h2>
         <p className="text-xs text-slate-500">
@@ -52,7 +52,7 @@ export const ColorDossierSection: React.FC<StyleProfileProps> = ({ profile }) =>
         </p>
       </div>
 
-      <hr className="border-none border-t border-[var(--atelier-gold-muted)] opacity-60" />
+      <hr className="border-none border-t border-(--atelier-gold-muted) opacity-60" />
 
       <div>
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">

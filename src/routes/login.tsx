@@ -139,8 +139,8 @@ function LoginPage() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -left-24 h-[420px] w-[420px] rounded-full bg-atelier-champagne/25 blur-3xl" />
-        <div className="absolute -bottom-32 -right-24 h-[420px] w-[420px] rounded-full bg-atelier-rose/20 blur-3xl" />
+        <div className="absolute -top-32 -left-24 h-105 w-105 rounded-full bg-atelier-champagne/25 blur-3xl" />
+        <div className="absolute -bottom-32 -right-24 h-105 w-105 rounded-full bg-atelier-rose/20 blur-3xl" />
       </div>
 
       <div className="relative atelier-page flex flex-col items-center justify-center min-h-screen gap-6 py-10">
@@ -333,7 +333,7 @@ function LoginPage() {
                 <Textarea
                   value={feedbackText}
                   onChange={(e) => setFeedbackText(e.target.value)}
-                  className="min-h-[100px] text-sm resize-none"
+                  className="min-h-25 text-sm resize-none"
                   required
                 />
               </div>

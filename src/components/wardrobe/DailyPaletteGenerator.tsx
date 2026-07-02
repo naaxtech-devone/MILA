@@ -50,7 +50,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
   );
 
   return (
-    <div className="bg-card rounded-[20px] shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] border border-border p-5 space-y-5">
+    <div className="bg-card rounded-4xl shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] border border-border p-5 space-y-5">
       {/* Eyebrow Row */}
       <div className="flex items-center justify-between">
         <span className="atelier-kicker">{today}</span>
@@ -90,11 +90,11 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
       </div>
 
       {/* Insight Copy */}
-      <div className="rounded-xl bg-[var(--atelier-gold-light)] border-l-[3px] border-l-[var(--atelier-gold)] p-3">
+      <div className="rounded-xl bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) p-3">
         <div className="flex items-start gap-2">
-          <Sparkles className="h-4 w-4 text-[var(--atelier-gold)] mt-0.5 shrink-0" />
+          <Sparkles className="h-4 w-4 text-(--atelier-gold) mt-0.5 shrink-0" />
           <p className="text-[13px] text-muted-foreground leading-snug">
-            <strong className="text-[var(--atelier-gold)]">Mila&apos;s take —</strong>{" "}
+            <strong className="text-(--atelier-gold)">Mila&apos;s take —</strong>{" "}
             {look.isSisterSeasonIncluded
               ? "I borrowed the accent from your Sister Season for a little range without leaving your palette."
               : look.insight}

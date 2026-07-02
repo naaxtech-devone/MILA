@@ -347,7 +347,7 @@ function Dashboard() {
                 </>
               ) : (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-[var(--atelier-gold)]" /> Generate
+                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate
                   look — {climate.tempC}°C{" "}
                   {climate.label.replace(/^[-\d.]+\s*°[CF]\s*/i, "").split(/[\s,]+/)[0] ||
                     climate.condition}
@@ -367,7 +367,7 @@ function Dashboard() {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[3/4] rounded-2xl bg-foreground/[0.06] animate-pulse"
+                    className="aspect-3/4 rounded-2xl bg-foreground/6 animate-pulse"
                   />
                 ))}
               </div>
@@ -434,7 +434,7 @@ function Dashboard() {
                     onClick={generateLook}
                     className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
                   >
-                    <Sparkles className="h-4 w-4 mr-2 text-[var(--atelier-gold)]" /> Try another
+                    <Sparkles className="h-4 w-4 mr-2 text-(--atelier-gold)" /> Try another
                   </Button>
                 </motion.div>
               </motion.div>
@@ -457,7 +457,7 @@ function Dashboard() {
       {profile?.color_season && (
         <motion.section
           variants={cardItemVariants}
-          className="mb-14 rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]"
+          className="mb-14 rounded-4xl bg-card border border-border p-6 md:p-8 shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]"
         >
           <DailyPaletteGenerator userColorSeason={profile.color_season} />
         </motion.section>
@@ -520,7 +520,7 @@ function LookSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[20px] border border-border bg-card p-5 md:p-6 shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]">
+    <section className="rounded-4xl border border-border bg-card p-5 md:p-6 shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]">
       <p className="atelier-kicker mb-2">{kicker}</p>
       <h3 className="font-serif text-xl md:text-2xl leading-snug mb-3">{title}</h3>
       {children}

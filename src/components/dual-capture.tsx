@@ -117,7 +117,7 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
   if (step === "review" && back && front) {
     return (
       <div className="space-y-5">
-        <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-porcelain/60 bg-atelier-ivory/60 shadow-atelier-soft">
+        <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-porcelain/60 bg-atelier-ivory/60 shadow-atelier-soft">
           <img
             src={URL.createObjectURL(back)}
             alt="The fit"
@@ -216,7 +216,7 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
           onClick={() => startCamera(copy.facing)}
           disabled={starting}
           className={cn(
-            "group relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-dashed border-porcelain/70 bg-atelier-ivory/40 backdrop-blur-xl transition-colors hover:border-ink/30",
+            "group relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-dashed border-porcelain/70 bg-atelier-ivory/40 backdrop-blur-xl transition-colors hover:border-ink/30",
             starting && "opacity-60 cursor-wait",
           )}
         >
@@ -236,7 +236,7 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
           </div>
         </button>
       ) : (
-        <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-porcelain/60 bg-black">
+        <div className="relative aspect-3/4 overflow-hidden rounded-2xl border border-porcelain/60 bg-black">
           <video
             ref={videoRef}
             playsInline
@@ -257,7 +257,7 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
           >
             <X className="h-4 w-4" />
           </button>
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-gradient-to-t from-black/70 to-transparent">
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-linear-to-t from-black/70 to-transparent">
             <button
               type="button"
               onClick={() => startCamera(copy.facing)}
