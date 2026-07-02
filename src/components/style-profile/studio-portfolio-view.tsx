@@ -75,7 +75,7 @@ export function StudioPortfolioView({
         </div>
 
         {telemetry && !isDemo && telemetryOpen && (
-          <pre className="mb-8 p-4 bg-foreground/[0.04] border-[0.5px] border-foreground/15 font-mono text-[10px] leading-relaxed text-foreground/80 whitespace-pre-wrap break-words">
+          <pre className="mb-8 p-4 bg-foreground/4 border-[0.5px] border-foreground/15 font-mono text-[10px] leading-relaxed text-foreground/80 whitespace-pre-wrap wrap-break-word">
             {`// Studio notes ${telemetry.source ? `· ${telemetry.source.toUpperCase()}` : ""}
 First look · light       : ${telemetry.pass1Raw.ambientLighting}
 First look · undertone   : ${telemetry.pass1Raw.biologicalUndertone}
@@ -95,7 +95,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         <div className="space-y-12">
           {/* Header Dossier Summary */}
           <div className="border-b border-border/60 pb-6 text-center md:text-left">
-            <span className="text-[9px] uppercase tracking-[0.32em] text-[var(--atelier-gold)] block mb-1">
+            <span className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold) block mb-1">
               Dossier N° {dossierNumber}
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl text-foreground tracking-tight font-medium">
@@ -129,7 +129,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
                       className="group relative rounded-2xl overflow-hidden border border-border shadow-sm transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-xl"
                     >
                       <div
-                        className="w-full h-[100px] relative"
+                        className="w-full h-25 relative"
                         style={{ backgroundColor: block.hex }}
                       >
                         <span
@@ -142,13 +142,13 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
                           {block.hex.toUpperCase()}
                         </span>
                       </div>
-                      <div className="bg-card/95 backdrop-blur-md p-4 flex flex-col justify-between border-t border-border min-h-[88px]">
+                      <div className="bg-card/95 backdrop-blur-md p-4 flex flex-col justify-between border-t border-border min-h-22">
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-serif text-base text-foreground font-medium leading-tight">
                             {block.name}
                           </h4>
                         </div>
-                        <div className="text-[9px] uppercase tracking-[0.28em] text-[var(--atelier-gold)] font-medium">
+                        <div className="text-[9px] uppercase tracking-[0.28em] text-(--atelier-gold) font-medium">
                           {role}
                         </div>
                       </div>
@@ -174,12 +174,12 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
                     className="relative rounded-2xl overflow-hidden flex shadow-sm border border-border"
                   >
                     <div
-                      className="w-1/3 h-[100px] self-stretch"
+                      className="w-1/3 h-25 self-stretch"
                       style={{ backgroundColor: block.hex }}
                     />
                     <div className="w-2/3 bg-card p-5 flex flex-col justify-between">
                       <div>
-                        <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--atelier-gold)] font-semibold">
+                        <span className="text-[9px] uppercase tracking-[0.2em] text-(--atelier-gold) font-semibold">
                           {i === 0 ? "Aura Tone" : "Illuminator"}
                         </span>
                         <h4 className="font-serif text-lg text-foreground mt-0.5 leading-tight">
@@ -260,7 +260,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Pillar 1: The Signature Lip */}
-          <div className="bg-card p-6 rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
+          <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">The Signature Lip</h4>
               <p className="text-[10px] text-stone uppercase tracking-widest mt-1">
@@ -290,7 +290,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
           </div>
 
           {/* Pillar 2: The Natural Flush */}
-          <div className="bg-card p-6 rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
+          <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">The Natural Flush</h4>
               <p className="text-[10px] text-stone uppercase tracking-widest mt-1">
@@ -324,7 +324,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
                     style={{ backgroundColor: cheek.swatch }}
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-tr ${cheek.fade} to-transparent opacity-80`}
+                      className={`absolute inset-0 bg-linear-to-tr ${cheek.fade} to-transparent opacity-80`}
                     />
                   </div>
                   <div>
@@ -339,7 +339,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
           </div>
 
           {/* Pillar 3: Luminous Accents */}
-          <div className="bg-card p-6 rounded-[20px] border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
+          <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">Luminous Accents</h4>
               <p className="text-[10px] text-stone uppercase tracking-widest mt-1">
@@ -433,7 +433,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
               key={idx}
               className={`relative p-5 rounded-2xl border ${fabric.border} ${fabric.color} shadow-atelier-soft h-32 flex flex-col justify-end group transition-all duration-300 hover:shadow-md`}
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-2xl pointer-events-none" />
+              <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent rounded-2xl pointer-events-none" />
               <div className="relative z-10">
                 <h4 className="font-serif text-lg leading-tight text-ink">{fabric.material}</h4>
                 <span className="text-[9px] uppercase tracking-[0.15em] block mt-1 text-stone">
@@ -447,7 +447,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
 
       {/* IV. The Denim Archive */}
       <div className="space-y-4 pt-8">
-        <p className="text-[10px] uppercase tracking-[0.28em] text-[var(--atelier-gold)]">
+        <p className="text-[10px] uppercase tracking-[0.28em] text-(--atelier-gold)">
           Recommended Textiles · Denim
         </p>
         <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
@@ -554,10 +554,10 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
 
       {/* VI. Analyst's Critique */}
       <section className="px-6 sm:px-10 py-8 border-t-[0.5px] border-border">
-        <p className="text-[9px] uppercase tracking-[0.32em] text-[var(--atelier-gold)]">
+        <p className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold)">
           VI · Analyst's Personal Critique
         </p>
-        <div className="mt-4 ml-2 sm:ml-6 border-[0.5px] border-border bg-[var(--atelier-gold-light)] border-l-[3px] border-l-[var(--atelier-gold)] px-6 py-6">
+        <div className="mt-4 ml-2 sm:ml-6 border-[0.5px] border-border bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) px-6 py-6">
           <blockquote className="font-serif text-base sm:text-lg italic leading-relaxed text-foreground">
             "{profile.stylistNote}"
           </blockquote>
@@ -598,7 +598,7 @@ export function DossierCell({
 }) {
   return (
     <div className={`p-4 ${!last ? "sm:border-r border-border" : ""}`}>
-      <p className="text-[9px] uppercase tracking-[0.32em] text-[var(--atelier-gold)] inline-flex items-center gap-1.5">
+      <p className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold) inline-flex items-center gap-1.5">
         {label}
         {info && <InfoDot text={info} />}
       </p>
@@ -623,7 +623,7 @@ export function SectionBlock({
   const isAlert = accent === "destructive";
   return (
     <section
-      className={`px-6 sm:px-10 py-7 border-t ${isAlert ? "border-destructive/30 bg-destructive/[0.02]" : "border-border"}`}
+      className={`px-6 sm:px-10 py-7 border-t ${isAlert ? "border-destructive/30 bg-destructive/2" : "border-border"}`}
     >
       <div className="flex items-baseline gap-3 mb-5">
         <span
@@ -704,7 +704,7 @@ export function PaletteCard({
           P a l e t t e
         </p>
       </div>
-      <div className="mt-7 mx-auto max-w-[280px] grid grid-cols-5 gap-3 sm:gap-4">
+      <div className="mt-7 mx-auto max-w-70 grid grid-cols-5 gap-3 sm:gap-4">
         {dots.map((s, i) => (
           <div
             key={i}
@@ -746,14 +746,14 @@ export function ContrastGauge({ value }: { value: string }) {
   return (
     <div className="mt-6 border-t-[0.5px] border-border pt-5">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[9px] uppercase tracking-[0.32em] text-[var(--atelier-gold)]">
+        <p className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold)">
           Contrast Spectrum
         </p>
         <p className="text-[9px] uppercase tracking-[0.32em] text-foreground font-medium">
           {value}
         </p>
       </div>
-      <div className="relative h-[4px] rounded-full bg-foreground/15">
+      <div className="relative h-1 rounded-full bg-foreground/15">
         <div
           className="absolute inset-y-0 left-0 rounded-full bg-foreground"
           style={{ width: `${pct}%` }}
@@ -762,10 +762,10 @@ export function ContrastGauge({ value }: { value: string }) {
           className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
           style={{ left: `${pct}%` }}
         >
-          <div className="h-[13px] w-[13px] rounded-full bg-background border-2 border-foreground shadow-sm" />
+          <div className="h-3.25 w-3.25 rounded-full bg-background border-2 border-foreground shadow-sm" />
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-between text-[8px] uppercase tracking-[0.28em] text-[var(--atelier-gold)]">
+      <div className="mt-3 flex items-center justify-between text-[8px] uppercase tracking-[0.28em] text-(--atelier-gold)">
         <span>Low · Muted / Monochromatic</span>
         <span>High · Striking / Block</span>
       </div>
