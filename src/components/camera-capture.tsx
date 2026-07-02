@@ -156,22 +156,24 @@ export function CameraCapture({
   }
 
   return (
-    <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-white/15 bg-black">
+    <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/15 bg-black">
       <video
         ref={videoRef}
         playsInline
         muted
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Alignment overlay */}
+
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="w-[70%] h-[85%] rounded-xl border-2 border-dashed border-white/70" />
       </div>
-      <div className="pointer-events-none absolute top-4 left-4 right-4 flex justify-between">
+
+      <div className="pointer-events-none absolute top-8 left-4 right-4 flex justify-center">
         <span className="text-[10px] uppercase tracking-[0.25em] text-white/80 bg-black/40 backdrop-blur px-3 py-1 rounded-full">
           Align outfit inside the frame
         </span>
       </div>
+
       <button
         type="button"
         onClick={close}
@@ -180,29 +182,35 @@ export function CameraCapture({
       >
         <X className="h-4 w-4" />
       </button>
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-linear-to-t from-black/70 to-transparent">
-        <button
-          type="button"
-          onClick={start}
-          className="h-10 w-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60"
-          aria-label="Restart camera"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          onClick={snap}
-          className="h-16 w-16 rounded-full bg-white ring-4 ring-white/30 hover:ring-white/50 transition-shadow"
-          aria-label="Capture photo"
-        />
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onPickGallery}
-          className="h-10 rounded-full text-white hover:bg-white/10 text-[11px] uppercase tracking-[0.22em]"
-        >
-          <ImageIcon className="h-4 w-4 mr-2" /> Gallery
-        </Button>
+
+      <div className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-14 bg-linear-to-t from-black/80 via-black/45 to-transparent">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center pb-10">
+          <button
+            type="button"
+            onClick={start}
+            className="justify-self-end mr-5 h-11 w-11 rounded-full bg-black/45 backdrop-blur text-white flex items-center justify-center hover:bg-black/65 transition-colors"
+            aria-label="Restart camera"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={snap}
+            className="h-16 w-16 mx-3 rounded-full bg-white ring-[6px] ring-white/25 shadow-lg shadow-black/30 hover:ring-white/40 transition-shadow"
+            aria-label="Capture photo"
+          />
+
+          <button
+            type="button"
+            onClick={onPickGallery}
+            className="justify-self-start ml-5 h-11 rounded-full bg-black/45 backdrop-blur px-4 text-white flex items-center gap-2 hover:bg-black/65 transition-colors"
+            aria-label="Choose from gallery"
+          >
+            <ImageIcon className="h-4 w-4" />
+            <span className="text-[10px] uppercase tracking-[0.22em]">Gallery</span>
+          </button>
+        </div>
       </div>
     </div>
   );
