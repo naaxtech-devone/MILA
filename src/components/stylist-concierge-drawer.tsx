@@ -273,10 +273,10 @@ export function StylistConciergeDrawer({
         >
           <Select value="" onValueChange={(v) => v && send(v)} disabled={sending || !profileReady}>
             <SelectTrigger className="h-9 rounded-full border-foreground/15 bg-background/70 px-4 text-[11px] uppercase tracking-[0.22em] text-muted-foreground focus:ring-0">
-              <span className="inline-flex items-center gap-2">
-                <Wand2 className="h-3.5 w-3.5 text-[var(--atelier-gold)]" strokeWidth={1.5} />
+              <div className="inline-flex items-center gap-2">
+                <Wand2 className="h-3.5 w-3.5 text-(--atelier-gold)" strokeWidth={1.5} />
                 <SelectValue placeholder="Quick prompts" />
-              </span>
+              </div>
             </SelectTrigger>
             <SelectContent className="bg-background/95 backdrop-blur-xl border-foreground/10">
               <SelectGroup>
