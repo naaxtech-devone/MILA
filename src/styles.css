@@ -237,6 +237,18 @@
     border: 1px solid var(--border);
     box-shadow: var(--atelier-card-shadow);
   }
+  /* Warm champagne wash for the dashboard hero; espresso equivalent in dark. */
+  .atelier-hero-card {
+    background: linear-gradient(145deg, #f0e6d3 0%, #faf8f5 60%, #f5f0e8 100%);
+  }
+  .dark .atelier-hero-card {
+    background: linear-gradient(
+      145deg,
+      oklch(0.24 0.02 70) 0%,
+      oklch(0.205 0.012 60) 60%,
+      oklch(0.225 0.016 65) 100%
+    );
+  }
   .atelier-hairline-card {
     background: var(--card);
     border-radius: 20px;

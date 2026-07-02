@@ -294,8 +294,7 @@ function Dashboard() {
     >
       <motion.section
         variants={cardItemVariants}
-        className="relative mb-10 sm:mb-14 overflow-hidden atelier-card"
-        style={{ background: "linear-gradient(145deg, #F0E6D3 0%, #FAF8F5 60%, #F5F0E8 100%)" }}
+        className="relative mb-10 sm:mb-14 overflow-hidden atelier-card atelier-hero-card"
       >
         <div className="pointer-events-none absolute -top-32 -right-20 h-80 w-80 rounded-full bg-atelier-champagne/25 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-atelier-rose/15 blur-3xl" />
