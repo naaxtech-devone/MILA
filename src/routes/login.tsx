@@ -1,9 +1,19 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ShieldCheck, HelpCircle, MessageSquare, ArrowRight } from "lucide-react";
+import {
+  ShieldCheck,
+  HelpCircle,
+  MessageSquare,
+  ArrowRight,
+  Check,
+  X,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -42,6 +52,16 @@ const authSchema = z.object({
 
 type AuthFormValues = z.infer<typeof authSchema>;
 
+// Mirrors the Supabase Auth password policy (min length 12; lowercase,
+// uppercase letters, digits and symbols) — the server rejects anything weaker.
+const passwordChecks = [
+  { label: "At least 12 characters", test: (p: string) => p.length >= 12 },
+  { label: "One lowercase letter", test: (p: string) => /[a-z]/.test(p) },
+  { label: "One uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "One digit", test: (p: string) => /[0-9]/.test(p) },
+  { label: "One symbol", test: (p: string) => /[^a-zA-Z0-9]/.test(p) },
+];
+
 function LoginPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
@@ -51,33 +71,56 @@ function LoginPage() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const captchaRef = useRef<HCaptcha>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
     defaultValues: { email: "", password: "", username: "" },
   });
+
+  const password = watch("password") ?? "";
+  const passedChecks = passwordChecks.filter((c) => c.test(password)).length;
+  const passwordOk = passedChecks === passwordChecks.length;
+  const strength =
+    passedChecks <= 2
+      ? { label: "Weak", bar: "bg-destructive", text: "text-destructive" }
+      : passedChecks < passwordChecks.length
+        ? { label: "Medium", bar: "bg-amber-500", text: "text-amber-600" }
+        : { label: "Strong", bar: "bg-emerald-500", text: "text-emerald-600" };
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/dashboard" });
   }, [loading, session, navigate]);
 
   const onAuthSubmit = async (data: AuthFormValues) => {
+    if (!captchaToken) {
+      toast.error("Please complete the captcha challenge.");
+      return;
+    }
     setBusy(true);
     try {
       if (activeTab === "login") {
         const { error } = await supabase.auth.signInWithPassword({
           email: data.email,
           password: data.password,
+          options: { captchaToken },
         });
         if (error) throw error;
       } else {
         if (!data.username) {
           toast.error("A unique studio username is required to create your styling account.");
+          return;
+        }
+        if (!passwordOk) {
+          toast.error("Password does not meet the security requirements yet.");
           return;
         }
         const { data: signUpData, error } = await supabase.auth.signUp({
@@ -86,6 +129,7 @@ function LoginPage() {
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
             data: { username: data.username },
+            captchaToken,
           },
         });
         if (error) throw error;
@@ -101,6 +145,9 @@ function LoginPage() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
     } finally {
+      // captcha tokens are single-use; require a fresh one for the next attempt
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken(null);
       setBusy(false);
     }
   };
@@ -253,19 +300,74 @@ function LoginPage() {
                     <Label htmlFor="password" className="text-xs">
                       Security Password
                     </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      className="h-10"
-                      {...register("password")}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="h-10 pr-10"
+                        {...register("password")}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                     {errors.password && (
                       <p className="text-xs text-destructive">{errors.password.message}</p>
                     )}
                   </div>
 
-                  <Button type="submit" disabled={busy} className="w-full h-10 gap-2">
+                  {activeTab === "signup" && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                          <div
+                            className={`h-full rounded-full transition-all ${strength.bar}`}
+                            style={{ width: `${(passedChecks / passwordChecks.length) * 100}%` }}
+                          />
+                        </div>
+                        <span className={`text-[10px] font-medium uppercase tracking-wider ${strength.text}`}>
+                          {strength.label}
+                        </span>
+                      </div>
+                      <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+                        {passwordChecks.map((c) => {
+                          const ok = c.test(password);
+                          return (
+                            <li
+                              key={c.label}
+                              className={`flex items-center gap-1.5 text-[11px] ${
+                                ok ? "text-emerald-600" : "text-muted-foreground"
+                              }`}
+                            >
+                              {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                              {c.label}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div className="flex justify-center">
+                    <HCaptcha
+                      ref={captchaRef}
+                      sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
+                      onVerify={setCaptchaToken}
+                      onExpire={() => setCaptchaToken(null)}
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={busy || !captchaToken || (activeTab === "signup" && !passwordOk)}
+                    className="w-full h-10 gap-2"
+                  >
                     {busy
                       ? "Please wait…"
                       : activeTab === "login"
