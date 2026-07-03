@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Camera, LayoutGrid, Palette, Images, MessageCircle } from "lucide-react";
+import { Camera, Coins, LayoutGrid, Palette, Images, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -69,6 +69,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         face_shape: (data as any).face_shape ?? null,
         hair_type: (data as any).hair_type ?? null,
       };
+    },
+    enabled: !!user,
+  });
+
+  const { data: credits } = useQuery({
+    queryKey: queryKeys.credits(user?.id),
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase
+        .from("user_entitlements")
+        .select("ai_credits")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      return data?.ai_credits ?? 0;
     },
     enabled: !!user,
   });
@@ -181,6 +195,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-2">
+            {credits != null && (
+              <button
+                type="button"
+                onClick={() => setCreditPaywallOpen(true)}
+                aria-label={`${credits} AI credits — get more`}
+                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
+              >
+                <Coins className="h-3.5 w-3.5 text-(--atelier-gold)" strokeWidth={1.5} />
+                {credits}
+              </button>
+            )}
             <ThemeToggle />
             <button
               type="button"
