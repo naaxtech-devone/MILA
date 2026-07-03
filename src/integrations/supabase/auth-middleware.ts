@@ -57,6 +57,17 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       throw new Error("Unauthorized: No user ID found in token");
     }
 
+    // Suspended members keep a valid session but lose access to every
+    // protected server function until a steward reinstates them.
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("suspended")
+      .eq("id", data.claims.sub)
+      .maybeSingle();
+    if (profile?.suspended) {
+      throw new Error("Forbidden: Account suspended");
+    }
+
     return next({
       context: {
         supabase,
