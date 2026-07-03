@@ -96,6 +96,18 @@ The authenticated section (`src/routes/_authenticated.tsx` and its children — 
 history, style-profile, admin) gates on auth at the route level; role checks live in
 `src/hooks/use-is-admin.tsx`.
 
+Roles live in `public.user_roles` (`app_role` enum: `admin` / `moderator` / `user`). Every
+new signup — email/password or OAuth — gets the `user` role automatically via the
+`handle_new_user()` trigger on `auth.users`. To bootstrap an admin: create the account
+(Supabase Dashboard → Authentication → Add user, or the `POST /auth/v1/admin/users` API with
+the service-role key — never commit the password), then in the SQL editor:
+
+```sql
+INSERT INTO public.user_roles (user_id, role)
+SELECT id, 'admin'::public.app_role FROM auth.users WHERE email = '<admin-email>'
+ON CONFLICT DO NOTHING;
+```
+
 ### Conventions
 
 - Path alias `@/*` → `src/*`
