@@ -66,6 +66,13 @@
   --color-atelier-rose: var(--atelier-rose);
   --color-atelier-stone: var(--atelier-stone);
   --color-atelier-panel: var(--atelier-panel);
+  /* Bare aliases — components use text-ink / text-stone / border-porcelain /
+     text-rose without the atelier- prefix; without these the classes compile
+     to nothing and break contrast in both themes. */
+  --color-ink: var(--atelier-ink);
+  --color-stone: var(--atelier-stone);
+  --color-porcelain: var(--atelier-porcelain);
+  --color-rose: var(--atelier-rose);
   --shadow-atelier-soft: var(--atelier-shadow-soft);
   --shadow-atelier-float: var(--atelier-shadow-float);
 }
