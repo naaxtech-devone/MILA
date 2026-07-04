@@ -36,7 +36,7 @@ function startOfTodayIso(): string {
 
 export const createPost = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => CreatePostInput.parse(input))
+  .validator((input: unknown) => CreatePostInput.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: row, error } = await supabase

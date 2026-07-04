@@ -43,7 +43,7 @@ const tool = {
 
 export const fixOutfitChat = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => Input.parse(input))
+  .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data, context }) => {
     // Credit gate — throws "INSUFFICIENT_CREDITS" if depleted.
     await consumeAiCredit(context.supabase, context.userId);

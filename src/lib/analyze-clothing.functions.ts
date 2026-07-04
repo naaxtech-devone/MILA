@@ -55,7 +55,7 @@ const tool = {
 
 export const analyzeClothing = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         imageUrl: z.string().url(),

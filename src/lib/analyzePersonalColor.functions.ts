@@ -777,7 +777,7 @@ const slimTool = {
 
 export const analyzePersonalColor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         imageBase64: z.string().min(1).max(15_000_000),

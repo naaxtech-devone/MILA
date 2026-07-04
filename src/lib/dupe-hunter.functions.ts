@@ -117,7 +117,7 @@ function scoreCandidate(
 
 export const findDupes = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => Input.parse(input))
+  .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data, context }): Promise<DupeHuntResult> => {
     await consumeAiCredit(context.supabase, context.userId);
 

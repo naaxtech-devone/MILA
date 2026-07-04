@@ -70,7 +70,7 @@ const SetRoleInput = z.object({
 
 export const adminSetAdminRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => SetRoleInput.parse(input))
+  .validator((input: unknown) => SetRoleInput.parse(input))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
     if (data.user_id === context.userId && !data.grant) {
@@ -100,7 +100,7 @@ const SetSuspendedInput = z.object({
 
 export const adminSetSuspended = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => SetSuspendedInput.parse(input))
+  .validator((input: unknown) => SetSuspendedInput.parse(input))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -180,7 +180,7 @@ const HidePostInput = z.object({
 
 export const adminHidePost = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => HidePostInput.parse(input))
+  .validator((input: unknown) => HidePostInput.parse(input))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -200,7 +200,7 @@ const DeletePostInput = z.object({ post_id: z.string().uuid() });
 
 export const adminDeletePost = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => DeletePostInput.parse(input))
+  .validator((input: unknown) => DeletePostInput.parse(input))
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

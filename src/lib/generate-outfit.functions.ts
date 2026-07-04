@@ -104,7 +104,7 @@ export type DailyLook = {
 
 export const generateDailyLook = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => Input.parse(input))
+  .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data, context }): Promise<DailyLook> => {
     await consumeAiCredit(context.supabase, context.userId);
 

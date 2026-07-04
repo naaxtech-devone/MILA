@@ -13,7 +13,7 @@ const HolisticInput = z.object({
 
 export const updateHolisticProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => HolisticInput.parse(input))
+  .validator((input: unknown) => HolisticInput.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const patch: Record<string, unknown> = { id: userId, updated_at: new Date().toISOString() };
