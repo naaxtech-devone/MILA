@@ -20,7 +20,9 @@ export interface ClimateState {
   condition: ClimateCondition;
 }
 
-const HUBS: Array<{ id: string; city: string; tagline: string; climate: ClimateState }> = [
+export const DEFAULT_HUB_STORAGE_KEY = "mila.default-hub";
+
+export const HUBS: Array<{ id: string; city: string; tagline: string; climate: ClimateState }> = [
   {
     id: "manila",
     city: "Manila",
@@ -282,8 +284,11 @@ export function ClimateWidget({
   }
 
   useEffect(() => {
-    // initialize with default hub on mount
-    onChange(HUBS[0].climate);
+    // initialize with the user's default hub (Preferences → Default Location), else Manila
+    const stored = localStorage.getItem(DEFAULT_HUB_STORAGE_KEY);
+    const hub = HUBS.find((h) => h.id === stored) ?? HUBS[0];
+    setHubId(hub.id);
+    onChange(hub.climate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

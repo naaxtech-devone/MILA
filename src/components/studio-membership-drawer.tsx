@@ -7,8 +7,10 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Link } from "@tanstack/react-router";
-import { Archive, AlertCircle } from "lucide-react";
+import { Archive, AlertCircle, Check, Download, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { HUBS, DEFAULT_HUB_STORAGE_KEY } from "@/components/climate-widget";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
@@ -31,8 +33,54 @@ export function StudioMembershipDrawer({
   onAcquirePasses,
   onWatchEditorial,
 }: StudioMembershipDrawerProps) {
-  const [view, setView] = useState<"membership" | "preferences">("membership");
-  const { signOut } = useAuth();
+  const [view, setView] = useState<"membership" | "preferences" | "location" | "privacy">(
+    "membership",
+  );
+  const { user: authUser, signOut } = useAuth();
+  const [defaultHubId, setDefaultHubId] = useState<string>(
+    () =>
+      (typeof localStorage !== "undefined" && localStorage.getItem(DEFAULT_HUB_STORAGE_KEY)) ||
+      HUBS[0].id,
+  );
+  const [exporting, setExporting] = useState(false);
+
+  async function downloadData() {
+    if (!authUser || exporting) return;
+    setExporting(true);
+    try {
+      const [profile, outfits, posts, favorites] = await Promise.all([
+        supabase.from("profiles").select("*").eq("id", authUser.id).maybeSingle(),
+        supabase.from("outfits").select("*").eq("user_id", authUser.id),
+        supabase.from("posts").select("*").eq("user_id", authUser.id),
+        supabase.from("user_favorites").select("*").eq("user_id", authUser.id),
+      ]);
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        account: { id: authUser.id, email: authUser.email },
+        profile: profile.data,
+        outfits: outfits.data ?? [],
+        posts: posts.data ?? [],
+        favorites: favorites.data ?? [],
+      };
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
+      );
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mila-data-export.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  const heading = {
+    membership: { title: "Your Atelier", sub: "Client Dossier & Passes" },
+    preferences: { title: "Preferences", sub: "Account Configuration" },
+    location: { title: "Default Location", sub: "Climate Sync Hub" },
+    privacy: { title: "Privacy & Data", sub: "Your Information" },
+  }[view];
 
   const missing = [
     !user.season && "Color Season",
@@ -47,18 +95,30 @@ export function StudioMembershipDrawer({
         <SheetHeader className="px-6 pt-8 pb-5 border-b border-porcelain/40 flex flex-row items-end justify-between space-y-0">
           <div className="space-y-1 text-left">
             <SheetTitle className="font-serif text-2xl text-ink tracking-wide">
-              {view === "membership" ? "Your Atelier" : "Preferences"}
+              {heading.title}
             </SheetTitle>
             <SheetDescription className="text-[10px] uppercase tracking-[0.25em] text-stone">
-              {view === "membership" ? "Client Dossier & Passes" : "Account Configuration"}
+              {heading.sub}
             </SheetDescription>
           </div>
 
           <button
-            onClick={() => setView(view === "membership" ? "preferences" : "membership")}
+            onClick={() =>
+              setView(
+                view === "membership"
+                  ? "preferences"
+                  : view === "preferences"
+                    ? "membership"
+                    : "preferences",
+              )
+            }
             className="text-[10px] uppercase tracking-[0.15em] text-stone hover:text-ink transition-colors underline underline-offset-4 pb-1"
           >
-            {view === "membership" ? "Settings" : "Back to Profile"}
+            {view === "membership"
+              ? "Settings"
+              : view === "preferences"
+                ? "Back to Profile"
+                : "Back to Preferences"}
           </button>
         </SheetHeader>
 
@@ -168,7 +228,7 @@ export function StudioMembershipDrawer({
                 </Link>
               </div>
             </div>
-          ) : (
+          ) : view === "preferences" ? (
             <div className="space-y-8">
               {/* Account Settings */}
               <div className="space-y-3">
@@ -199,11 +259,22 @@ export function StudioMembershipDrawer({
                       Celsius (°C)
                     </span>
                   </div>
-                  <button className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors">
+                  <button
+                    onClick={() => setView("location")}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors"
+                  >
                     <span className="text-sm text-ink">Default Location</span>
-                    <span className="text-stone">→</span>
+                    <span className="flex items-center gap-3">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-stone">
+                        {HUBS.find((h) => h.id === defaultHubId)?.city}
+                      </span>
+                      <span className="text-stone">→</span>
+                    </span>
                   </button>
-                  <button className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors">
+                  <button
+                    onClick={() => setView("privacy")}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors"
+                  >
                     <span className="text-sm text-ink">Privacy &amp; Data</span>
                     <span className="text-stone">→</span>
                   </button>
@@ -221,6 +292,70 @@ export function StudioMembershipDrawer({
                 >
                   Sign Out of Studio
                 </button>
+              </div>
+            </div>
+          ) : view === "location" ? (
+            <div className="space-y-3">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-stone">Climate sync hub</p>
+              <div className="rounded-xl border border-porcelain/40 overflow-hidden divide-y divide-porcelain/30">
+                {HUBS.map((h) => (
+                  <button
+                    key={h.id}
+                    onClick={() => {
+                      localStorage.setItem(DEFAULT_HUB_STORAGE_KEY, h.id);
+                      setDefaultHubId(h.id);
+                      setView("preferences");
+                    }}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors"
+                  >
+                    <span className="text-sm text-ink">{h.city}</span>
+                    <span className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-stone">
+                      {h.tagline}
+                      {defaultHubId === h.id && (
+                        <Check className="h-3.5 w-3.5 text-ink" strokeWidth={1.6} />
+                      )}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-stone leading-relaxed px-1">
+                Your default hub sets the dashboard climate sync each time you open the studio.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-stone">Your data</p>
+                <p className="text-xs text-stone leading-relaxed">
+                  Mila stores your style profile, outfit analyses, community posts, and favorites to
+                  tailor your recommendations. Your data is never sold and is only used within the
+                  studio.
+                </p>
+                <button
+                  onClick={downloadData}
+                  disabled={exporting}
+                  className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-white dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-3 disabled:opacity-60"
+                >
+                  {exporting ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  )}
+                  <span>{exporting ? "Preparing export…" : "Download My Data"}</span>
+                </button>
+                <p className="text-[10px] text-stone leading-relaxed">
+                  Exports your profile, outfits, posts, and favorites as JSON.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-porcelain/30 space-y-3">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-stone">
+                  Account removal
+                </p>
+                <p className="text-[10px] text-stone leading-relaxed">
+                  To permanently delete your account and all associated data, contact the concierge
+                  from your registered email address.
+                </p>
               </div>
             </div>
           )}
