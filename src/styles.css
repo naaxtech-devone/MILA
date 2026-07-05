@@ -80,26 +80,28 @@
 :root {
   color-scheme: light;
   --radius: 0.25rem;
+  /* Brand kit palette: Ivory #F5F0E8 · Gold #C9A96E · Parchment #F5ECD9 ·
+     Gold Muted #E8D5B0 · Charcoal #2B2320 · Stone #6B6259 · White #FAF8F5 */
   --background: #f5f0e8;
-  --foreground: oklch(0.18 0.01 60);
+  --foreground: oklch(0.264 0.013 41.6); /* Atelier Charcoal #2B2320 */
   --card: #faf8f5;
-  --card-foreground: oklch(0.18 0.01 60);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.01 60);
-  --primary: oklch(0.22 0.015 50);
-  --primary-foreground: oklch(0.98 0.005 75);
+  --card-foreground: oklch(0.264 0.013 41.6);
+  --popover: oklch(0.98 0.005 78.3); /* Warm White #FAF8F5 — brand kit card surface, not pure white */
+  --popover-foreground: oklch(0.264 0.013 41.6);
+  --primary: oklch(0.264 0.013 41.6); /* Charcoal — Dark / CTA */
+  --primary-foreground: oklch(0.98 0.005 78.3); /* Warm White #FAF8F5 */
   --secondary: oklch(0.95 0.008 70);
-  --secondary-foreground: oklch(0.22 0.015 50);
+  --secondary-foreground: oklch(0.264 0.013 41.6);
   --muted: oklch(0.95 0.008 70);
-  --muted-foreground: oklch(0.5 0.015 60);
-  --accent: oklch(0.72 0.08 40);
-  --accent-foreground: oklch(0.98 0.005 75);
+  --muted-foreground: oklch(0.502 0.018 67.4); /* Warm Stone #6B6259 */
+  --accent: oklch(0.945 0.027 85.7); /* Parchment #F5ECD9 — active states */
+  --accent-foreground: oklch(0.264 0.013 41.6);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.98 0.005 75);
   /* Gold Muted per brand kit — "structural warmth without weight" */
   --border: #e8d5b0;
-  --input: oklch(0.9 0.01 70);
-  --ring: oklch(0.72 0.08 40);
+  --input: oklch(0.879 0.053 84); /* Gold Muted #E8D5B0 */
+  --ring: oklch(0.75 0.085 82.1); /* Champagne Gold #C9A96E */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -115,12 +117,12 @@
   --sidebar-ring: oklch(0.72 0.08 40);
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
-  --atelier-ivory: oklch(0.985 0.006 85);
+  --atelier-ivory: oklch(0.957 0.012 79.8); /* Atelier Ivory #F5F0E8 */
   --atelier-porcelain: oklch(0.965 0.008 80);
-  --atelier-ink: oklch(0.18 0.012 55);
-  --atelier-champagne: oklch(0.78 0.055 75);
+  --atelier-ink: oklch(0.264 0.013 41.6); /* Atelier Charcoal #2B2320 */
+  --atelier-champagne: oklch(0.75 0.085 82.1); /* Champagne Gold #C9A96E */
   --atelier-rose: oklch(0.76 0.055 25);
-  --atelier-stone: oklch(0.72 0.018 65);
+  --atelier-stone: oklch(0.502 0.018 67.4); /* Warm Stone #6B6259 */
   --atelier-panel: oklch(1 0.003 80 / 78%);
   --atelier-shadow-soft: 0 18px 50px -35px oklch(0.18 0.012 55 / 45%);
   --atelier-shadow-float: 0 24px 80px -45px oklch(0.18 0.012 55 / 55%);
@@ -148,13 +150,13 @@
   --secondary-foreground: oklch(0.93 0.008 75);
   --muted: oklch(0.26 0.012 60);
   --muted-foreground: oklch(0.7 0.015 65);
-  --accent: oklch(0.62 0.08 40);
-  --accent-foreground: oklch(0.98 0.005 75);
+  --accent: oklch(0.32 0.03 80); /* dark champagne wash — gold family, not terracotta */
+  --accent-foreground: oklch(0.93 0.008 75);
   --destructive: oklch(0.62 0.19 27);
   --destructive-foreground: oklch(0.98 0.005 75);
   --border: oklch(0.95 0.01 70 / 12%);
   --input: oklch(0.95 0.01 70 / 16%);
-  --ring: oklch(0.72 0.08 40);
+  --ring: oklch(0.75 0.085 82.1); /* Champagne Gold #C9A96E */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
