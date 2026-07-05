@@ -78,17 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mila — Personal AI Fashion Stylist" },
+      { title: "Mila — Your stylist. Every morning." },
       {
         name: "description",
         content:
-          "Mila is your elite, studio-tuned AI stylist — tailored to your 16-season color profile and silhouette.",
+          "Your AI personal stylist. Daily outfits built on your colour season and shape.",
       },
       { name: "author", content: "Mila" },
-      { property: "og:title", content: "Mila — Personal AI Fashion Stylist" },
+      { property: "og:title", content: "Mila — Your stylist. Every morning." },
       {
         property: "og:description",
-        content: "Elite, studio-tuned styling for your unique color season and silhouette.",
+        content:
+          "Mila composes your daily look around your colour season, your silhouette, and the weather outside.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -96,7 +96,8 @@
   --accent-foreground: oklch(0.98 0.005 75);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.98 0.005 75);
-  --border: #ede8e0;
+  /* Gold Muted per brand kit — "structural warmth without weight" */
+  --border: #e8d5b0;
   --input: oklch(0.9 0.01 70);
   --ring: oklch(0.72 0.08 40);
   --chart-1: oklch(0.646 0.222 41.116);
