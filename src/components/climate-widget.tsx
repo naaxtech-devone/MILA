@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sun, Cloud, CloudRain, CloudSnow, Wind, MapPin, Loader2 } from "lucide-react";
 import {
   Select,
@@ -73,6 +73,26 @@ function describe(code: number): string {
   return "Mild";
 }
 
+async function fetchClimate(lat: number, lon: number, location: string): Promise<ClimateState> {
+  const r = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m`,
+  );
+  const j = await r.json();
+  const temp = Math.round(j?.current?.temperature_2m ?? 20);
+  const wind = Math.round(j?.current?.wind_speed_10m ?? 0);
+  const code = j?.current?.weather_code ?? 2;
+  const ic = iconFor(code);
+  const windy = wind >= 25 ? " & Windy" : "";
+  return {
+    label: `${temp}°C ${describe(code)}${windy}`,
+    location,
+    icon: wind >= 25 && ic === "cloud" ? "wind" : ic,
+    tempC: temp,
+    tempF: Math.round((temp * 9) / 5 + 32),
+    condition: conditionFor(code, wind),
+  };
+}
+
 function ClimateGlyph({ icon, className }: { icon: ClimateIcon; className?: string }) {
   const cls = className ?? "h-4 w-4";
   if (icon === "sun") return <Sun className={cls} strokeWidth={1.5} />;
@@ -104,48 +124,49 @@ export function ClimateWidget({
 }) {
   const [loading, setLoading] = useState(false);
   const [hubId, setHubId] = useState<string>("manila");
+  // ponytail: seq guard so a slow response can't overwrite a newer selection
+  const seq = useRef(0);
+
+  async function selectHub(id: string) {
+    const hub = HUBS.find((h) => h.id === id);
+    if (!hub) return;
+    const req = ++seq.current;
+    setHubId(id);
+    onChange(hub.climate); // instant static fallback while live data loads
+    setLoading(true);
+    try {
+      const live = await fetchClimate(hub.lat, hub.lon, hub.city);
+      if (req === seq.current) onChange(live);
+    } catch {
+    } finally {
+      if (req === seq.current) setLoading(false);
+    }
+  }
 
   async function detect() {
     if (typeof navigator === "undefined" || !navigator.geolocation) return;
+    const req = ++seq.current;
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          const { latitude, longitude } = pos.coords;
-          const r = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m`,
-          );
-          const j = await r.json();
-          const temp = Math.round(j?.current?.temperature_2m ?? 20);
-          const wind = Math.round(j?.current?.wind_speed_10m ?? 0);
-          const code = j?.current?.weather_code ?? 2;
-          const ic = iconFor(code);
-          const desc = describe(code);
-          const windy = wind >= 25 ? " & Windy" : "";
-          const finalIcon: ClimateIcon = wind >= 25 && ic === "cloud" ? "wind" : ic;
-          onChange({
-            label: `${temp}°C ${desc}${windy}`,
-            location: "Your location",
-            icon: finalIcon,
-            tempC: temp,
-            tempF: Math.round((temp * 9) / 5 + 32),
-            condition: conditionFor(code, wind),
-          });
+          const live = await fetchClimate(pos.coords.latitude, pos.coords.longitude, "Your location");
+          if (req === seq.current) onChange(live);
         } catch {
         } finally {
-          setLoading(false);
+          if (req === seq.current) setLoading(false);
         }
       },
-      () => setLoading(false),
+      () => {
+        if (req === seq.current) setLoading(false);
+      },
       { timeout: 8000, maximumAge: 5 * 60 * 1000 },
     );
   }
 
   useEffect(() => {
     const stored = localStorage.getItem(DEFAULT_HUB_STORAGE_KEY);
-    const hub = HUBS.find((h) => h.id === stored) ?? HUBS[0];
-    setHubId(hub.id);
-    onChange(hub.climate);
+    selectHub((HUBS.find((h) => h.id === stored) ?? HUBS[0]).id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -163,16 +184,7 @@ export function ClimateWidget({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <Select
-          value={hubId}
-          onValueChange={(id) => {
-            const hub = HUBS.find((h) => h.id === id);
-            if (hub) {
-              setHubId(id);
-              onChange(hub.climate);
-            }
-          }}
-        >
+        <Select value={hubId} onValueChange={selectHub}>
           <SelectTrigger className="h-8 rounded-full text-[11px] uppercase tracking-[0.18em] bg-background/60">
             <SelectValue placeholder="Pick a hub">
               {HUBS.find((h) => h.id === hubId)?.city.toUpperCase()}
