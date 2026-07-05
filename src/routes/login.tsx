@@ -52,8 +52,6 @@ const authSchema = z.object({
 
 type AuthFormValues = z.infer<typeof authSchema>;
 
-// Mirrors the Supabase Auth password policy (min length 12; lowercase,
-// uppercase letters, digits and symbols) — the server rejects anything weaker.
 const passwordChecks = [
   { label: "At least 12 characters", test: (p: string) => p.length >= 12 },
   { label: "One lowercase letter", test: (p: string) => /[a-z]/.test(p) },
@@ -145,7 +143,6 @@ function LoginPage() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
     } finally {
-      // captcha tokens are single-use; require a fresh one for the next attempt
       captchaRef.current?.resetCaptcha();
       setCaptchaToken(null);
       setBusy(false);
@@ -314,7 +311,11 @@ function LoginPage() {
                         aria-label={showPassword ? "Hide password" : "Show password"}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
                     {errors.password && (
@@ -331,7 +332,9 @@ function LoginPage() {
                             style={{ width: `${(passedChecks / passwordChecks.length) * 100}%` }}
                           />
                         </div>
-                        <span className={`text-[10px] font-medium uppercase tracking-wider ${strength.text}`}>
+                        <span
+                          className={`text-[10px] font-medium uppercase tracking-wider ${strength.text}`}
+                        >
                           {strength.label}
                         </span>
                       </div>

@@ -2,7 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChatCompletion, isAiConfigured } from "./ai.server";
-import { SEASON_HEX_MATRIX } from "@/constants/style-profile";
+import {
+  SEASON_HEX_MATRIX,
+  SEASON_KEYS,
+  SEASONS_MASTER_DATA,
+  type SeasonKey,
+} from "@/constants/style-profile";
 
 const SEASONS = ["Spring", "Summer", "Autumn", "Winter"] as const;
 const TONE_TYPES = ["Warm Tone (Yellow Base)", "Cool Tone (Blue Base)"] as const;
@@ -57,576 +62,6 @@ const StudioColorProfileSchema = z.object({
 
 export type StudioColorProfile = z.infer<typeof StudioColorProfileSchema>;
 
-/* ------------------------------------------------------------------ */
-/* SEASONS_MASTER_DATA                                                */
-/* ------------------------------------------------------------------ */
-/* Static Mila studio dictionary. The vision model never sees this   */
-/* — it only returns a slim season key, and we hydrate the full       */
-/* StudioColorProfile from this table to guarantee palette accuracy.  */
-/* ------------------------------------------------------------------ */
-
-const SEASON_KEYS = [
-  "SPRING_LIGHT",
-  "SPRING_TRUE",
-  "SPRING_BRIGHT",
-  "SPRING_WARM",
-  "SUMMER_LIGHT",
-  "SUMMER_TRUE",
-  "SUMMER_MUTED",
-  "SUMMER_COOL",
-  "AUTUMN_SOFT",
-  "AUTUMN_TRUE",
-  "AUTUMN_DEEP",
-  "AUTUMN_WARM",
-  "WINTER_CLEAR",
-  "WINTER_TRUE",
-  "WINTER_DEEP",
-  "WINTER_COOL",
-] as const;
-type SeasonKey = (typeof SEASON_KEYS)[number];
-
-type StaticSeasonSpec = Omit<
-  StudioColorProfile,
-  "stylistNote" | "faceShape" | "bodyType" | "contrastScale"
-> & {
-  contrastScale: StudioColorProfile["contrastScale"];
-};
-
-export const SEASONS_MASTER_DATA: Record<SeasonKey, StaticSeasonSpec> = {
-  SPRING_LIGHT: {
-    season: "Spring",
-    subSeason: "Spring Light / PCCS Light & Soft",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "High Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Low Contrast",
-    primarySwatches: [
-      { hex: "#FFB3A7", name: "Warm Peach Blush" },
-      { hex: "#FFD1A9", name: "Soft Apricot" },
-      { hex: "#FFF3CD", name: "Buttermilk Chiffon" },
-      { hex: "#D4EDDA", name: "Light Pistachio Mint" },
-    ],
-    secondarySwatches: [
-      { hex: "#FDF5E6", name: "Warm Cream Ivory" },
-      { hex: "#FFC0CB", name: "Light Coral Pink" },
-      { hex: "#E0F7FA", name: "Soft Aquamarine" },
-      { hex: "#E8DAEF", name: "Gentle Lavender-Pink" },
-    ],
-    avoidColors: [
-      "Pure High-Contrast Black (drops heavy shadow lines on delicate features)",
-      "Stark Bleached White (creates excessive facial contrast shadows)",
-      "Vivid Primary Tones (overpower the soft expression matrix)",
-    ],
-    beautyMap: {
-      hair: "Light milk chocolate brown, honey blonde highlights, or bright warm amber.",
-      lip: "Clear peach gloss, warm coral tints, or soft salmon pink.",
-      base: "Luminous ivory with a warm peach or golden undertone (dewy finish).",
-    },
-    fabrication: ["Chiffon & Organza", "Fine Knit Cotton", "Lightweight Linen"],
-    accessories: ["Polished 14k Yellow Gold", "Warm Rose Gold", "Delicate Seed Pearls"],
-    denimRegistry: ["Soft Bleached Blue Denim", "Pure Light Gray Denim"],
-  },
-  SPRING_TRUE: {
-    season: "Spring",
-    subSeason: "Spring True / Pure Warm Clarity",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "High Lightness",
-    saturation: "High Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#FFB347", name: "Sunlit Apricot" },
-      { hex: "#FF7F50", name: "Warm Coral" },
-      { hex: "#FFD166", name: "Golden Marigold" },
-      { hex: "#40E0D0", name: "Warm Turquoise" },
-    ],
-    secondarySwatches: [
-      { hex: "#FFA500", name: "Pure Tangerine" },
-      { hex: "#9ACD32", name: "Clear Leaf Green" },
-      { hex: "#FFB6C1", name: "Warm Pink Coral" },
-      { hex: "#FAD7A0", name: "Buttery Honey" },
-    ],
-    avoidColors: [
-      "Hazy Smoky Gray (cancels the sunlit clarity)",
-      "Pure Stark Black (overwhelms the radiant warmth)",
-      "Icy Cool Blue (clashes with the golden baseline)",
-    ],
-    beautyMap: {
-      hair: "Warm honey blonde, sunlit caramel, or radiant golden brown.",
-      lip: "Warm coral or sunlit peach gloss.",
-      base: "Golden luminous demi-dewy finish with peach undertone.",
-    },
-    fabrication: ["Crisp Cotton Poplin", "Soft Pebbled Leather", "Fine Warm Silk"],
-    accessories: ["Polished Yellow Gold", "Sunlit Amber", "Warm Carnelian Stone"],
-    denimRegistry: ["Bright Warm Indigo", "Sunlit Mid-Wash Blue"],
-  },
-  SPRING_BRIGHT: {
-    season: "Spring",
-    subSeason: "Spring Bright / Clear Spring",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "High Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#FF3B30", name: "Vivid Coral Red" },
-      { hex: "#FFCC00", name: "Sunshine Yellow" },
-      { hex: "#4CD964", name: "Clear Emerald" },
-      { hex: "#5AC8FA", name: "Bright Sky Aqua" },
-    ],
-    secondarySwatches: [
-      { hex: "#FF9500", name: "Tangerine Pop" },
-      { hex: "#FF2D55", name: "Hot Watermelon" },
-      { hex: "#007AFF", name: "Electric Cobalt" },
-      { hex: "#FFD700", name: "Pure Gold Glow" },
-    ],
-    avoidColors: [
-      "Dusty Muted Mauve (deadens the clear vibrant glow)",
-      "Ashy Beige Neutrals (turn the complexion sallow)",
-      "Hazy Smoke Gray (cancels the striking eye sparkle)",
-    ],
-    beautyMap: {
-      hair: "Bright warm chestnut, golden caramel, or vivid honey gold.",
-      lip: "Bright coral or warm true red, vibrant peach blush.",
-      base: "Glass-skin radiant, slightly golden, demi-dewy finish.",
-    },
-    fabrication: ["Smooth Patent Leather", "High-Shine Silk", "Crisp Poplin Cotton"],
-    accessories: ["Polished Bright Yellow Gold", "Lacquered Enamel", "Clear Cut Crystal"],
-    denimRegistry: ["Bright Medium-Wash Blue", "Crisp White Denim"],
-  },
-  SPRING_WARM: {
-    season: "Spring",
-    subSeason: "Spring Warm / True Spring",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#E67E22", name: "Sunlit Pumpkin" },
-      { hex: "#F1C40F", name: "Warm Mustard" },
-      { hex: "#2ECC71", name: "Fresh Leaf Green" },
-      { hex: "#1ABC9C", name: "Warm Turquoise" },
-    ],
-    secondarySwatches: [
-      { hex: "#FF8C00", name: "Dark Apricot" },
-      { hex: "#CD853F", name: "Honey Tan" },
-      { hex: "#D2691E", name: "Cinnamon Brown" },
-      { hex: "#F5DEB3", name: "Wheat Cream" },
-    ],
-    avoidColors: [
-      "Icy Cool Pink (clashes with the golden undertone)",
-      "Pure Black (overwhelms the warm vitality)",
-      "Cool Slate Blue (drains the sunny glow)",
-    ],
-    beautyMap: {
-      hair: "Warm chestnut, copper auburn, or sun-kissed honey.",
-      lip: "Rich terracotta or warm apricot, golden bronze gloss.",
-      base: "Golden bronzed natural finish with warm brown mascara.",
-    },
-    fabrication: ["Pebble-Grain Tan Leather", "Warm Wool Twill", "Soft Brushed Cotton"],
-    accessories: ["Heavy Yellow Gold", "Solid Unpolished Brass", "Natural Wooden Beads"],
-    denimRegistry: ["Warm Tobacco-Wash Denim", "Honey-Tinted Indigo"],
-  },
-  SUMMER_LIGHT: {
-    season: "Summer",
-    subSeason: "Summer Light / Icy Pastel Summer",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "High Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Low Contrast",
-    primarySwatches: [
-      { hex: "#FADBD8", name: "Soft Cool Rose" },
-      { hex: "#D7BDE2", name: "Powder Lilac" },
-      { hex: "#A9CCE3", name: "Misty Blue" },
-      { hex: "#A2D9CE", name: "Pale Seafoam" },
-    ],
-    secondarySwatches: [
-      { hex: "#EBDEF0", name: "Whisper Mauve" },
-      { hex: "#E8F8F5", name: "Frosted Mint" },
-      { hex: "#EBF5FB", name: "Glacier White" },
-      { hex: "#F5CBA7", name: "Cool Peach Cream" },
-    ],
-    avoidColors: [
-      "Burnt Orange (clashes with the cool milky undertone)",
-      "Pure Black (overpowers the airy complexion)",
-      "Mustard Yellow (turns the skin sallow)",
-    ],
-    beautyMap: {
-      hair: "Ash blonde, cool platinum, or pale rose taupe.",
-      lip: "Soft cool pink gloss or dusty rose.",
-      base: "Pale porcelain matte with cool pink undertone.",
-    },
-    fabrication: ["Sheer Organza", "Washed Linen", "Soft Brushed Cashmere"],
-    accessories: ["Brushed White Gold", "Satin-Finish Sterling Silver", "Freshwater Pearls"],
-    denimRegistry: ["Cool Light-Wash Blue", "Pale Sky Denim"],
-  },
-  SUMMER_TRUE: {
-    season: "Summer",
-    subSeason: "Summer True / Pure Cool Clarity",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#7395B6", name: "Periwinkle Sky" },
-      { hex: "#D8BFD8", name: "Soft Orchid" },
-      { hex: "#F4A6C1", name: "Cool Rose Pink" },
-      { hex: "#5D8AA8", name: "Slate Blue" },
-    ],
-    secondarySwatches: [
-      { hex: "#A29BFE", name: "Lavender Mist" },
-      { hex: "#9FB8AD", name: "Sage Mineral" },
-      { hex: "#C8BFE7", name: "Cool Wisteria" },
-      { hex: "#E59ABF", name: "Berry Rose" },
-    ],
-    avoidColors: [
-      "Warm Orange (clashes with the cool baseline)",
-      "Earthy Olive Brown (drains the rosy glow)",
-      "Pure Stark Black (overpowers the soft clarity)",
-    ],
-    beautyMap: {
-      hair: "Soft ash brown, cool walnut, or pale rose-blonde.",
-      lip: "Cool rose or soft mauve-pink gloss.",
-      base: "Porcelain demi-matte with rose-cool undertone.",
-    },
-    fabrication: ["Fine Silk Crepe", "Light Merino Wool", "Cool Cotton Voile"],
-    accessories: ["Brushed White Gold", "Freshwater Pearls", "Cool Amethyst"],
-    denimRegistry: ["Cool Indigo Wash", "Soft Periwinkle Denim"],
-  },
-  SUMMER_MUTED: {
-    season: "Summer",
-    subSeason: "Summer Muted / Soft Summer",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Low Contrast",
-    primarySwatches: [
-      { hex: "#95A5A6", name: "Hazy Slate" },
-      { hex: "#BDC3C7", name: "Smoke Pearl" },
-      { hex: "#6C3483", name: "Muted Plum" },
-      { hex: "#2874A6", name: "Dusty Denim Blue" },
-    ],
-    secondarySwatches: [
-      { hex: "#566573", name: "Cool Pewter" },
-      { hex: "#85929E", name: "Foggy Steel" },
-      { hex: "#D6DBDF", name: "Cloud Gray" },
-      { hex: "#F5B7B1", name: "Soft Dusty Rose" },
-    ],
-    avoidColors: [
-      "Bright Neon Tones (overwhelm the hazy softness)",
-      "Pure Black & White Combo (creates too much harsh contrast)",
-      "Warm Orange (clashes with the cool muted undertone)",
-    ],
-    beautyMap: {
-      hair: "Mushroom brown, ash taupe, or muted rose blonde.",
-      lip: "Muted mauve or dusty berry, cool taupe contour.",
-      base: "Velvet satin finish with neutral-cool undertone.",
-    },
-    fabrication: ["Soft Suede", "Heathered Cashmere", "Brushed Wool Flannel"],
-    accessories: ["Matte Platinum", "Antique Vintage Silver", "Smoky Quartz"],
-    denimRegistry: ["Faded Mid-Wash Denim", "Stone-Washed Gray"],
-  },
-  SUMMER_COOL: {
-    season: "Summer",
-    subSeason: "Summer Cool / True Summer",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#2980B9", name: "Slate Ocean" },
-      { hex: "#5499C7", name: "Crisp Cornflower" },
-      { hex: "#48C9B0", name: "Cool Turquoise" },
-      { hex: "#BB8FCE", name: "Cool Orchid" },
-    ],
-    secondarySwatches: [
-      { hex: "#2E4053", name: "Deep Slate" },
-      { hex: "#7FB3D5", name: "Powder Sky" },
-      { hex: "#D2B4DE", name: "Soft Wisteria" },
-      { hex: "#F1948A", name: "Cool Coral Berry" },
-    ],
-    avoidColors: [
-      "Warm Mustard Yellow (clashes with the cool blue undertone)",
-      "Earthy Rust Orange (drains the rosy complexion)",
-      "Olive Green (turns the skin tone muddy)",
-    ],
-    beautyMap: {
-      hair: "Ash brown, cool walnut, or rose-tinted dark blonde.",
-      lip: "Classic cool berry or cool orchid pink.",
-      base: "Crisp demi-matte porcelain with cool pink undertone.",
-    },
-    fabrication: ["Smooth Silk Jersey", "Fine Merino Wool", "Cool Cotton Voile"],
-    accessories: ["Polished White Gold", "High-Luster Sterling Silver", "Cool Blue Sapphire"],
-    denimRegistry: ["Classic Cool Indigo", "Slate Blue Denim"],
-  },
-  AUTUMN_SOFT: {
-    season: "Autumn",
-    subSeason: "Autumn Soft / Hazy Earth",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "Medium Lightness",
-    saturation: "Low-Mid Saturation",
-    contrastScale: "Low Contrast",
-    primarySwatches: [
-      { hex: "#B7950B", name: "Hazy Olive Gold" },
-      { hex: "#52BE80", name: "Soft Moss Green" },
-      { hex: "#DC7633", name: "Toasted Terracotta" },
-      { hex: "#E59866", name: "Warm Camel" },
-    ],
-    secondarySwatches: [
-      { hex: "#F4D03F", name: "Soft Maize" },
-      { hex: "#A9DFBF", name: "Faded Sage" },
-      { hex: "#EDBB99", name: "Light Khaki Peach" },
-      { hex: "#F6DDCC", name: "Warm Sand Beige" },
-    ],
-    avoidColors: [
-      "Icy Cool Pink (clashes with the earthy undertone)",
-      "Stark Pure White (creates harsh facial contrast)",
-      "Bright Neon Tones (overpower the soft, hazy palette)",
-    ],
-    beautyMap: {
-      hair: "Warm caramel, toasted hazelnut, or soft auburn.",
-      lip: "Warm nude or muted brick rose with toasted cinnamon blush.",
-      base: "Soft velvet finish with olive-warm undertone.",
-    },
-    fabrication: ["Soft Brushed Cords", "Washed Utility Canvas", "Heathered Wool"],
-    accessories: ["Matte Brass", "Brushed Yellow Gold", "Tigers Eye Stone"],
-    denimRegistry: ["Warm Stone-Washed Denim", "Soft Khaki Brown"],
-  },
-  AUTUMN_TRUE: {
-    season: "Autumn",
-    subSeason: "Autumn True / Pure Earthy Warm",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#B8651A", name: "Burnished Sienna" },
-      { hex: "#A0522D", name: "Saddle Russet" },
-      { hex: "#DAA520", name: "Goldenrod Spice" },
-      { hex: "#556B2F", name: "Forest Olive" },
-    ],
-    secondarySwatches: [
-      { hex: "#8B4513", name: "Walnut Brown" },
-      { hex: "#CD853F", name: "Honey Tan" },
-      { hex: "#2E8B57", name: "Pine Emerald" },
-      { hex: "#BC8F8F", name: "Dusty Rose Clay" },
-    ],
-    avoidColors: [
-      "Icy Pastel Pink (clashes with grounded warmth)",
-      "Pure Black (too cold against the spice palette)",
-      "Cool Slate Blue (drains the earthy glow)",
-    ],
-    beautyMap: {
-      hair: "Warm chestnut, burnished copper, or rich amber-mahogany.",
-      lip: "Burnished brick red or terracotta spice.",
-      base: "Satin golden finish with warm caramel undertone.",
-    },
-    fabrication: ["Heavy Cotton Twill", "Oiled Saddle Leather", "Soft Brushed Wool"],
-    accessories: ["Antique Brass", "Carved Tigers Eye", "Warm Hammered Bronze"],
-    denimRegistry: ["Warm Tobacco Indigo", "Russet-Tinted Stone Wash"],
-  },
-  AUTUMN_DEEP: {
-    season: "Autumn",
-    subSeason: "Autumn Deep / Dark Autumn",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "Low Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#4A235A", name: "Aubergine Plum" },
-      { hex: "#154360", name: "Midnight Petrol" },
-      { hex: "#0E6251", name: "Pine Forest" },
-      { hex: "#78281F", name: "Deep Brick Red" },
-    ],
-    secondarySwatches: [
-      { hex: "#7D6608", name: "Dark Bronze" },
-      { hex: "#512E5F", name: "Royal Mulberry" },
-      { hex: "#1B2631", name: "Charcoal Onyx" },
-      { hex: "#6E2C00", name: "Burnt Mahogany" },
-    ],
-    avoidColors: [
-      "Pastel Pink (vanishes against the depth of features)",
-      "Light Mint Green (clashes with the warm intensity)",
-      "Powder Blue (washes out the rich complexion)",
-    ],
-    beautyMap: {
-      hair: "Espresso brown, dark mahogany, or deep auburn.",
-      lip: "Deep brick red or espresso brown with warm amber bronzer.",
-      base: "Rich full-coverage with golden warm undertone.",
-    },
-    fabrication: ["Heavy Alligator Leather", "Structured Wool Tweed", "Dense Velvet"],
-    accessories: ["Antique Bronze", "Heavy 18k Hammered Gold", "Smoky Topaz"],
-    denimRegistry: ["Dark Indigo Raw Denim", "Espresso Brown Denim"],
-  },
-  AUTUMN_WARM: {
-    season: "Autumn",
-    subSeason: "Autumn Warm / True Autumn",
-    toneType: "Warm Tone (Yellow Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "Medium Contrast",
-    primarySwatches: [
-      { hex: "#D35400", name: "Pumpkin Spice" },
-      { hex: "#CA6F1E", name: "Burnt Sienna" },
-      { hex: "#D4AC0D", name: "Ochre Gold" },
-      { hex: "#196F3D", name: "Forest Pine" },
-    ],
-    secondarySwatches: [
-      { hex: "#A04000", name: "Russet Brown" },
-      { hex: "#9A7D0A", name: "Antique Brass" },
-      { hex: "#27AE60", name: "Moss Emerald" },
-      { hex: "#E59866", name: "Spiced Apricot" },
-    ],
-    avoidColors: [
-      "Cool Icy Blue (clashes with the earthy warmth)",
-      "Hot Magenta Pink (fights the spice palette)",
-      "Pure Black (too harsh for the warm depth)",
-    ],
-    beautyMap: {
-      hair: "Rich copper, deep auburn, or warm mahogany.",
-      lip: "Burnt orange or pumpkin spice with rich ochre.",
-      base: "Warm satin finish with heavy golden undertone.",
-    },
-    fabrication: ["Thick Shearling", "Heavy Cable Knit", "Pebbled Suede"],
-    accessories: ["Raw Copper", "Natural Wood Grain", "Carved Amber"],
-    denimRegistry: ["Rust-Tinted Denim", "Warm Mid-Brown Wash"],
-  },
-  WINTER_DEEP: {
-    season: "Winter",
-    subSeason: "Winter Deep / Dark Winter",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Low Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#1B2631", name: "Midnight Onyx" },
-      { hex: "#4A235A", name: "Royal Aubergine" },
-      { hex: "#0E4D92", name: "Deep Sapphire" },
-      { hex: "#4A0E17", name: "Black Cherry" },
-    ],
-    secondarySwatches: [
-      { hex: "#17202A", name: "Cool Jet" },
-      { hex: "#002FA7", name: "True Cobalt" },
-      { hex: "#512E5F", name: "Dark Plum" },
-      { hex: "#641E16", name: "Cool Burgundy" },
-    ],
-    avoidColors: [
-      "Soft Pastel Peach (vanishes against the contrast)",
-      "Warm Camel Beige (clashes with the cool depth)",
-      "Dusty Olive (drains the porcelain glow)",
-    ],
-    beautyMap: {
-      hair: "Jet black, deep espresso, or cool dark walnut.",
-      lip: "Deep plum, midnight blackberry, or dark cherry.",
-      base: "Flawless high-contrast porcelain with cool undertone.",
-    },
-    fabrication: ["Heavy Velvet", "Structured Brocade", "Polished Leather"],
-    accessories: ["Polished Gunmetal", "Dark Obsidian Silver", "Onyx & Hematite"],
-    denimRegistry: ["Pure Black Raw Denim", "Deep Indigo Selvedge"],
-  },
-  WINTER_CLEAR: {
-    season: "Winter",
-    subSeason: "Winter Clear / Crystal Winter",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#FF0000", name: "Pure Crimson" },
-      { hex: "#FF1493", name: "Electric Fuchsia" },
-      { hex: "#00FFFF", name: "Neon Cyan" },
-      { hex: "#8B00FF", name: "Vivid Violet" },
-    ],
-    secondarySwatches: [
-      { hex: "#FFFFFF", name: "Pure Snow White" },
-      { hex: "#000000", name: "True Jet Black" },
-      { hex: "#0000FF", name: "Electric Blue" },
-      { hex: "#39FF14", name: "Brilliant Lime" },
-    ],
-    avoidColors: [
-      "Hazy Muted Tones (cancel the crystal clarity)",
-      "Warm Beige Neutrals (drain the cool sparkle)",
-      "Dusty Earth Browns (turn the complexion flat)",
-    ],
-    beautyMap: {
-      hair: "Crisp jet black, cool dark brunette, or icy platinum.",
-      lip: "Electric fuchsia or high-shine crimson red.",
-      base: "Ultra-bright clear porcelain with diamond highlighter.",
-    },
-    fabrication: ["Glossy Latex", "Structural Neoprene", "Crisp Mirror Silk"],
-    accessories: ["Polished Brilliant Diamond", "Mirror-Finish White Gold", "Clear Crystal"],
-    denimRegistry: ["Pure Bright White Denim", "Crisp Inky Black Denim"],
-  },
-  WINTER_TRUE: {
-    season: "Winter",
-    subSeason: "Winter True / Pure Cool Jewel",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#000080", name: "True Navy" },
-      { hex: "#B22222", name: "Pure Ruby" },
-      { hex: "#4B0082", name: "Royal Indigo" },
-      { hex: "#008B8B", name: "Jewel Teal" },
-    ],
-    secondarySwatches: [
-      { hex: "#191970", name: "Midnight Blue" },
-      { hex: "#C71585", name: "Jewel Magenta" },
-      { hex: "#FFFFFF", name: "Pure Snow White" },
-      { hex: "#000000", name: "True Jet Black" },
-    ],
-    avoidColors: [
-      "Warm Mustard Gold (clashes with the cool baseline)",
-      "Earthy Camel Tan (drains the jewel-tone glow)",
-      "Hazy Dusty Mauve (cancels the clarity)",
-    ],
-    beautyMap: {
-      hair: "True jet black, cool dark brunette, or polished platinum.",
-      lip: "True ruby red or jewel magenta with cool berry blush.",
-      base: "Snowy porcelain with cool blue-pink undertone.",
-    },
-    fabrication: ["Heavy Silk Satin", "Fine Grain Leather", "Crisp Cool Wool"],
-    accessories: ["Polished Platinum", "Brilliant Diamond Cut", "Sapphire Stone"],
-    denimRegistry: ["Crisp True Indigo", "Pure Inky Black Denim"],
-  },
-  WINTER_COOL: {
-    season: "Winter",
-    subSeason: "Winter Cool / True Winter",
-    toneType: "Cool Tone (Blue Base)",
-    brightness: "Medium Lightness",
-    saturation: "High Saturation",
-    contrastScale: "High Contrast",
-    primarySwatches: [
-      { hex: "#1F3A52", name: "Royal Navy" },
-      { hex: "#4B0082", name: "Imperial Indigo" },
-      { hex: "#B11B56", name: "Jewel Magenta" },
-      { hex: "#800020", name: "Royal Ruby" },
-    ],
-    secondarySwatches: [
-      { hex: "#003366", name: "Deep Marine" },
-      { hex: "#004B49", name: "Jewel Emerald" },
-      { hex: "#FFFFFF", name: "Snow White" },
-      { hex: "#000000", name: "True Black" },
-    ],
-    avoidColors: [
-      "Warm Golden Yellow (clashes with the icy undertone)",
-      "Earthy Rust Brown (drains the jewel-toned glow)",
-      "Muted Olive Green (dulls the crisp contrast)",
-    ],
-    beautyMap: {
-      hair: "Cool jet black, icy ash brunette, or platinum silver.",
-      lip: "Deep royal ruby red or magenta with icy pink blush.",
-      base: "Snowy white velvet matte with cool pink undertone.",
-    },
-    fabrication: ["Liquid Silk Satin", "Heavy Grain Leather", "Crisp Cool Wool"],
-    accessories: ["Brilliant Platinum", "Solid Silver Chunks", "Cool Diamond Cut"],
-    denimRegistry: ["Crisp Cool Indigo", "Icy Light Blue Denim"],
-  },
-};
-
-/* ------------------------------------------------------------------ */
-/* Slim Vision Schema                                                 */
-/* ------------------------------------------------------------------ */
-
 const SlimVisionSchema = z.object({
   season: z.enum(SEASON_KEYS),
   contrastScore: z.number().min(1).max(100),
@@ -639,14 +74,6 @@ const SlimVisionSchema = z.object({
   confidenceScore: z.number().min(1).max(100),
   confidenceLabel: z.string().optional(),
 });
-
-/* ------------------------------------------------------------------ */
-/* PASS 1 — Calibration Schema                                         */
-/* ------------------------------------------------------------------ */
-/* Lightweight raw environmental + biological read. NO seasonal key.   */
-/* Result is sanitized by the server-side GateKeeper, then injected    */
-/* into the Pass 2 PCCS routing prompt.                                */
-/* ------------------------------------------------------------------ */
 
 const AMBIENT_LIGHTING_VALUES = [
   "backlit",
@@ -834,9 +261,6 @@ export const analyzePersonalColor = createServerFn({ method: "POST" })
           return { success: false, error: "CONFIG_MISSING_API_KEY" };
         }
 
-        /* ----------------------------------------------------------- */
-        /* Shared gateway helper                                       */
-        /* ----------------------------------------------------------- */
         const callGateway = async (
           systemPrompt: string,
           userText: string,
@@ -865,9 +289,6 @@ export const analyzePersonalColor = createServerFn({ method: "POST" })
           return res;
         };
 
-        /* ============================================================ */
-        /* PASS 1 — Environmental & Biological Calibration              */
-        /* ============================================================ */
         const forced = data.diagnostics?.forceCalibration;
         let pass1Parsed: { success: true; data: z.infer<typeof CalibrationSchema> };
         if (forced) {
@@ -936,20 +357,14 @@ Return ONLY by calling the report_calibration tool.`;
           pass1Parsed = parsed1;
         }
 
-        // Snapshot raw Pass-1 metrics BEFORE the server-side GateKeeper mutates them.
         const pass1Raw = { ...pass1Parsed.data };
 
-        /* ============================================================ */
-        /* CODE-LAYER INTERCEPT — Server-Side GateKeeper                 */
-        /* ============================================================ */
         const calibration: Calibration = {
           ...pass1Parsed.data,
           sensorClippingEvent: false,
           notes: [],
         };
 
-        // Backlit override: clamp contrast to "low-medium" to cancel out
-        // dark-hair-against-bright-background silhouette illusions.
         if (calibration.ambientLighting === "backlit") {
           if (
             calibration.computedContrast === "high" ||
@@ -963,8 +378,6 @@ Return ONLY by calling the report_calibration tool.`;
           calibration.sensorClippingEvent = true;
         }
 
-        // Neutral or conflicting undertone → sensor clipping flag so Pass 2
-        // knows the cool/warm signal cannot be trusted on its own.
         if (calibration.biologicalUndertone === "neutral") {
           calibration.sensorClippingEvent = true;
           calibration.notes.push(
@@ -972,8 +385,6 @@ Return ONLY by calling the report_calibration tool.`;
           );
         }
 
-        // Warm lamp + cool skin (or cool fluorescent + warm skin) = conflicting
-        // ambient vs biology → also a clipping event.
         const warmAmbient = calibration.ambientLighting === "warm_lamp";
         const coolAmbient = calibration.ambientLighting === "cool_fluorescent";
         const coolBio =
@@ -991,9 +402,6 @@ Return ONLY by calling the report_calibration tool.`;
 
         console.log("[analyzePersonalColor] Pass1 calibration:", calibration);
 
-        /* ============================================================ */
-        /* PASS 2 — Canonical PCCS Routing                              */
-        /* ============================================================ */
         const calibrationBlock = `=== VALIDATED PASS-1 CALIBRATION OVERRIDES (AUTHORITATIVE) ===
 ambientLighting        : ${calibration.ambientLighting}
 biologicalUndertone    : ${calibration.biologicalUndertone}
@@ -1137,8 +545,6 @@ ELIMINATION SHORTCUT (apply BEFORE walking the 12 sub-types — these are mandat
       – Feature Indicators: Unmistakable warm golden-orange, rich amber, or deep peachy skin base. Eyes striking dark amber, warm tawny brown, or true golden-green. Hair intense fiery copper red, deep golden mahogany, or rich auburn.
       – Salon Targets: Burnt pumpkin spice, rich warm ochre, fiery terracotta matte, deep forest olive.
 
-
-
 ■ WINTER GROUP — Cool Undertone, High Contrast & Vivid
   • WINTER_DEEP (Dark Winter)
       – Core Physics: Cool Temperature + Low Lightness (Value/Deep) + High Contrast.
@@ -1240,8 +646,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           return { success: false, error: "ANALYSIS_PARSING_FAILED", detail: slim.error.message };
         }
 
-        // Hydrate the full StudioColorProfile from the static dictionary using
-        // the diagnosed season key. The AI only contributes the vision read.
         const spec = SEASONS_MASTER_DATA[slim.data.season];
         const hydrated: StudioColorProfile = {
           ...spec,
@@ -1254,12 +658,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           confidenceScore: slim.data.confidenceScore,
         };
 
-        // STEP 3.7 — Dual-Track Ambient Noise Sanity Check telemetry overwrite.
-        // When the ambient-lighting pipeline flags backlit glare / yellow lamp
-        // cast / blue-light bleed AND the model has resolved to either
-        // SPRING_LIGHT or SUMMER_MUTED, we know the safety fallback fired.
-        // Choose the correct lane based on the hair-root / undertone reading
-        // so cool-neutral users aren't misrouted into SPRING_LIGHT.
         const AMBIENT_NOISE_PATTERN = /backlit|glare|yellow.*lamp|blue-?light|ambient noise/i;
         const FALLBACK_SEASONS = new Set<SeasonKey>(["SPRING_LIGHT", "SUMMER_MUTED"]);
         if (
@@ -1267,9 +665,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           typeof hydrated.detectedLighting === "string" &&
           AMBIENT_NOISE_PATTERN.test(hydrated.detectedLighting)
         ) {
-          // Decide lane from hair-root / undertone signal. LANE B (cool-neutral)
-          // wins when the model itself reported Cool/Neutral undertone OR the
-          // calculatedUndertone string mentions ash/mousy/charcoal/slate.
           const undertoneText = (slim.data.calculatedUndertone || "").toLowerCase();
           const LANE_B_HINT = /ash|mousy|charcoal|slate|grey|gray|cool|neutral/;
           const LANE_A_HINT = /warm|gold|honey|peach|amber|copper|caramel/;
@@ -1280,8 +675,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           const targetSeason: SeasonKey = leansCool ? "SUMMER_MUTED" : "SPRING_LIGHT";
           const targetSpec = SEASONS_MASTER_DATA[targetSeason];
 
-          // Re-hydrate the full dossier from the target season so palette,
-          // swatches, fabrication, accessories, etc. all stay consistent.
           hydrated.season = targetSpec.season;
           hydrated.subSeason = targetSpec.subSeason;
           hydrated.toneType = targetSpec.toneType;
@@ -1334,9 +727,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           (parsed.data.fullPalette ?? []).slice(0, 3),
         );
 
-        // STEP 4 — Persist the hydrated dossier server-side to the user's
-        // profiles row. RLS scopes the write to context.userId via the
-        // authenticated Supabase client from requireSupabaseAuth.
         try {
           const { supabase, userId } = context;
           const { error: persistError } = await supabase.from("profiles").upsert(

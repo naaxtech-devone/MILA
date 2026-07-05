@@ -40,9 +40,7 @@ export function StudioPortfolioView({
   });
   return (
     <section className="mt-10 border border-foreground/15 bg-card animate-fade-in">
-      {/* Color-Block Portfolio Header + Palette */}
       <header className="px-6 sm:px-10 pt-10 pb-8 border-b-[0.5px] border-border">
-        {/* Chip row */}
         <div className="flex items-center justify-between gap-3 flex-wrap mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-foreground text-background text-[9px] uppercase tracking-[0.32em] font-medium">
             <ShieldCheck className="h-3 w-3" /> Seoul Atelier Record
@@ -61,7 +59,6 @@ export function StudioPortfolioView({
                 />
               </button>
             )}
-            {/* Demo Portfolio badge removed */}
             {!isDemo && profile.calibrationSource && (
               <span className="text-[9px] uppercase tracking-[0.32em] text-foreground border-[0.5px] border-foreground/60 px-2 py-1">
                 {profile.confidenceLabel
@@ -93,7 +90,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         )}
 
         <div className="space-y-12">
-          {/* Header Dossier Summary */}
           <div className="border-b border-border/60 pb-6 text-center md:text-left">
             <span className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold) block mb-1">
               Dossier N° {dossierNumber}
@@ -107,7 +103,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </p>
           </div>
 
-          {/* Primary Core Tones */}
           {primaryBlocks.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-[10px] uppercase tracking-[0.32em] text-foreground font-medium inline-flex items-center gap-1.5">
@@ -128,10 +123,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
                       key={`${block.hex}-${i}`}
                       className="group relative rounded-2xl overflow-hidden border border-border shadow-sm transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-xl"
                     >
-                      <div
-                        className="w-full h-25 relative"
-                        style={{ backgroundColor: block.hex }}
-                      >
+                      <div className="w-full h-25 relative" style={{ backgroundColor: block.hex }}>
                         <span
                           className="absolute top-3 right-3 text-[8px] tracking-[0.2em] font-mono uppercase opacity-80"
                           style={{
@@ -159,7 +151,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </div>
           )}
 
-          {/* Seasonal Accent Infusions */}
           {accentBlocks.length > 0 && (
             <div className="space-y-4 pt-2">
               <h3 className="text-[10px] uppercase tracking-[0.32em] text-foreground font-medium">
@@ -197,7 +188,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </div>
           )}
 
-          {/* Disruptive Tones */}
           {omitTones.length > 0 && (
             <div className="space-y-3 pt-2">
               <h3 className="text-[10px] uppercase tracking-[0.32em] text-destructive font-medium">
@@ -211,7 +201,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </div>
           )}
 
-          {/* Diagnostic Cells */}
           <div className="grid grid-cols-1 sm:grid-cols-3 border-t-[0.5px] border-border">
             <DossierCell label="Tone Type" value={profile.toneType} />
             <DossierCell
@@ -230,7 +219,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </header>
 
-      {/* I. Full Palette Matrix */}
       <SectionBlock
         numeral="I"
         title="Atelier Palette Matrix"
@@ -247,7 +235,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         />
       </SectionBlock>
 
-      {/* II. The Beauty Canvas - Cosmetic Harmonies */}
       <div className="space-y-6 pt-8 border-t border-porcelain/30">
         <div className="flex justify-between items-end mb-2">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
@@ -259,7 +246,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pillar 1: The Signature Lip */}
           <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">The Signature Lip</h4>
@@ -289,7 +275,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </div>
           </div>
 
-          {/* Pillar 2: The Natural Flush */}
           <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">The Natural Flush</h4>
@@ -338,7 +323,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
             </div>
           </div>
 
-          {/* Pillar 3: Luminous Accents */}
           <div className="bg-card p-6 rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] space-y-6">
             <div className="text-center pb-4 border-b border-porcelain/50">
               <h4 className="font-serif text-lg text-ink">Luminous Accents</h4>
@@ -390,8 +374,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      {/* III. Textile & Material Prescriptions */}
-      {/* III. Textile Drape & Weight (Fabrication) */}
       <div className="space-y-4 pt-8 border-t border-porcelain/30">
         <div className="flex justify-between items-end mb-4">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
@@ -445,7 +427,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      {/* IV. The Denim Archive */}
       <div className="space-y-4 pt-8">
         <p className="text-[10px] uppercase tracking-[0.28em] text-(--atelier-gold)">
           Recommended Textiles · Denim
@@ -503,7 +484,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      {/* V. Exclusions */}
       <SectionBlock
         numeral="V"
         title="Colors to Avoid"
@@ -537,7 +517,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </SectionBlock>
 
-      {/* Avoid Harmony Block — Amplified */}
       <div className="space-y-4 pt-8 px-6 sm:px-10">
         <div className="flex justify-between items-end mb-2">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
@@ -552,7 +531,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      {/* VI. Analyst's Critique */}
       <section className="px-6 sm:px-10 py-8 border-t-[0.5px] border-border">
         <p className="text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold)">
           VI · Analyst's Personal Critique
@@ -570,7 +548,6 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </section>
 
-      {/* Archive Dossier */}
       <div className="px-6 sm:px-10 py-6 border-t-[0.5px] border-border flex justify-end">
         <Button
           variant="outline"
@@ -681,7 +658,6 @@ export function PaletteCard({
   swatches: Swatch[];
   fullPalette?: string[];
 }) {
-  // Prefer the curated 20-hex PCCS matrix when present; fall back to repeating swatches.
   let dots: Swatch[] = [];
   if (fullPalette && fullPalette.length > 0) {
     dots = fullPalette.slice(0, 20).map((hex) => ({ hex, name: hex.toUpperCase() }));
@@ -741,7 +717,6 @@ export function ContrastGauge({ value }: { value: string }) {
   else if (/medium-low|mid-low/.test(v)) raw = 35;
   else if (/very low|monochromatic|minimal/.test(v)) raw = 10;
   else if (/low|muted|soft|tonal/.test(v)) raw = 22;
-  // Clamp to keep the marker visually inside the track at extremes
   const pct = Math.max(4, Math.min(96, raw));
   return (
     <div className="mt-6 border-t-[0.5px] border-border pt-5">

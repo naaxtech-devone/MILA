@@ -90,7 +90,6 @@ export function CameraCapture({
     );
   }
 
-  // Frozen preview + analyzing overlay
   if (frozenPreview) {
     return (
       <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-white/15 bg-black">

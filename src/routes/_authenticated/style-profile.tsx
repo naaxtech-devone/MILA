@@ -1,8 +1,6 @@
-// src/routes/_authenticated/style-profile.tsx
-
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { type StudioColorProfile, SEASONS_MASTER_DATA } from "@/lib/analyzePersonalColor.functions";
+import { type StudioColorProfile } from "@/lib/analyzePersonalColor.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -12,7 +10,7 @@ import { ColorDossierSection } from "@/components/studio/style-profile";
 import {
   FACE_SHAPES as HOLISTIC_FACE_SHAPES,
   HAIR_TYPES as HOLISTIC_HAIR_TYPES,
-} from "@/lib/profile.functions";
+} from "@/constants/style-profile";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sheet,
@@ -33,6 +31,7 @@ import {
   type DetailedColorProfile as StudioDossier,
   type BodyType,
   SEASON_HEX_MATRIX,
+  SEASONS_MASTER_DATA,
   matrixForSubSeason,
   type StudioTelemetry,
   SEASON_DETAIL,
@@ -68,7 +67,6 @@ import { StudioPortfolioView } from "@/components/style-profile/studio-portfolio
 
 export const Route = createFileRoute("/_authenticated/style-profile")({ component: StyleProfile });
 
-/** Convert the AI/camera StudioColorProfile shape into the canonical DetailedColorProfile. */
 function studioToDossier(p: StudioColorProfile, prev?: StudioDossier): StudioDossier {
   const season = p.season as Season;
   return {
@@ -102,7 +100,6 @@ function studioToDossier(p: StudioColorProfile, prev?: StudioDossier): StudioDos
   };
 }
 
-/** Detect & normalize whatever sits in profiles.color_profile JSON. */
 function normalizeStoredProfile(raw: any): StudioDossier | null {
   if (!raw || typeof raw !== "object") return null;
   if (Array.isArray(raw.primarySwatches) && Array.isArray(raw.fabrication) && raw.stylistNote) {
@@ -141,7 +138,6 @@ function StyleProfile() {
   const portfolioRef = useRef<HTMLDivElement | null>(null);
   const localStudioUpdateRef = useRef(false);
 
-  // --- Dossier 2.0 perspective + auto-save state ---------------------------
   const [viewMode, setViewMode] = useState<"streamlined" | "detailed">("streamlined");
   const [beautyPrefs, setBeautyPrefs] = useState<string[]>([]);
   const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "synced" | "error">("idle");
@@ -162,16 +158,12 @@ function StyleProfile() {
           const json = (data as any).color_profile as any;
           setForm({
             full_name: data.full_name ?? "",
-            // Prefer JSONB color_profile as the single source of truth; fall back to mirror columns.
             skin_undertone:
               json?.undertone ?? json?.calculatedUndertone ?? data.skin_undertone ?? "",
             color_season: json?.season ?? data.color_season ?? "",
             body_type: json?.bodyType ?? data.body_type ?? "",
             selected_aesthetic: json?.selectedAesthetic ?? "",
           });
-          // Top-level columns are the source of truth. If they're null but
-          // legacy data exists inside color_profile JSONB, normalize and
-          // backfill the top-level columns on this mount.
           const topFace = (data as any).face_shape as string | null;
           const topHair = (data as any).hair_type as string | null;
           const jbFaceRaw = (json?.faceShape ?? null) as string | null;
@@ -222,15 +214,11 @@ function StyleProfile() {
             setDossier(normalized);
             setHasRealDossier(true);
           }
-          // Seed the auto-save baseline so we don't immediately re-write the row we just read.
           lastSavedRef.current = JSON.stringify({
             skin_undertone:
               (json?.undertone ?? json?.calculatedUndertone ?? data.skin_undertone) || null,
             color_season: (json?.season ?? data.color_season) || null,
             body_type: (json?.bodyType ?? data.body_type) || null,
-            // Baseline reflects what's effectively in the row after backfill —
-            // so the auto-save effect won't immediately re-write the same value,
-            // but WILL write if a user changes the pill selection.
             face_shape: resolvedFace,
             hair_type: resolvedHair,
             beauty_preferences: Array.isArray(bp)
@@ -349,8 +337,6 @@ function StyleProfile() {
     void commitManual({ body: v });
   }
 
-  // Frictionless auto-save: debounce updates to profiles whenever the user
-  // changes any dossier vector (season, undertone, body, face, hair, beauty).
   useEffect(() => {
     if (!user || !initialLoadedRef.current) return;
     const payload = {
@@ -376,7 +362,6 @@ function StyleProfile() {
       }
       lastSavedRef.current = sig;
       setSyncStatus("synced");
-      // Per-field confirmation that the DB write succeeded.
 
       console.log("[StyleProfile] auto-save OK →", {
         skin_undertone: payload.skin_undertone,
@@ -444,10 +429,6 @@ function StyleProfile() {
     toast.success("Your seasonal palette is ready.");
   }
 
-  /** Dashboard-level fine-tune override. Builds a clean StudioColorProfile
-   *  straight from SEASONS_MASTER_DATA and re-uses the full studio-complete
-   *  pipeline so the dossier, palette, beautyMap, and confidence chip all
-   *  re-hydrate together. */
   async function applyDashboardCalibration(key: keyof typeof SEASONS_MASTER_DATA, label: string) {
     const spec = SEASONS_MASTER_DATA[key];
     const profile: StudioColorProfile = {
@@ -623,7 +604,6 @@ function StyleProfile() {
               </AnimatePresence>
             </div>
             <div className="mb-10">
-              {/* Option 1 — Known Color Profile */}
               <div className="bg-card rounded-4xl border border-border shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] p-6 sm:p-8">
                 <div className="text-center">
                   <p className="atelier-kicker">Path 01 · Know Your Season</p>
@@ -715,7 +695,6 @@ function StyleProfile() {
                 </div>
               </div>
 
-              {/* Option 2 — Studio Camera Calibration */}
               <div className="mt-8">
                 <Accordion
                   type="single"

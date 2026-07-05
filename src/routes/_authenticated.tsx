@@ -6,14 +6,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { queryKeys } from "@/constants/query-keys";
-
-// ponytail: replace with a real support inbox when one exists
-const STEWARD_EMAIL = "milaadmin@gmail.com";
+import { STEWARD_EMAIL } from "@/constants/app";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
-    // Client-side gate. SSR has no Supabase session, so skip there and let
-    // the in-component fallback handle it after hydration.
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
@@ -55,7 +51,6 @@ function AuthLayout() {
     );
   }
 
-  // Suspended members see only this screen — no shell, no navigation.
   if (suspended) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-6">

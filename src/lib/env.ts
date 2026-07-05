@@ -1,6 +1,3 @@
-// Shared env validation. Server-only secrets stay in process.env at the call
-// site; client-safe vars must be resolved via import.meta.env (VITE_*) by the
-// caller before being passed here — never read secrets in client bundles.
 export function requireEnv<T extends Record<string, string | undefined>>(
   vars: T,
 ): { [K in keyof T]: string } {

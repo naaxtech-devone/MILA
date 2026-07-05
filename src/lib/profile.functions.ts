@@ -1,9 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
-
-export const FACE_SHAPES = ["Oval", "Round", "Square", "Heart", "Diamond", "Oblong"] as const;
-export const HAIR_TYPES = ["Straight/Fine", "Wavy", "Curly", "Coily/Textured"] as const;
+import { FACE_SHAPES, HAIR_TYPES } from "@/constants/style-profile";
 
 const HolisticInput = z.object({
   face_shape: z.enum(FACE_SHAPES).nullable().optional(),

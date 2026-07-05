@@ -1,8 +1,5 @@
 import { SeasonId } from "./types";
 
-/**
- * Maps legacy 4-season profiles securely to a default 16-season sub-palette.
- */
 export function migrateLegacySeason(legacySeason: string): SeasonId {
   const normalized = legacySeason.toLowerCase().trim();
 
@@ -16,7 +13,6 @@ export function migrateLegacySeason(legacySeason: string): SeasonId {
     case "winter":
       return "true_winter";
     default:
-      // If it's already an exact 16-season ID match, pass it right through
       return normalized as SeasonId;
   }
 }

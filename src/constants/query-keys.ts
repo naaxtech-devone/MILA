@@ -1,4 +1,3 @@
-// Central TanStack Query keys — fetch and invalidate sites must agree on these.
 export const queryKeys = {
   profile: (userId: string | undefined) => ["profile", userId] as const,
   feed: (userId: string | undefined) => ["feed", userId] as const,

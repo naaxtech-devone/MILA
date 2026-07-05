@@ -1,7 +1,6 @@
 import { SeasonProfile, SeasonId } from "./types";
 
 export const SEASONS_DATA: Record<SeasonId, SeasonProfile> = {
-  // --- SPRINGS ---
   light_spring: {
     id: "light_spring",
     name: "Light Spring",
@@ -49,7 +48,6 @@ export const SEASONS_DATA: Record<SeasonId, SeasonProfile> = {
     avoidColorsDescription: ["Pastel Grey", "Dusty Brown", "Cool Grey"],
   },
 
-  // --- SUMMERS ---
   light_summer: {
     id: "light_summer",
     name: "Light Summer",
@@ -92,7 +90,6 @@ export const SEASONS_DATA: Record<SeasonId, SeasonProfile> = {
     avoidColorsDescription: ["Neon Orange", "Bright Yellow", "Vivid Coral"],
   },
 
-  // --- AUTUMNS ---
   soft_autumn: {
     id: "soft_autumn",
     name: "Soft Autumn",
@@ -140,7 +137,6 @@ export const SEASONS_DATA: Record<SeasonId, SeasonProfile> = {
     avoidColorsDescription: ["Pastel Pink", "Baby Blue", "Lavender"],
   },
 
-  // --- WINTERS ---
   bright_winter: {
     id: "bright_winter",
     name: "Bright Winter",

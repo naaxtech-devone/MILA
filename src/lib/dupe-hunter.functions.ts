@@ -2,11 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChatCompletion } from "./ai.server";
+import {
+  CLOTHING_CATEGORIES as CATEGORIES,
+  CLOTHING_UNDERTONES as UNDERTONES,
+} from "@/constants/wardrobe";
 import { consumeAiCredit } from "./credits.server";
 import type { ClothingAttributes } from "./analyze-clothing.functions";
-
-const CATEGORIES = ["Tops", "Bottoms", "Outerwear", "Dresses", "Shoes", "Accessories"] as const;
-const UNDERTONES = ["Cool", "Warm", "Neutral"] as const;
 
 const Input = z.object({
   imageUrl: z.string().url(),
@@ -61,10 +62,6 @@ export type DupeHuntResult = {
   dupes: DupeMatch[];
 };
 
-/**
- * Score how strongly a product candidate matches the inspiration's
- * silhouette + color undertone + category.
- */
 function scoreCandidate(
   inspiration: ClothingAttributes,
   product: {
@@ -121,7 +118,6 @@ export const findDupes = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<DupeHuntResult> => {
     await consumeAiCredit(context.supabase, context.userId);
 
-    // Step 1 — extract structural attributes of the inspiration piece.
     const systemPrompt =
       "You are Mila — an elite luxury fashion archivist. Look at the inspiration piece in the image (likely high-end designer) and extract precise structural silhouette and color attributes so we can match budget dupes. silhouette_tags must isolate the SHAPE/CONSTRUCTION cues a dupe must match. Always call the report_clothing_attributes tool.";
 
@@ -153,7 +149,6 @@ export const findDupes = createServerFn({ method: "POST" })
     if (!call) throw new Error("AI did not return attributes.");
     const inspiration = JSON.parse(call.function.arguments) as ClothingAttributes;
 
-    // Step 2 — query candidate products (scope by category first for speed).
     const { data: candidates, error } = await context.supabase
       .from("products")
       .select(
@@ -167,7 +162,6 @@ export const findDupes = createServerFn({ method: "POST" })
       throw new Error("Couldn't search the dupe catalog.");
     }
 
-    // Step 3 — score, sort, and return top N with affiliate links.
     const ranked = (candidates ?? [])
       .filter((p) => !!p.affiliate_link)
       .map((p) => {
@@ -177,7 +171,7 @@ export const findDupes = createServerFn({ method: "POST" })
       .filter((r) => r.score > 0)
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
-        return a.product.price - b.product.price; // cheaper wins on a tie
+        return a.product.price - b.product.price;
       })
       .slice(0, data.maxResults);
 

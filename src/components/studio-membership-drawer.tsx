@@ -10,7 +10,7 @@ import { Link } from "@tanstack/react-router";
 import { Archive, AlertCircle, Check, Download, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { HUBS, DEFAULT_HUB_STORAGE_KEY } from "@/components/climate-widget";
+import { HUBS, DEFAULT_HUB_STORAGE_KEY } from "@/constants/climate";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
@@ -91,7 +91,6 @@ export function StudioMembershipDrawer({
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col bg-background">
-        {/* Header */}
         <SheetHeader className="px-6 pt-8 pb-5 border-b border-porcelain/40 flex flex-row items-end justify-between space-y-0">
           <div className="space-y-1 text-left">
             <SheetTitle className="font-serif text-2xl text-ink tracking-wide">
@@ -122,11 +121,9 @@ export function StudioMembershipDrawer({
           </button>
         </SheetHeader>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-8">
           {view === "membership" ? (
             <div className="space-y-8">
-              {/* Identity */}
               <div className="text-center space-y-1.5 pb-6 border-b border-porcelain/30">
                 <p className="font-serif text-xl text-ink">{user.fullName}</p>
                 <p className="text-xs text-stone">@{user.username}</p>
@@ -158,7 +155,6 @@ export function StudioMembershipDrawer({
                 )}
               </div>
 
-              {/* Concierge Wallet */}
               <div className="relative overflow-hidden rounded-2xl border border-porcelain/50 bg-linear-to-br from-atelier-champagne/30 via-background to-porcelain/20 p-6 shadow-atelier-soft">
                 <div
                   aria-hidden
@@ -203,7 +199,6 @@ export function StudioMembershipDrawer({
                 </div>
               </div>
 
-              {/* Quick Links */}
               <div className="space-y-px rounded-xl overflow-hidden border border-porcelain/40">
                 <Link
                   to="/style-profile"
@@ -230,7 +225,6 @@ export function StudioMembershipDrawer({
             </div>
           ) : view === "preferences" ? (
             <div className="space-y-8">
-              {/* Account Settings */}
               <div className="space-y-3">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-stone">
                   Account details
@@ -247,7 +241,6 @@ export function StudioMembershipDrawer({
                 </div>
               </div>
 
-              {/* Styling Preferences */}
               <div className="space-y-3">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-stone">
                   Styling parameters
@@ -281,7 +274,6 @@ export function StudioMembershipDrawer({
                 </div>
               </div>
 
-              {/* Danger Zone */}
               <div className="pt-4 border-t border-porcelain/30">
                 <button
                   onClick={() => {

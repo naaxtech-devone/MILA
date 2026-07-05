@@ -24,17 +24,17 @@ import {
 import {
   analyzePersonalColor as analyzeStudioColor,
   type StudioColorProfile,
-  SEASONS_MASTER_DATA,
 } from "@/lib/analyzePersonalColor.functions";
 import {
   type StudioTelemetry,
   MANUAL_SEASON_GROUPS,
   SEASON_HEX_MATRIX,
+  SEASONS_MASTER_DATA,
   KNOWN_SEASON_GROUPS,
 } from "@/constants/style-profile";
 
-export const DRAPE_COLORS = ["#FFB347", "#94A3B8", "#1E3A8A", "#F7B7A3", "#C2410C"] as const;
-export const DRAPE_LABELS = [
+const DRAPE_COLORS = ["#FFB347", "#94A3B8", "#1E3A8A", "#F7B7A3", "#C2410C"] as const;
+const DRAPE_LABELS = [
   "READING YOUR TRUE TONES…",
   "FEELING THE WARMTH IN YOUR SKIN…",
   "STUDYING THE CONTRAST IN YOUR FEATURES…",
@@ -140,8 +140,6 @@ export function VisualDiagnosticViewfinder({
     })();
     return () => {
       cancelled = true;
-      // Detach the video element first so the browser releases its reference,
-      // then explicitly stop every track so the OS camera indicator turns off.
       if (videoRef.current) {
         try {
           videoRef.current.pause();
@@ -296,8 +294,6 @@ export function VisualDiagnosticViewfinder({
     reader.readAsDataURL(file);
   }
 
-  /** Bypass the vision pipeline. Hydrate StudioColorProfile directly from
-   *  the static SEASONS_MASTER_DATA spec and forward to onComplete. */
   async function applyManualCalibration(key: keyof typeof SEASONS_MASTER_DATA, label: string) {
     const spec = SEASONS_MASTER_DATA[key];
     const profile: StudioColorProfile = {
@@ -311,7 +307,6 @@ export function VisualDiagnosticViewfinder({
       confidenceScore: 100,
     };
     setManualCalibrateOpen(false);
-    // Release camera before unmounting via parent state change.
     if (videoRef.current) {
       try {
         videoRef.current.pause();
@@ -432,7 +427,6 @@ export function VisualDiagnosticViewfinder({
         />
         <canvas ref={canvasRef} className="hidden" />
 
-        {/* Golden oval tracking guide */}
         <svg
           className="absolute inset-0 h-full w-full pointer-events-none"
           viewBox="0 0 100 140"
@@ -461,8 +455,6 @@ export function VisualDiagnosticViewfinder({
           />
         </svg>
 
-        {/* Salon draping cape — guides head & shoulder centering so landmark
-            samplers reliably hit the Cheek Apex and Iris roots. */}
         <svg
           className="absolute inset-0 h-full w-full pointer-events-none"
           viewBox="0 0 100 140"
@@ -489,7 +481,6 @@ export function VisualDiagnosticViewfinder({
           />
         </svg>
 
-        {/* Studio Telemetry Logs — collapsible workspace anchored beside the viewfinder */}
         <div className="absolute top-16 right-4 z-30 w-70 max-w-[78vw] hidden sm:block">
           <div className="border-[0.5px] border-white/20 bg-black/55 backdrop-blur-md text-white">
             <button
@@ -545,7 +536,6 @@ export function VisualDiagnosticViewfinder({
         )}
       </div>
 
-      {/* Luxury minimalist shutter capture button */}
       <div className="absolute bottom-24 inset-x-0 z-20 flex items-center justify-center">
         <button
           onClick={() => capture()}
@@ -553,16 +543,11 @@ export function VisualDiagnosticViewfinder({
           className="group relative flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label="Take photo"
         >
-          {/* Outer ring */}
           <span className="absolute inset-0 rounded-full border-2 border-white/80 bg-black/10 backdrop-blur-sm" />
-          {/* Inner core */}
           <span className="relative flex items-center justify-center h-14 w-14 rounded-full bg-white/90 shadow-sm">
             {analyzing ? <Loader2 className="h-5 w-5 animate-spin text-black/80" /> : null}
           </span>
         </button>
-        {/* Developer diagnostic — forces Pass-1 to a hardcoded "Backlit & High
-            Contrast" device state so the server-side gatekeeper's contrast
-            clamp can be verified without needing the real environment. */}
         <button
           type="button"
           onClick={() => capture({ stressTest: true })}
@@ -575,7 +560,6 @@ export function VisualDiagnosticViewfinder({
         </button>
       </div>
 
-      {/* Subtle alignment reminder above shutter */}
       {!analyzing && (
         <div className="absolute bottom-44 inset-x-0 z-10 flex justify-center pointer-events-none">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/70 font-serif italic">
@@ -584,8 +568,6 @@ export function VisualDiagnosticViewfinder({
         </div>
       )}
 
-      {/* Manual calibration override — sits well below the shutter so it
-          never competes with the primary capture ring. */}
       {!analyzing && (
         <div className="absolute bottom-6 inset-x-0 z-20 flex flex-col items-center gap-2 px-6">
           <input

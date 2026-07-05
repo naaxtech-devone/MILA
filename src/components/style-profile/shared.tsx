@@ -82,9 +82,7 @@ export function DossierField({
     <section className="space-y-4">
       <div className="space-y-1.5">
         {eyebrow && (
-          <p className="text-[9px] uppercase tracking-[0.42em] text-(--atelier-gold)">
-            {eyebrow}
-          </p>
+          <p className="text-[9px] uppercase tracking-[0.42em] text-(--atelier-gold)">{eyebrow}</p>
         )}
         <h3 className="font-serif text-2xl tracking-tight text-foreground">{title}</h3>
         {caption && (

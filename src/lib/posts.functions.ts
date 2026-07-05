@@ -15,8 +15,8 @@ export interface FeedPost {
   caption: string | null;
   created_at: string;
   generated_look_id: string | null;
-  image_url_back: string; // signed
-  image_url_front: string; // signed
+  image_url_back: string;
+  image_url_front: string;
   author_name: string | null;
   is_self: boolean;
 }
@@ -26,7 +26,7 @@ export interface FeedResponse {
   posts: FeedPost[];
 }
 
-const SIGNED_URL_TTL = 60 * 60; // 1 hour
+const SIGNED_URL_TTL = 60 * 60;
 
 function startOfTodayIso(): string {
   const d = new Date();

@@ -4,10 +4,10 @@ import { ArrowRight, Star, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { TESTIMONIALS, STEPS } from "@/constants/landing";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
-    // Members skip the pitch. SSR has no session; the landing page is public anyway.
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
     if (data.session) throw redirect({ to: "/dashboard" });
@@ -15,7 +15,6 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-// Slow and editorial — nothing bounces, nothing flashes (brand kit, Visual Style).
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
@@ -34,32 +33,6 @@ function Reveal({ children, className }: { children: React.ReactNode; className?
     </motion.section>
   );
 }
-
-const TESTIMONIALS = [
-  { name: "Amara", season: "True Summer", quote: "As a True Summer, I finally understand what to buy." },
-  { name: "Jess", season: "Soft Autumn", quote: "Mila got my face shape right from day one." },
-  { name: "Priya", season: "Deep Winter", quote: "She told me exactly which reds are mine. Not red — mine." },
-  { name: "Sofia", season: "Light Spring", quote: "One tap before work. I stopped second-guessing the mirror." },
-  { name: "Renee", season: "True Autumn", quote: "The first app that talks about my shape without talking around it." },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Tell Mila who you are",
-    body: "Three questions, under a minute. Your colour season, your silhouette, your features.",
-  },
-  {
-    n: "02",
-    title: "Get your look",
-    body: "Outfit, hair, and makeup for today — tuned to your palette and the weather outside.",
-  },
-  {
-    n: "03",
-    title: "Post and discover",
-    body: "Share your look, unlock the feed, and see how women with your season dress in real life.",
-  },
-];
 
 function SeasonTag({ season }: { season: string }) {
   return (
@@ -85,7 +58,6 @@ function CtaButton({ children = "Get your first look" }: { children?: React.Reac
 function LandingPage() {
   return (
     <div className="min-h-screen">
-      {/* Nav */}
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
         <span className="font-serif text-xl font-bold tracking-[0.35em] text-foreground">MILA</span>
         <div className="flex items-center gap-4">
@@ -99,7 +71,6 @@ function LandingPage() {
         </div>
       </header>
 
-      {/* Hero — show the output, not the tool */}
       <Reveal className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-10 sm:pt-16 lg:grid-cols-2">
         <div>
           <p className="atelier-kicker">Your AI stylist</p>
@@ -118,7 +89,6 @@ function LandingPage() {
           </div>
         </div>
 
-        {/* Generated look result card — the hero visual per the kit */}
         <div className="atelier-card relative overflow-hidden p-7 sm:p-9">
           <div className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-atelier-champagne/25 blur-3xl" />
           <div className="relative">
@@ -139,7 +109,9 @@ function LandingPage() {
             <div className="mt-6 grid grid-cols-2 gap-6 border-t border-border pt-5">
               <div>
                 <p className="atelier-kicker">Hair</p>
-                <p className="mt-1 text-sm text-foreground">Low knot, centre part — humidity-proof</p>
+                <p className="mt-1 text-sm text-foreground">
+                  Low knot, centre part — humidity-proof
+                </p>
               </div>
               <div>
                 <p className="atelier-kicker">Makeup</p>
@@ -150,7 +122,6 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* Social proof strip */}
       <Reveal className="mx-auto w-full max-w-6xl px-6 pb-24">
         <div className="flex snap-x gap-4 overflow-x-auto pb-2">
           {TESTIMONIALS.map((t) => (
@@ -171,7 +142,6 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* How it works */}
       <Reveal className="mx-auto w-full max-w-6xl px-6 pb-24">
         <p className="atelier-kicker">How it works</p>
         <h2 className="mt-2 font-serif">Three steps to dressed</h2>
@@ -186,7 +156,6 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* The Dossier */}
       <Reveal className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-24 lg:grid-cols-2">
         <div>
           <p className="atelier-kicker">The Style Dossier</p>
@@ -226,7 +195,6 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* Dupe Hunter */}
       <Reveal className="mx-auto w-full max-w-6xl px-6 pb-24">
         <div className="atelier-card atelier-hero-card p-8 sm:p-12">
           <p className="atelier-kicker">Dupe Hunter</p>
@@ -254,16 +222,13 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* Community */}
       <Reveal className="mx-auto w-full max-w-6xl px-6 pb-24">
         <p className="atelier-kicker">The feed</p>
-        <h2 className="mt-2 max-w-xl font-serif">
-          A feed that actually makes sense for you.
-        </h2>
+        <h2 className="mt-2 max-w-xl font-serif">A feed that actually makes sense for you.</h2>
         <p className="mt-4 max-w-lg text-sm leading-relaxed">
           Only the looks that could work for your season — real outfits from women who share your
-          palette, not whatever's trending. Share your look, unlock the feed. Everyone here
-          actually dresses with intention.
+          palette, not whatever's trending. Share your look, unlock the feed. Everyone here actually
+          dresses with intention.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           {["True Summer", "Soft Autumn", "Deep Winter", "Light Spring"].map((s) => (
@@ -272,7 +237,6 @@ function LandingPage() {
         </div>
       </Reveal>
 
-      {/* Final CTA */}
       <Reveal className="mx-auto w-full max-w-6xl px-6 pb-24">
         <div className="atelier-card p-10 text-center sm:p-16">
           <h2 className="font-serif">Style that knows you.</h2>

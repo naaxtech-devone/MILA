@@ -3,7 +3,8 @@ import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Sparkles, Loader2, CheckCircle2, Wand2, Bookmark } from "lucide-react";
-import { ClimateWidget, ClimateGlyph, type ClimateState } from "@/components/climate-widget";
+import { ClimateWidget, ClimateGlyph } from "@/components/climate-widget";
+import type { ClimateState } from "@/constants/climate";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -25,6 +26,7 @@ import { deriveColorMetrics } from "@/lib/profile-color";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
 import { queryKeys } from "@/constants/query-keys";
+import { VIBES } from "@/constants/app";
 
 const cardContainerVariants: Variants = {
   hidden: { opacity: 1 },
@@ -47,7 +49,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-const VIBES = ["Casual", "Business Casual", "Business Attire", "Formal", "Date Night"] as const;
 type Vibe = (typeof VIBES)[number];
 
 function greet() {
@@ -83,8 +84,6 @@ function Dashboard() {
           beauty_preferences: null,
         };
       const m = deriveColorMetrics(data as any);
-      // Prefer the 16-season subSeason value (e.g. "Spring Soft / PCCS Light & Soft")
-      // stored in color_profile JSONB over the legacy 4-season mirror column.
       const json = (data as any).color_profile as {
         subSeason?: string;
         season?: string;

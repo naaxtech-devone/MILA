@@ -53,7 +53,6 @@ export function PostCanvas({ post }: { post: FeedPost }) {
           </div>
         )}
 
-        {/* Front-camera portrait — top-left circular hairline */}
         {post.image_url_front && (
           <div className="absolute top-4 left-4 h-20 w-20 md:h-24 md:w-24 rounded-full overflow-hidden border-2 border-atelier-ivory shadow-atelier-float ring-1 ring-ink/10">
             <img

@@ -156,7 +156,6 @@ export const generateDailyLook = createServerFn({ method: "POST" })
     if (!data.bodyType?.trim())
       throw new Error("Body type missing from profile. Complete your Studio dossier first.");
 
-    // Build the profile + hair lines conditionally — no silent "unspecified" placeholders.
     const profileLines = [
       `- Body type: ${data.bodyType}`,
       `- 16-season color profile: ${colorSeasonValue} (AUTHORITATIVE — every color reference in outfit/hair/makeup MUST be drawn from this exact season; do NOT substitute a different season name)`,
@@ -211,9 +210,6 @@ ${hairRule}
 - Tone: read like a luxury fashion editorial — confident, precise, never generic.
 
 Always call the report_daily_look tool.`;
-
-    // Server-side trace: full prompt + interpolated profile values so we can
-    // confirm that the AI is receiving the user's real dossier vectors.
 
     console.log("[generateDailyLook] resolved profile inputs", {
       bodyType: data.bodyType,

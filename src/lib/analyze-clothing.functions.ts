@@ -2,13 +2,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChatCompletion } from "./ai.server";
+import {
+  CLOTHING_CATEGORIES as CATEGORIES,
+  CLOTHING_UNDERTONES as UNDERTONES,
+} from "@/constants/wardrobe";
 
-const CATEGORIES = ["Tops", "Bottoms", "Outerwear", "Dresses", "Shoes", "Accessories"] as const;
-const UNDERTONES = ["Cool", "Warm", "Neutral"] as const;
 const MODES = ["catalog", "dupe-hunt"] as const;
 export type AnalyzeClothingMode = (typeof MODES)[number];
 
-// Strict Runtime Zod Schema matching your database constraints
 const ClothingAttributesSchema = z.object({
   name: z.string().max(100),
   category: z.enum(CATEGORIES),
@@ -96,7 +97,6 @@ export const analyzeClothing = createServerFn({ method: "POST" })
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("AI did not return attributes.");
 
-    // Safety check: parse arguments and strictly validate via Zod before passing back
     const rawArguments = JSON.parse(call.function.arguments);
     const validatedData = ClothingAttributesSchema.parse(rawArguments);
 

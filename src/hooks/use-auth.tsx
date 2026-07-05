@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signOut: async () => {
           await supabase.auth.signOut();
-          // Hard nav so every caller lands on the public landing page with clean state.
           window.location.href = "/";
         },
       }}

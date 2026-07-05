@@ -7,27 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-
-const CREDIT_PACKS: { id: string; name: string; description: string; price: string }[] = [
-  {
-    id: "mila_pack_small",
-    name: "Mila Daily Pack",
-    description: "+10 styling credits — a week of effortless looks.",
-    price: "$1.99",
-  },
-  {
-    id: "mila_pack_large",
-    name: "Mila Studio Pack",
-    description: "+50 styling credits — for the seriously well-dressed.",
-    price: "$5.99",
-  },
-  {
-    id: "mila_pack_unlimited",
-    name: "Mila Unlimited",
-    description: "Unlimited daily styling — your studio never closes.",
-    price: "$14.99",
-  },
-];
+import { CREDIT_PACKS } from "@/constants/app";
 
 export function UpgradeSlotsDialog({
   open,

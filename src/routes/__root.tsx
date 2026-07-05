@@ -10,10 +10,10 @@ import {
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ThemeProvider, THEME_STORAGE_KEY } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
+import { THEME_STORAGE_KEY } from "@/constants/app";
 import { Toaster } from "@/components/ui/sonner";
 
-// Runs before first paint so a persisted/system dark theme never flashes light.
 const themeInitScript = `(function(){try{var t=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}})()`;
 
 function NotFoundComponent() {
@@ -81,8 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Mila — Your stylist. Every morning." },
       {
         name: "description",
-        content:
-          "Your AI personal stylist. Daily outfits built on your colour season and shape.",
+        content: "Your AI personal stylist. Daily outfits built on your colour season and shape.",
       },
       { name: "author", content: "Mila" },
       { property: "og:title", content: "Mila — Your stylist. Every morning." },

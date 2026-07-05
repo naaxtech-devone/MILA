@@ -209,7 +209,6 @@ export function StudioCameraDrawer({
               </SheetDescription>
             </SheetHeader>
 
-            {/* Daily Drop CTA — prominent entry into the dual-capture flow */}
             <button
               type="button"
               onClick={() => setPostingOpen(true)}
@@ -233,7 +232,6 @@ export function StudioCameraDrawer({
           </>
         )}
 
-        {/* Glassmorphic sliding pill toggle */}
         {!postingOpen && (
           <div
             role="tablist"
@@ -273,7 +271,6 @@ export function StudioCameraDrawer({
           </div>
         )}
 
-        {/* Active lens window */}
         {!postingOpen && (
           <div className="max-w-xl mx-auto">
             {mode === "look-analysis" && (

@@ -4,9 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 import { requireEnv } from "@/lib/env";
 
-// Verifies the bearer JWT on protected server functions and injects
-// { supabase, userId, claims } into the handler context. The Supabase
-// client it hands out carries the caller's token, so RLS applies.
 export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
     const { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } = requireEnv({
@@ -57,8 +54,6 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       throw new Error("Unauthorized: No user ID found in token");
     }
 
-    // Suspended members keep a valid session but lose access to every
-    // protected server function until a steward reinstates them.
     const { data: profile } = await supabase
       .from("profiles")
       .select("suspended")

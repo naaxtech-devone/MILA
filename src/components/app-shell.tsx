@@ -39,7 +39,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const analyze = useServerFn(analyzeOutfit);
 
-  // Shared queries — keyed identically to dashboard/style-profile so cache is reused.
   const { data: profile } = useQuery({
     queryKey: queryKeys.profile(user?.id),
     queryFn: async () => {
@@ -132,7 +131,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col w-full">
-      {/* Sticky glassmorphic top navigation */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-porcelain/30">
         <div className="max-w-7xl mx-auto h-16 px-5 md:px-8 flex items-center justify-between gap-6 relative">
           <Link
@@ -231,7 +229,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/* Mobile floating luxury tab bar */}
       <nav
         className="md:hidden fixed left-3 right-3 z-50 flex items-center justify-around rounded-[28px] px-5 py-2.5"
         style={{

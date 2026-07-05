@@ -1,6 +1,3 @@
-// Provider-agnostic client for any OpenAI-compatible chat-completions API.
-// Configured via AI_BASE_URL, AI_API_KEY and AI_MODEL.
-
 type ChatCompletionRequest = {
   messages: Array<Record<string, unknown>>;
   tools?: Array<Record<string, unknown>>;

@@ -21,9 +21,7 @@ const VIBES = [
   "Modern Classic",
 ];
 
-// Curated name → hex map for every color referenced in SEASONS_DATA.
 const COLOR_HEX: Record<string, string> = {
-  // Springs
   "Baby Pink": "#F8C8D4",
   "Mint Green": "#B8E6C9",
   "Soft Peach": "#FBD3B4",
@@ -40,7 +38,6 @@ const COLOR_HEX: Record<string, string> = {
   "Bright Turquoise": "#2EB6B3",
   "Sea Green": "#3CAE8B",
   "Vivid Yellow": "#F4D03F",
-  // Summers
   Lavender: "#C7B8E0",
   "Powder Blue": "#B8CFE3",
   "Rose Pink": "#D98C9B",
@@ -57,7 +54,6 @@ const COLOR_HEX: Record<string, string> = {
   "Slate Grey": "#7D848C",
   "Soft Rose": "#D2A8AC",
   Charcoal: "#2B2B2F",
-  // Autumns
   "Olive Green": "#7A7A3D",
   Beige: "#D6C3A3",
   "Warm Pink": "#D38A86",
@@ -74,7 +70,6 @@ const COLOR_HEX: Record<string, string> = {
   "Deep Forest Green": "#234734",
   "Dark Chocolate": "#3B2618",
   Mustard: "#C99A2E",
-  // Winters
   "Royal Blue": "#2747B0",
   Fuchsia: "#C8157A",
   "Pure White": "#FAFAFA",
@@ -108,7 +103,6 @@ const MILA_TAKES = [
   "Modern, low-effort balance — built for an unscripted day.",
 ];
 
-// Curated Spring Soft / PCCS Light & Soft palette combinations.
 const CURATED_MIXES: Array<{
   base: { name: string; hex: string };
   statement: { name: string; hex: string };
@@ -163,7 +157,6 @@ export function generateDailyPalette(userSeasonId: SeasonId): DailyPalette {
   void hexFor;
   void VIBES;
 
-  // Rotate through curated mixes, ensuring we don't repeat the previous one.
   let nextIndex = Math.floor(Math.random() * CURATED_MIXES.length);
   if (CURATED_MIXES.length > 1 && nextIndex === lastMixIndex) {
     nextIndex = (nextIndex + 1) % CURATED_MIXES.length;

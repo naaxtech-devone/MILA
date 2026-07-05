@@ -7,7 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { FACE_SHAPES, HAIR_TYPES, updateHolisticProfile } from "@/lib/profile.functions";
+import { updateHolisticProfile } from "@/lib/profile.functions";
+import { FACE_SHAPES, HAIR_TYPES } from "@/constants/style-profile";
 import { cn } from "@/lib/utils";
 import { queryKeys } from "@/constants/query-keys";
 
@@ -73,7 +74,6 @@ export function HolisticProfileForm({ userId, initial }: Props) {
         </p>
       </div>
 
-      {/* Face Shape */}
       <div className="space-y-3">
         <label className="text-xs uppercase tracking-[0.2em] text-ink font-medium block">
           Face Shape
@@ -108,7 +108,6 @@ export function HolisticProfileForm({ userId, initial }: Props) {
         )}
       </div>
 
-      {/* Hair Type */}
       <div className="space-y-3 pt-4 border-t border-porcelain/40">
         <label className="text-xs uppercase tracking-[0.2em] text-ink font-medium block">
           Hair Type

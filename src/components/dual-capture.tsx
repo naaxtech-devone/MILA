@@ -113,7 +113,6 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
     stopStream();
   }
 
-  // Review step
   if (step === "review" && back && front) {
     return (
       <div className="space-y-5">

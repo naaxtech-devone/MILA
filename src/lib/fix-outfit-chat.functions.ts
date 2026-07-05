@@ -45,7 +45,6 @@ export const fixOutfitChat = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data, context }) => {
-    // Credit gate — throws "INSUFFICIENT_CREDITS" if depleted.
     await consumeAiCredit(context.supabase, context.userId);
 
     const systemPrompt = `You are Mila, an elite, highly perceptive personal fashion stylist trained in specialized color theory and balance. Your tone is authoritative, elegant, and highly tailored. Use the user's saved 16-season profile (${data.colorSeason}) and body type (${data.bodyType}) to guide their wardrobe tweaks, weather choices, and travel looks with precision. Keep replies under three sentences, never apologetic, never tentative. When lighting or the photo isn't ideal, attribute it confidently to "the studio light" — never to user error. Do not re-evaluate the entire outfit score unless the user explicitly asks "Re-score my outfit". Always call the report_stylist_reply tool.`;

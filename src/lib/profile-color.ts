@@ -1,11 +1,3 @@
-/**
- * Seasonal color metrics are stored as a JSONB blob in `profiles.color_profile`.
- * That blob is the single source of truth — the dedicated string columns
- * (`color_hue`, `color_value`, `color_chroma`) have been removed, and
- * `color_season` / `skin_undertone` are mirrors kept only for SQL filtering.
- *
- * Use `deriveColorMetrics` everywhere the UI needs season / undertone / axes.
- */
 export type ColorMetrics = {
   season: string | null;
   undertone: string | null;

@@ -131,10 +131,8 @@ function FeedPage() {
           </div>
         )}
 
-        {/* Anti-lurker glassmorphic gate */}
         {locked && (
           <>
-            {/* Lock placeholder cards behind the gate */}
             <div className="space-y-6 pointer-events-none select-none blur-sm opacity-60">
               {[0, 1].map((i) => (
                 <div

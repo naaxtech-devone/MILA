@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { THEME_STORAGE_KEY } from "@/constants/app";
 
 export type Theme = "light" | "dark" | "system";
-
-export const THEME_STORAGE_KEY = "mila-theme";
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -19,7 +18,6 @@ function applyTheme(theme: Theme) {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("system");
 
-  // Read persisted choice after mount (localStorage is unavailable during SSR).
   useEffect(() => {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === "light" || stored === "dark" || stored === "system") {

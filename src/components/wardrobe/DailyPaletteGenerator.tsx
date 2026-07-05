@@ -51,7 +51,6 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
 
   return (
     <div className="bg-card rounded-4xl shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] border border-border p-5 space-y-5">
-      {/* Eyebrow Row */}
       <div className="flex items-center justify-between">
         <span className="atelier-kicker">{today}</span>
         <span
@@ -63,7 +62,6 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
         <span className="atelier-kicker">Mix {String(mixCount).padStart(2, "0")}</span>
       </div>
 
-      {/* Color Cards */}
       <div className="grid grid-cols-3 gap-3">
         {swatches.map((s, i) => (
           <div
@@ -89,7 +87,6 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
         ))}
       </div>
 
-      {/* Insight Copy */}
       <div className="rounded-xl bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) p-3">
         <div className="flex items-start gap-2">
           <Sparkles className="h-4 w-4 text-(--atelier-gold) mt-0.5 shrink-0" />
@@ -102,7 +99,6 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex gap-2">
         <button
           onClick={() => setSaved((s) => !s)}

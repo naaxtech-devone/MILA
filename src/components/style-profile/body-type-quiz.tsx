@@ -8,17 +8,14 @@ export type Drape = "structured" | "waist" | "relaxed";
 export type Balance = "aligned" | "hips" | "upper";
 
 export function resolveBodyFromQuiz(drape: Drape, balance: Balance): BodyType {
-  // Waist-defined blazers + curve at the hips = clear hourglass / pear story.
   if (drape === "waist") {
     if (balance === "hips") return "Pear";
-    return "Hourglass"; // aligned or upper-strong with a defined waist
+    return "Hourglass";
   }
-  // Structured shoulder line.
   if (drape === "structured") {
-    if (balance === "hips") return "Hourglass"; // shoulders match a hip curve
-    return "Inverted Triangle"; // aligned or upper-strong
+    if (balance === "hips") return "Hourglass";
+    return "Inverted Triangle";
   }
-  // Relaxed all over.
   if (balance === "hips") return "Pear";
   return "Rectangle";
 }
