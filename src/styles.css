@@ -178,8 +178,8 @@
   --atelier-shadow-soft: 0 18px 50px -35px oklch(0 0 0 / 70%);
   --atelier-shadow-float: 0 24px 80px -45px oklch(0 0 0 / 80%);
   --atelier-gold: #c9a96e;
-  --atelier-gold-light: #f5ecd9;
-  --atelier-gold-muted: #e8d5b0;
+  --atelier-gold-light: rgb(201 169 110 / 14%);
+  --atelier-gold-muted: rgb(201 169 110 / 40%);
   --body-foreground: oklch(0.74 0.015 70);
   --atelier-card-shadow:
     0 4px 24px rgba(0, 0, 0, 0.35),

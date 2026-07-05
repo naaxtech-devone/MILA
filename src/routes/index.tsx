@@ -3,6 +3,7 @@ import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Star, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -87,12 +88,15 @@ function LandingPage() {
       {/* Nav */}
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
         <span className="font-serif text-xl font-bold tracking-[0.35em] text-foreground">MILA</span>
-        <Link
-          to="/login"
-          className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Sign in
-        </Link>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <Link
+            to="/login"
+            className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Sign in
+          </Link>
+        </div>
       </header>
 
       {/* Hero — show the output, not the tool */}
