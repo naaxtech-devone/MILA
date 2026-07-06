@@ -214,6 +214,7 @@ export type Database = {
           color_profile: Json | null;
           color_season: string | null;
           created_at: string;
+          default_location: string | null;
           face_shape: string | null;
           full_name: string | null;
           hair_type: string | null;
@@ -229,6 +230,7 @@ export type Database = {
           color_profile?: Json | null;
           color_season?: string | null;
           created_at?: string;
+          default_location?: string | null;
           face_shape?: string | null;
           full_name?: string | null;
           hair_type?: string | null;
@@ -244,6 +246,7 @@ export type Database = {
           color_profile?: Json | null;
           color_season?: string | null;
           created_at?: string;
+          default_location?: string | null;
           face_shape?: string | null;
           full_name?: string | null;
           hair_type?: string | null;

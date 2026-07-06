@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/select";
 import {
   HUBS,
-  DEFAULT_HUB_STORAGE_KEY,
   type ClimateIcon,
   type ClimateState,
   type ClimateCondition,
 } from "@/constants/climate";
+import { useAuth } from "@/hooks/use-auth";
+import { fetchDefaultHubId, localDefaultHubId } from "@/lib/default-hub";
 
 function iconFor(code: number): ClimateIcon {
   if (code === 0 || code === 1) return "sun";
@@ -122,6 +123,7 @@ export function ClimateWidget({
   value: ClimateState;
   onChange: (c: ClimateState) => void;
 }) {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [hubId, setHubId] = useState<string>("manila");
   // ponytail: seq guard so a slow response can't overwrite a newer selection
@@ -150,7 +152,11 @@ export function ClimateWidget({
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          const live = await fetchClimate(pos.coords.latitude, pos.coords.longitude, "Your location");
+          const live = await fetchClimate(
+            pos.coords.latitude,
+            pos.coords.longitude,
+            "Your location",
+          );
           if (req === seq.current) onChange(live);
         } catch {
         } finally {
@@ -165,10 +171,17 @@ export function ClimateWidget({
   }
 
   useEffect(() => {
-    const stored = localStorage.getItem(DEFAULT_HUB_STORAGE_KEY);
-    selectHub((HUBS.find((h) => h.id === stored) ?? HUBS[0]).id);
+    // Profile value wins; localStorage covers pre-auth render and offline.
+    let cancelled = false;
+    (async () => {
+      const remote = user ? await fetchDefaultHubId(user.id) : null;
+      if (!cancelled) selectHub(remote ?? localDefaultHubId() ?? HUBS[0].id);
+    })();
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.id]);
 
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-white/20 bg-background/40 backdrop-blur px-4 py-3 min-w-55">

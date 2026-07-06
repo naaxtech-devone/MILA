@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,8 @@ import { Link } from "@tanstack/react-router";
 import { Archive, AlertCircle, Check, Download, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { HUBS, DEFAULT_HUB_STORAGE_KEY } from "@/constants/climate";
+import { HUBS } from "@/constants/climate";
+import { fetchDefaultHubId, localDefaultHubId, saveDefaultHubId } from "@/lib/default-hub";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
@@ -37,11 +38,19 @@ export function StudioMembershipDrawer({
     "membership",
   );
   const { user: authUser, signOut } = useAuth();
-  const [defaultHubId, setDefaultHubId] = useState<string>(
-    () =>
-      (typeof localStorage !== "undefined" && localStorage.getItem(DEFAULT_HUB_STORAGE_KEY)) ||
-      HUBS[0].id,
-  );
+  const [defaultHubId, setDefaultHubId] = useState<string>(() => localDefaultHubId() ?? HUBS[0].id);
+
+  useEffect(() => {
+    // Profile is the cross-device source of truth; refresh when the drawer opens.
+    if (!isOpen || !authUser) return;
+    let cancelled = false;
+    fetchDefaultHubId(authUser.id).then((id) => {
+      if (!cancelled && id) setDefaultHubId(id);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, authUser]);
   const [exporting, setExporting] = useState(false);
 
   async function downloadData() {
@@ -294,8 +303,8 @@ export function StudioMembershipDrawer({
                   <button
                     key={h.id}
                     onClick={() => {
-                      localStorage.setItem(DEFAULT_HUB_STORAGE_KEY, h.id);
                       setDefaultHubId(h.id);
+                      void saveDefaultHubId(authUser?.id, h.id);
                       setView("preferences");
                     }}
                     className="w-full flex items-center justify-between px-5 py-4 hover:bg-porcelain/20 transition-colors"
