@@ -32,6 +32,10 @@ CREATE TABLE public.profiles (
   hair_type TEXT,
   -- The app saves arrays of preference tags; readers tolerate objects too
   beauty_preferences JSONB NOT NULL DEFAULT '[]'::jsonb,
+  -- Default Climate Sync Hub id slug (e.g. 'manila') from the app's HUBS
+  -- constant; label/coords derive client-side. Lenient length guard on
+  -- purpose — not an enum/FK, invalid values are simply ignored in the app.
+  default_location TEXT CHECK (default_location IS NULL OR length(default_location) <= 64),
   -- Admin-controlled; column grants below prevent users from clearing it
   suspended BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -204,6 +208,9 @@ ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 --    (Postgres grants EXECUTE to PUBLIC by default on new functions).
 --    Signature must stay (_user_id, _role): admin.functions.ts calls it by
 --    name via supabase.rpc("has_role", { _user_id, _role }).
+--    Self-scoped: signed-in users get a real answer only for their own uid
+--    (prevents probing who the admins are via /rest/v1/rpc/has_role); the
+--    service role (auth.uid() IS NULL) may query anyone.
 -- ============================================================================
 CREATE OR REPLACE FUNCTION public.has_role(_user_id uuid, _role public.app_role)
 RETURNS boolean
@@ -212,9 +219,10 @@ STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = _role
-  )
+  SELECT ((select auth.uid()) = _user_id OR (select auth.uid()) IS NULL)
+     AND EXISTS (
+       SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = _role
+     )
 $$;
 
 REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM PUBLIC, anon;
@@ -321,9 +329,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE
 REVOKE ALL ON public.profiles FROM authenticated;
 GRANT SELECT ON public.profiles TO authenticated;
 GRANT INSERT (id, full_name, username, skin_undertone, color_season, body_type,
-              color_profile, face_shape, hair_type, beauty_preferences, updated_at),
+              color_profile, face_shape, hair_type, beauty_preferences,
+              default_location, updated_at),
       UPDATE (id, full_name, username, skin_undertone, color_season, body_type,
-              color_profile, face_shape, hair_type, beauty_preferences, updated_at)
+              color_profile, face_shape, hair_type, beauty_preferences,
+              default_location, updated_at)
   ON public.profiles TO authenticated;
 
 -- ============================================================================
