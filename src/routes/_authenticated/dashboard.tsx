@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
+import { greet } from "@/lib/greet";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
 import { VIBES } from "@/constants/app";
@@ -46,14 +47,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 type Vibe = (typeof VIBES)[number];
-
-function greet() {
-  const h = new Date().getHours();
-  if (h < 5) return "Still up";
-  if (h < 12) return "Good morning";
-  if (h < 18) return "Good afternoon";
-  return "Good evening";
-}
 
 function Dashboard() {
   const { user } = useAuth();
