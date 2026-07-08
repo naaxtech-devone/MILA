@@ -235,7 +235,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         />
       </SectionBlock>
 
-      <div className="space-y-6 pt-8 border-t border-porcelain/30">
+      <div className="space-y-6 px-9 pt-8 border-t border-porcelain/30">
         <div className="flex justify-between items-end mb-2">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
             The Beauty Canvas
@@ -374,7 +374,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      <div className="space-y-4 pt-8 border-t border-porcelain/30">
+      <div className="space-y-4 px-9 pt-8 border-t border-porcelain/30">
         <div className="flex justify-between items-end mb-4">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
             Textile Drape & Weight
@@ -427,7 +427,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </div>
 
-      <div className="space-y-4 pt-8">
+      <div className="space-y-4 px-9 py-8">
         <p className="text-[10px] uppercase tracking-[0.28em] text-(--atelier-gold)">
           Recommended Textiles · Denim
         </p>
@@ -517,7 +517,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         </div>
       </SectionBlock>
 
-      <div className="space-y-4 pt-8 px-6 sm:px-10">
+      <div className="space-y-4 py-8 px-6 sm:px-10">
         <div className="flex justify-between items-end mb-2">
           <h3 className="text-xs uppercase tracking-[0.2em] text-ink font-semibold">
             Disruptive Tones
