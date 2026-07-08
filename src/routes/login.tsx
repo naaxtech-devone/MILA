@@ -33,6 +33,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { submitSupportMessage } from "@/lib/support.functions";
+import { passwordChecks } from "@/constants/password";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -53,14 +54,6 @@ const authSchema = z.object({
 });
 
 type AuthFormValues = z.infer<typeof authSchema>;
-
-const passwordChecks = [
-  { label: "At least 12 characters", test: (p: string) => p.length >= 12 },
-  { label: "One lowercase letter", test: (p: string) => /[a-z]/.test(p) },
-  { label: "One uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
-  { label: "One digit", test: (p: string) => /[0-9]/.test(p) },
-  { label: "One symbol", test: (p: string) => /[^a-zA-Z0-9]/.test(p) },
-];
 
 function LoginPage() {
   const { session, loading } = useAuth();

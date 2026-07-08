@@ -7,10 +7,13 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Link } from "@tanstack/react-router";
-import { Archive, AlertCircle, Check, Download, Loader2 } from "lucide-react";
+import { Archive, AlertCircle, Check, Download, Loader2, X } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { Input } from "@/components/ui/input";
 import { HUBS } from "@/constants/climate";
+import { passwordChecks } from "@/constants/password";
 import { fetchDefaultHubId, localDefaultHubId, saveDefaultHubId } from "@/lib/default-hub";
 
 interface StudioMembershipDrawerProps {
@@ -34,9 +37,9 @@ export function StudioMembershipDrawer({
   onAcquirePasses,
   onWatchEditorial,
 }: StudioMembershipDrawerProps) {
-  const [view, setView] = useState<"membership" | "preferences" | "location" | "privacy">(
-    "membership",
-  );
+  const [view, setView] = useState<
+    "membership" | "preferences" | "location" | "privacy" | "security"
+  >("membership");
   const { user: authUser, signOut } = useAuth();
   const [defaultHubId, setDefaultHubId] = useState<string>(() => localDefaultHubId() ?? HUBS[0].id);
 
@@ -52,6 +55,53 @@ export function StudioMembershipDrawer({
     };
   }, [isOpen, authUser]);
   const [exporting, setExporting] = useState(false);
+
+  const [newEmail, setNewEmail] = useState("");
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+  const newPasswordOk = passwordChecks.every((c) => c.test(newPassword));
+
+  async function changeEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newEmail.trim() || newEmail === authUser?.email) return;
+    setEmailSubmitting(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ email: newEmail.trim() });
+      if (error) throw error;
+      toast.success("Check both your old and new inbox to confirm the email change.");
+      setNewEmail("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't update email.");
+    } finally {
+      setEmailSubmitting(false);
+    }
+  }
+
+  async function changePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newPasswordOk || newPassword !== confirmPassword || !authUser?.email) return;
+    setPasswordSubmitting(true);
+    try {
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email: authUser.email,
+        password: currentPassword,
+      });
+      if (reauthError) throw new Error("Current password is incorrect.");
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast.success("Password updated.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't update password.");
+    } finally {
+      setPasswordSubmitting(false);
+    }
+  }
 
   async function downloadData() {
     if (!authUser || exporting) return;
@@ -89,6 +139,7 @@ export function StudioMembershipDrawer({
     preferences: { title: "Preferences", sub: "Account Configuration" },
     location: { title: "Default Location", sub: "Climate Sync Hub" },
     privacy: { title: "Privacy & Data", sub: "Your Information" },
+    security: { title: "Email & Security", sub: "Login Credentials" },
   }[view];
 
   const missing = [
@@ -239,7 +290,10 @@ export function StudioMembershipDrawer({
                   Account details
                 </p>
                 <div className="rounded-xl border border-porcelain/40 overflow-hidden">
-                  <button className="w-full flex items-center justify-between px-5 py-4 bg-background hover:bg-porcelain/20 transition-colors border-b border-porcelain/30">
+                  <button
+                    onClick={() => setView("security")}
+                    className="w-full flex items-center justify-between px-5 py-4 bg-background hover:bg-porcelain/20 transition-colors border-b border-porcelain/30"
+                  >
                     <span className="text-sm text-ink">Email &amp; Security</span>
                     <span className="text-stone">→</span>
                   </button>
@@ -322,6 +376,92 @@ export function StudioMembershipDrawer({
               <p className="text-[10px] text-stone leading-relaxed px-1">
                 Your default hub sets the dashboard climate sync each time you open the studio.
               </p>
+            </div>
+          ) : view === "security" ? (
+            <div className="space-y-8">
+              <form onSubmit={changeEmail} className="space-y-3">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-stone">Email address</p>
+                <p className="text-xs text-stone">
+                  Current: <span className="text-ink">{authUser?.email}</span>
+                </p>
+                <Input
+                  type="email"
+                  placeholder="new@email.com"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  className="h-10"
+                />
+                <button
+                  type="submit"
+                  disabled={emailSubmitting || !newEmail.trim() || newEmail === authUser?.email}
+                  className="w-full py-3 rounded-lg bg-ink text-white text-[11px] uppercase tracking-[0.25em] font-semibold hover:bg-ink/90 transition-colors disabled:opacity-50"
+                >
+                  {emailSubmitting ? "Sending confirmation…" : "Update Email"}
+                </button>
+              </form>
+
+              <form
+                onSubmit={changePassword}
+                className="space-y-3 pt-6 border-t border-porcelain/30"
+              >
+                <p className="text-[10px] uppercase tracking-[0.25em] text-stone">
+                  Change password
+                </p>
+                <Input
+                  type="password"
+                  placeholder="Current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="h-10"
+                />
+                <Input
+                  type="password"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="h-10"
+                />
+                <Input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="h-10"
+                />
+                {newPassword && (
+                  <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+                    {passwordChecks.map((c) => {
+                      const ok = c.test(newPassword);
+                      return (
+                        <li
+                          key={c.label}
+                          className={`flex items-center gap-1.5 text-[11px] ${
+                            ok ? "text-emerald-600" : "text-stone"
+                          }`}
+                        >
+                          {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                          {c.label}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+                {confirmPassword && newPassword !== confirmPassword && (
+                  <p className="text-[11px] text-destructive">Passwords don't match.</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={
+                    passwordSubmitting ||
+                    !currentPassword ||
+                    !newPasswordOk ||
+                    newPassword !== confirmPassword
+                  }
+                  className="w-full py-3 rounded-lg bg-ink text-white text-[11px] uppercase tracking-[0.25em] font-semibold hover:bg-ink/90 transition-colors disabled:opacity-50"
+                >
+                  {passwordSubmitting ? "Updating…" : "Update Password"}
+                </button>
+              </form>
             </div>
           ) : (
             <div className="space-y-8">
