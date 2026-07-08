@@ -1,0 +1,73 @@
+import { Link } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
+
+const topNavItems: { to: string; label: string }[] = [
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/feed", label: "Feed" },
+];
+
+export function DesktopNav({
+  path,
+  isAdmin,
+  onOpenLens,
+  onOpenConcierge,
+}: {
+  path: string;
+  isAdmin: boolean;
+  onOpenLens: () => void;
+  onOpenConcierge: () => void;
+}) {
+  return (
+    <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
+      {topNavItems.map((it) => {
+        const active = path === it.to;
+        return (
+          <Link
+            key={it.to}
+            to={it.to}
+            className={cn(
+              "text-xs uppercase tracking-[0.2em] transition-colors",
+              active ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
+            )}
+          >
+            {it.label}
+          </Link>
+        );
+      })}
+      <button
+        type="button"
+        onClick={onOpenLens}
+        className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
+      >
+        Lens
+      </button>
+      <Link
+        to="/style-profile"
+        className={cn(
+          "text-xs uppercase tracking-[0.2em] transition-colors",
+          path === "/style-profile" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
+        )}
+      >
+        Studio
+      </Link>
+      <button
+        type="button"
+        onClick={onOpenConcierge}
+        className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
+      >
+        Concierge
+      </button>
+      {isAdmin && (
+        <Link
+          to="/admin"
+          className={cn(
+            "text-xs uppercase tracking-[0.2em] transition-colors",
+            path === "/admin" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
+          )}
+        >
+          Admin
+        </Link>
+      )}
+    </nav>
+  );
+}

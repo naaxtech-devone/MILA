@@ -2,14 +2,15 @@ import { useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Camera, Coins, LayoutGrid, Palette, Images, MessageCircle } from "lucide-react";
+import { Camera, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
-import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { StudioMembershipDrawer } from "@/components/account/studio-membership-drawer";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { DesktopNav } from "@/components/layout/desktop-nav";
+import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { StudioCameraDrawer } from "@/components/dashboard/studio-camera-drawer";
 import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
@@ -17,16 +18,6 @@ import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
 import { queryKeys } from "@/constants/query-keys";
-
-const topNavItems: { to: string; label: string }[] = [
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/feed", label: "Feed" },
-];
-
-const mobileTabItems: { to: string; label: string; icon: typeof LayoutGrid }[] = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutGrid },
-  { to: "/feed", label: "Feed", icon: Images },
-];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -113,57 +104,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             Mila
           </Link>
 
-          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
-            {topNavItems.map((it) => {
-              const active = path === it.to;
-              return (
-                <Link
-                  key={it.to}
-                  to={it.to}
-                  className={cn(
-                    "text-xs uppercase tracking-[0.2em] transition-colors",
-                    active ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
-                  )}
-                >
-                  {it.label}
-                </Link>
-              );
-            })}
-            <button
-              type="button"
-              onClick={() => setIsLensOpen(true)}
-              className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
-            >
-              Lens
-            </button>
-            <Link
-              to="/style-profile"
-              className={cn(
-                "text-xs uppercase tracking-[0.2em] transition-colors",
-                path === "/style-profile" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
-              )}
-            >
-              Studio
-            </Link>
-            <button
-              type="button"
-              onClick={() => setIsConciergeOpen(true)}
-              className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
-            >
-              Concierge
-            </button>
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className={cn(
-                  "text-xs uppercase tracking-[0.2em] transition-colors",
-                  path === "/admin" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
-                )}
-              >
-                Admin
-              </Link>
-            )}
-          </nav>
+          <DesktopNav
+            path={path}
+            isAdmin={isAdmin}
+            onOpenLens={() => setIsLensOpen(true)}
+            onOpenConcierge={() => setIsConciergeOpen(true)}
+          />
 
           <div className="flex items-center gap-2">
             {credits != null && (
@@ -202,60 +148,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <nav
-        className="md:hidden fixed left-3 right-3 z-50 flex items-center justify-around rounded-[28px] px-5 py-2.5"
-        style={{
-          bottom: "calc(0.75rem + env(safe-area-inset-bottom))",
-          background: "rgba(28, 24, 20, 0.85)",
-          backdropFilter: "blur(20px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-        }}
-      >
-        {mobileTabItems.map((it) => {
-          const active = path === it.to;
-          const Icon = it.icon;
-
-          return (
-            <Link
-              key={it.to}
-              to={it.to}
-              className={cn(
-                "relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] transition-colors",
-                active ? "text-(--atelier-gold)" : "text-white/45",
-              )}
-            >
-              <Icon className="h-4.5 w-4.5" strokeWidth={1.5} />
-              <span>{it.label}</span>
-            </Link>
-          );
-        })}
-        <button
-          type="button"
-          onClick={() => setIsLensOpen(true)}
-          className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-white/45"
-        >
-          <Camera className="h-4.5 w-4.5" strokeWidth={1.5} />
-          <span>Lens</span>
-        </button>
-        <Link
-          to="/style-profile"
-          className={cn(
-            "relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] transition-colors",
-            path === "/style-profile" ? "text-(--atelier-gold)" : "text-white/45",
-          )}
-        >
-          <Palette className="h-4.5 w-4.5" strokeWidth={1.5} />
-          <span>Studio</span>
-        </Link>
-        <button
-          type="button"
-          onClick={() => setIsConciergeOpen(true)}
-          className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-white/45"
-        >
-          <MessageCircle className="h-4.5 w-4.5" strokeWidth={1.5} />
-          <span>Concierge</span>
-        </button>
-      </nav>
+      <MobileTabBar
+        path={path}
+        onOpenLens={() => setIsLensOpen(true)}
+        onOpenConcierge={() => setIsConciergeOpen(true)}
+      />
 
       <StudioMembershipDrawer
         isOpen={isMembershipOpen}
