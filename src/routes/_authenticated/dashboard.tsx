@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Sparkles, Loader2, CheckCircle2, Wand2, Bookmark } from "lucide-react";
@@ -15,14 +15,8 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { generateDailyLook, type DailyLook } from "@/lib/generate-outfit.functions";
 import { toast } from "sonner";
-import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
-import {
-  StudioCameraDrawer,
-  type StudioCameraMode,
-} from "@/components/dashboard/studio-camera-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
@@ -76,7 +70,6 @@ function Dashboard() {
   const [savingLook, setSavingLook] = useState(false);
   const [lookSaved, setLookSaved] = useState(false);
   const [vibe, setVibe] = useState<Vibe>("Casual");
-  const [stylistOpen, setStylistOpen] = useState(false);
   const [creditPaywallOpen, setCreditPaywallOpen] = useState(false);
   const [climate, setClimate] = useState<ClimateState>({
     label: "22°C Mild & Clear",
@@ -87,12 +80,6 @@ function Dashboard() {
     condition: "Sunny",
   });
 
-  const [isLensOpen, setIsLensOpen] = useState(false);
-  const [lensMode] = useState<StudioCameraMode>("look-analysis");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const pendingModeRef = useRef<StudioCameraMode>("look-analysis");
-
-  const analyze = useServerFn(analyzeOutfit);
   const generate = useServerFn(generateDailyLook);
 
   async function generateLook() {
@@ -160,56 +147,6 @@ function Dashboard() {
       setSavingLook(false);
     }
   }
-
-  async function handleCapture(f: File) {
-    if (!profileComplete) {
-      toast.error("Complete your Style Profile first.");
-      return;
-    }
-    await runAnalyzeWith(f);
-  }
-
-  async function runAnalyzeWith(f: File) {
-    if (!user) return;
-    if (!profile?.body_type || !profile?.color_season) return;
-    try {
-      const ext = (f.name.split(".").pop() || "jpg").toLowerCase();
-      const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("outfits")
-        .upload(path, f, { contentType: f.type || "image/jpeg" });
-      if (upErr) throw upErr;
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("outfits").getPublicUrl(path);
-      const result = await analyze({
-        data: {
-          imageUrl: publicUrl,
-          bodyType: profile.body_type,
-          colorSeason: profile.color_season,
-        },
-      });
-      await supabase.from("outfits").insert({
-        user_id: user.id,
-        image_url: publicUrl,
-        analysis_result: result,
-        match_score: result.overall_score,
-      });
-      toast.success("Analysis saved to your history.");
-    } catch (e) {
-      console.error(e);
-      toast.error(e instanceof Error ? e.message : "Something went wrong.");
-    }
-  }
-
-  const handleLookCapture = async (file: File) => {
-    await handleCapture(file);
-  };
-
-  const handlePickGallery = (mode: StudioCameraMode) => {
-    pendingModeRef.current = mode;
-    fileInputRef.current?.click();
-  };
 
   return (
     <motion.div
@@ -385,48 +322,10 @@ function Dashboard() {
         </motion.section>
       )}
 
-      <StylistConciergeDrawer
-        open={stylistOpen}
-        onOpenChange={setStylistOpen}
-        item={null}
-        profile={{
-          bodyType: profile?.body_type ?? null,
-          colorSeason: profile?.color_season ?? null,
-          skinUndertone: profile?.skin_undertone ?? null,
-        }}
-        onInsufficientCredits={() => setCreditPaywallOpen(true)}
-      />
-
       <UpgradeSlotsDialog
         open={creditPaywallOpen}
         onOpenChange={setCreditPaywallOpen}
         variant="credits"
-      />
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) {
-            if (pendingModeRef.current === "look-analysis") {
-              handleLookCapture(f);
-            }
-            e.target.value = "";
-          }
-        }}
-      />
-
-      <StudioCameraDrawer
-        isOpen={isLensOpen}
-        onClose={() => setIsLensOpen(false)}
-        initialMode={lensMode}
-        userId={user?.id ?? null}
-        onLookCapture={handleLookCapture}
-        onPickGallery={handlePickGallery}
-        onInsufficientCredits={() => setCreditPaywallOpen(true)}
       />
     </motion.div>
   );
