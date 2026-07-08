@@ -64,20 +64,17 @@ function Dashboard() {
   const [lookSaved, setLookSaved] = useState(false);
   const [vibe, setVibe] = useState<Vibe>("Casual");
   const [creditPaywallOpen, setCreditPaywallOpen] = useState(false);
-  const [climate, setClimate] = useState<ClimateState>({
-    label: "22°C Mild & Clear",
-    location: "—",
-    icon: "sun",
-    tempC: 22,
-    tempF: 72,
-    condition: "Sunny",
-  });
+  const [climate, setClimate] = useState<ClimateState | null>(null);
 
   const generate = useServerFn(generateDailyLook);
 
   async function generateLook() {
     if (!user || !profile?.body_type || !profile?.color_season) {
       toast.error("Complete your Style Profile first.");
+      return;
+    }
+    if (!climate) {
+      toast.error("Still detecting your local weather — try again in a moment.");
       return;
     }
     setGenerating(true);
@@ -114,7 +111,7 @@ function Dashboard() {
   }
 
   async function saveLookToHistory() {
-    if (!user || !look) return;
+    if (!user || !look || !climate) return;
     setSavingLook(true);
     try {
       const { error } = await supabase.from("outfits").insert({
@@ -193,19 +190,23 @@ function Dashboard() {
             </div>
             <Button
               onClick={generateLook}
-              disabled={generating || !profileComplete}
+              disabled={generating || !profileComplete || !climate}
               className="w-full sm:w-auto h-12 px-6 rounded-full bg-foreground text-background hover:bg-foreground/90 uppercase tracking-[0.2em] text-xs whitespace-normal text-center leading-snug"
             >
               {generating ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Composing…
                 </>
-              ) : (
+              ) : climate ? (
                 <>
                   <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate look —{" "}
                   {climate.tempC}°C{" "}
                   {climate.label.replace(/^[-\d.]+\s*°[CF]\s*/i, "").split(/[\s,]+/)[0] ||
                     climate.condition}
+                </>
+              ) : (
+                <>
+                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate look
                 </>
               )}
             </Button>
@@ -235,9 +236,13 @@ function Dashboard() {
                     <span className="text-muted-foreground">{vibe}</span>
                     <span className="h-1 w-1 rounded-full bg-foreground/40" />
                     <span className="font-medium">Vibe fit {look.vibe_alignment_score}/10</span>
-                    <span className="h-1 w-1 rounded-full bg-foreground/40" />
-                    <ClimateGlyph icon={climate.icon} className="h-3 w-3" />
-                    <span className="text-muted-foreground">{climate.label}</span>
+                    {climate && (
+                      <>
+                        <span className="h-1 w-1 rounded-full bg-foreground/40" />
+                        <ClimateGlyph icon={climate.icon} className="h-3 w-3" />
+                        <span className="text-muted-foreground">{climate.label}</span>
+                      </>
+                    )}
                   </span>
                 </div>
                 <motion.div variants={resultItemVariants}>

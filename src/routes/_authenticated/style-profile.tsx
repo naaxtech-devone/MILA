@@ -364,15 +364,6 @@ function StyleProfile() {
       }
       lastSavedRef.current = sig;
       setSyncStatus("synced");
-
-      console.log("[StyleProfile] auto-save OK →", {
-        skin_undertone: payload.skin_undertone,
-        color_season: payload.color_season,
-        body_type: payload.body_type,
-        face_shape: payload.face_shape,
-        hair_type: payload.hair_type,
-        beauty_preferences: payload.beauty_preferences,
-      });
     }, 600);
     return () => window.clearTimeout(t);
   }, [

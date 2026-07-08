@@ -120,11 +120,12 @@ export function ClimateWidget({
   value,
   onChange,
 }: {
-  value: ClimateState;
+  value: ClimateState | null;
   onChange: (c: ClimateState) => void;
 }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [hubId, setHubId] = useState<string>("manila");
   // ponytail: seq guard so a slow response can't overwrite a newer selection
   const seq = useRef(0);
@@ -134,12 +135,13 @@ export function ClimateWidget({
     if (!hub) return;
     const req = ++seq.current;
     setHubId(id);
-    onChange(hub.climate); // instant static fallback while live data loads
     setLoading(true);
+    setError(false);
     try {
       const live = await fetchClimate(hub.lat, hub.lon, hub.city);
       if (req === seq.current) onChange(live);
     } catch {
+      if (req === seq.current) setError(true);
     } finally {
       if (req === seq.current) setLoading(false);
     }
@@ -149,6 +151,7 @@ export function ClimateWidget({
     if (typeof navigator === "undefined" || !navigator.geolocation) return;
     const req = ++seq.current;
     setLoading(true);
+    setError(false);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
@@ -159,12 +162,16 @@ export function ClimateWidget({
           );
           if (req === seq.current) onChange(live);
         } catch {
+          if (req === seq.current) setError(true);
         } finally {
           if (req === seq.current) setLoading(false);
         }
       },
       () => {
-        if (req === seq.current) setLoading(false);
+        if (req === seq.current) {
+          setError(true);
+          setLoading(false);
+        }
       },
       { timeout: 8000, maximumAge: 5 * 60 * 1000 },
     );
@@ -183,16 +190,20 @@ export function ClimateWidget({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
+  const statusLabel = loading
+    ? "Detecting weather…"
+    : (value?.label ?? (error ? "Weather unavailable" : "Detecting weather…"));
+
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-white/20 bg-background/40 backdrop-blur px-4 py-3 min-w-55">
       <div className="flex items-center gap-3">
         <span className="grid place-items-center h-8 w-8 rounded-full border border-white/20 bg-foreground/4 text-foreground">
-          <ClimateGlyph icon={value.icon} className="h-4 w-4" />
+          <ClimateGlyph icon={value?.icon ?? "cloud"} className="h-4 w-4" />
         </span>
         <div className="leading-tight">
-          <p className="text-xs font-medium">{value.label}</p>
+          <p className="text-xs font-medium">{statusLabel}</p>
           <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            {value.location}
+            {value?.location ?? "—"}
           </p>
         </div>
       </div>
