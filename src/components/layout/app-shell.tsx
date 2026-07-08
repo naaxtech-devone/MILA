@@ -10,10 +10,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { StudioMembershipDrawer } from "@/components/account/studio-membership-drawer";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import {
-  StudioCameraDrawer,
-  type StudioCameraMode,
-} from "@/components/dashboard/studio-camera-drawer";
+import { StudioCameraDrawer } from "@/components/dashboard/studio-camera-drawer";
 import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";

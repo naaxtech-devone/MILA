@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Info, ChevronDown, Archive, ShieldCheck, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
   type DetailedColorProfile as StudioDossier,
-  type Tone,
   type Swatch,
   type StudioTelemetry,
   FACE_FULL_TO_SHORT,

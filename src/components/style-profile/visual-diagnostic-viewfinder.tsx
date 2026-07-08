@@ -1,19 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera,
   X as XIcon,
   Loader2,
   Sun,
-  ShieldCheck,
   Lightbulb,
   Shirt,
   FlaskConical,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -30,7 +27,6 @@ import {
   MANUAL_SEASON_GROUPS,
   SEASON_HEX_MATRIX,
   SEASONS_MASTER_DATA,
-  KNOWN_SEASON_GROUPS,
 } from "@/constants/style-profile";
 
 const DRAPE_COLORS = ["#FFB347", "#94A3B8", "#1E3A8A", "#F7B7A3", "#C2410C"] as const;
@@ -92,6 +88,24 @@ export function VisualDiagnosticViewfinder({
     ]);
   }
 
+  function stopCamera() {
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+      } catch {}
+      videoRef.current.srcObject = null;
+    }
+    const stream = streamRef.current;
+    if (stream) {
+      for (const track of stream.getTracks()) {
+        try {
+          track.stop();
+        } catch {}
+      }
+    }
+    streamRef.current = null;
+  }
+
   useEffect(() => {
     if (!calibrated) return;
     let cancelled = false;
@@ -140,21 +154,7 @@ export function VisualDiagnosticViewfinder({
     })();
     return () => {
       cancelled = true;
-      if (videoRef.current) {
-        try {
-          videoRef.current.pause();
-        } catch {}
-        videoRef.current.srcObject = null;
-      }
-      const stream = streamRef.current;
-      if (stream) {
-        for (const track of stream.getTracks()) {
-          try {
-            track.stop();
-          } catch {}
-        }
-      }
-      streamRef.current = null;
+      stopCamera();
     };
   }, [calibrated]);
 
@@ -206,7 +206,6 @@ export function VisualDiagnosticViewfinder({
     base64: string,
     opts?: { stressTest?: boolean; source?: "live" | "stress-test" | "upload" },
   ) {
-    const sourceLabel = opts?.source ?? (opts?.stressTest ? "stress-test" : "live");
     try {
       pushLog(`Studying the light in your photo…`);
       const result = await analyze({
@@ -239,21 +238,7 @@ export function VisualDiagnosticViewfinder({
         source: opts?.stressTest ? "stress-test" : opts?.source === "upload" ? "live" : "live",
       };
       pushLog(`Got it — you're a ${profile.subSeason}.`);
-      if (videoRef.current) {
-        try {
-          videoRef.current.pause();
-        } catch {}
-        videoRef.current.srcObject = null;
-      }
-      const stream = streamRef.current;
-      if (stream) {
-        for (const track of stream.getTracks()) {
-          try {
-            track.stop();
-          } catch {}
-        }
-      }
-      streamRef.current = null;
+      stopCamera();
       await onComplete(profile, telemetry);
     } catch (e: any) {
       console.error("Studio error details:", e);
@@ -307,21 +292,7 @@ export function VisualDiagnosticViewfinder({
       confidenceScore: 100,
     };
     setManualCalibrateOpen(false);
-    if (videoRef.current) {
-      try {
-        videoRef.current.pause();
-      } catch {}
-      videoRef.current.srcObject = null;
-    }
-    const stream = streamRef.current;
-    if (stream) {
-      for (const track of stream.getTracks()) {
-        try {
-          track.stop();
-        } catch {}
-      }
-    }
-    streamRef.current = null;
+    stopCamera();
     await onComplete(profile, {
       pass1Raw: { ambientLighting: "n/a", biologicalUndertone: "n/a", computedContrast: "n/a" },
       interceptTriggered: false,

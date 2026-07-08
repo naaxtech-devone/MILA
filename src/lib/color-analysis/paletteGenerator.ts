@@ -1,4 +1,3 @@
-import { SEASONS_DATA } from "./seasonsData";
 import { SeasonId } from "./types";
 
 export interface DailyPalette {

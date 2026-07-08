@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, RotateCcw, X, ImageIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   onCapture: (file: File) => void;
