@@ -135,8 +135,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto h-16 px-5 md:px-8 flex items-center justify-between gap-6 relative">
           <Link
             to="/dashboard"
-            className="font-serif text-xl md:text-2xl uppercase tracking-[0.32em] text-ink"
+            className="inline-flex items-center gap-2 font-serif text-xl md:text-2xl uppercase tracking-[0.32em] text-ink"
           >
+            <img src="/favicon.svg" alt="" className="h-6 w-6 md:h-7 md:w-7" />
             Mila
           </Link>
 

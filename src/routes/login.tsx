@@ -189,7 +189,11 @@ function LoginPage() {
 
       <div className="relative atelier-page flex flex-col items-center justify-center min-h-screen gap-6 py-10">
         <div className="text-center max-w-md">
-          <Link to="/login" className="font-serif text-2xl tracking-[0.32em]">
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-2.5 font-serif text-2xl tracking-[0.32em]"
+          >
+            <img src="/favicon.svg" alt="" className="h-7 w-7" />
             MILA
           </Link>
           <p className="atelier-kicker mt-3">Personal AI Fashion Stylist</p>
