@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 export function SiteHeader() {
   return (

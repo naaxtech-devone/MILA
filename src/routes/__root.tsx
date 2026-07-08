@@ -10,7 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/layout/theme-provider";
 import { THEME_STORAGE_KEY } from "@/constants/app";
 import { Toaster } from "@/components/ui/sonner";
 

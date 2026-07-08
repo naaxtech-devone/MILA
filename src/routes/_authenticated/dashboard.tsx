@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { Sparkles, Loader2, CheckCircle2, Wand2, Bookmark } from "lucide-react";
-import { ClimateWidget, ClimateGlyph } from "@/components/climate-widget";
+import { ClimateWidget, ClimateGlyph } from "@/components/dashboard/climate-widget";
 import type { ClimateState } from "@/constants/climate";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,9 +18,12 @@ import { useAuth } from "@/hooks/use-auth";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { generateDailyLook, type DailyLook } from "@/lib/generate-outfit.functions";
 import { toast } from "sonner";
-import { StylistConciergeDrawer } from "@/components/stylist-concierge-drawer";
-import { StudioCameraDrawer, type StudioCameraMode } from "@/components/studio-camera-drawer";
-import { UpgradeSlotsDialog } from "@/components/upgrade-slots-dialog";
+import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
+import {
+  StudioCameraDrawer,
+  type StudioCameraMode,
+} from "@/components/dashboard/studio-camera-drawer";
+import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { deriveColorMetrics } from "@/lib/profile-color";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";

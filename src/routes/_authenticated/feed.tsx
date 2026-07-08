@@ -10,8 +10,8 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { PostCanvas } from "@/components/post-canvas";
-import { DualCapture } from "@/components/dual-capture";
+import { PostCanvas } from "@/components/feed/post-canvas";
+import { DualCapture } from "@/components/capture/dual-capture";
 import { getFeed, createPost } from "@/lib/posts.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";

@@ -8,11 +8,14 @@ import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { StudioMembershipDrawer } from "@/components/studio-membership-drawer";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { StudioCameraDrawer, type StudioCameraMode } from "@/components/studio-camera-drawer";
-import { StylistConciergeDrawer } from "@/components/stylist-concierge-drawer";
-import { UpgradeSlotsDialog } from "@/components/upgrade-slots-dialog";
+import { StudioMembershipDrawer } from "@/components/account/studio-membership-drawer";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import {
+  StudioCameraDrawer,
+  type StudioCameraMode,
+} from "@/components/dashboard/studio-camera-drawer";
+import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
+import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { deriveColorMetrics } from "@/lib/profile-color";

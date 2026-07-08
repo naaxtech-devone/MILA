@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { AppShell } from "@/components/app-shell";
+import { AppShell } from "@/components/layout/app-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { queryKeys } from "@/constants/query-keys";
 import { STEWARD_EMAIL } from "@/constants/app";

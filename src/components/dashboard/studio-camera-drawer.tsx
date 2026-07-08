@@ -7,8 +7,8 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { CameraCapture } from "@/components/camera-capture";
-import { DualCapture } from "@/components/dual-capture";
+import { CameraCapture } from "@/components/capture/camera-capture";
+import { DualCapture } from "@/components/capture/dual-capture";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
