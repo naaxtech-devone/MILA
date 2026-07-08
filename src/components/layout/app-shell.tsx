@@ -15,7 +15,7 @@ import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
-import { deriveColorMetrics } from "@/lib/profile-color";
+import { profileQueryOptions } from "@/lib/queries/profile";
 import { queryKeys } from "@/constants/query-keys";
 
 const topNavItems: { to: string; label: string }[] = [
@@ -40,36 +40,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const analyze = useServerFn(analyzeOutfit);
 
   const { data: profile } = useQuery({
-    queryKey: queryKeys.profile(user?.id),
-    queryFn: async () => {
-      if (!user) return null;
-      const { data } = await supabase
-        .from("profiles")
-        .select(
-          "body_type,color_season,skin_undertone,full_name,face_shape,hair_type,color_profile",
-        )
-        .eq("id", user.id)
-        .single();
-      if (!data)
-        return {
-          body_type: null,
-          color_season: null,
-          skin_undertone: null,
-          full_name: null,
-          face_shape: null,
-          hair_type: null,
-        };
-      const m = deriveColorMetrics(data as any);
-      return {
-        body_type: data.body_type ?? null,
-        color_season: m.season,
-        skin_undertone: m.undertone,
-        full_name: data.full_name ?? null,
-        face_shape: (data as any).face_shape ?? null,
-        hair_type: (data as any).hair_type ?? null,
-      };
-    },
-    enabled: !!user,
+    ...profileQueryOptions(user?.id),
+    enabled: !!user?.id,
   });
 
   const { data: credits } = useQuery({

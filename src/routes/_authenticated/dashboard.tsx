@@ -25,10 +25,9 @@ import {
 } from "@/components/dashboard/studio-camera-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
-import { deriveColorMetrics } from "@/lib/profile-color";
+import { profileQueryOptions } from "@/lib/queries/profile";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
-import { queryKeys } from "@/constants/query-keys";
 import { VIBES } from "@/constants/app";
 
 const cardContainerVariants: Variants = {
@@ -66,83 +65,8 @@ function Dashboard() {
   const { user } = useAuth();
 
   const { data: profile } = useQuery({
-    queryKey: queryKeys.profile(user?.id),
-    queryFn: async () => {
-      if (!user) return null;
-      const { data } = await supabase
-        .from("profiles")
-        .select(
-          "body_type,color_season,skin_undertone,full_name,color_profile,face_shape,hair_type,beauty_preferences",
-        )
-        .eq("id", user.id)
-        .single();
-      if (!data)
-        return {
-          body_type: null,
-          color_season: null,
-          skin_undertone: null,
-          full_name: null,
-          face_shape: null,
-          hair_type: null,
-          beauty_preferences: null,
-        };
-      const m = deriveColorMetrics(data as any);
-      const json = (data as any).color_profile as {
-        subSeason?: string;
-        season?: string;
-        faceShape?: string;
-        hairType?: string;
-      } | null;
-      const sixteenSeason = json?.subSeason ?? m.season ?? null;
-
-      const normalizeFirstWord = (v: unknown): string | null => {
-        if (typeof v !== "string") return null;
-        const first = v.trim().split(/\s+/)[0];
-        return first ? first : null;
-      };
-
-      const topFaceShape = (data as any).face_shape ?? null;
-      const jsonFaceShape = normalizeFirstWord(json?.faceShape);
-      const faceShape = topFaceShape ?? jsonFaceShape ?? null;
-      const faceShapeSource = topFaceShape
-        ? "profiles column"
-        : jsonFaceShape
-          ? "color_profile JSONB fallback"
-          : "none";
-
-      const topHairType = (data as any).hair_type ?? null;
-      const jsonHairType =
-        typeof json?.hairType === "string" && json.hairType.trim() ? json.hairType : null;
-      const hairType = topHairType ?? jsonHairType ?? null;
-      const hairTypeSource = topHairType
-        ? "profiles column"
-        : jsonHairType
-          ? "color_profile JSONB fallback"
-          : "none";
-
-      const built = {
-        body_type: data.body_type ?? null,
-        color_season: sixteenSeason,
-        skin_undertone: m.undertone,
-        full_name: data.full_name ?? null,
-        face_shape: faceShape,
-        hair_type: hairType,
-        beauty_preferences: (data as any).beauty_preferences ?? null,
-      };
-
-      console.log("[Dashboard] profile loaded from DB", {
-        raw: data,
-        derived: built,
-        sources: {
-          face_shape: `${faceShape ?? "null"} (source: ${faceShapeSource})`,
-          hair_type: `${hairType ?? "null"} (source: ${hairTypeSource})`,
-        },
-      });
-      return built;
-    },
-    enabled: !!user,
-    staleTime: 0,
-    refetchOnMount: "always",
+    ...profileQueryOptions(user?.id),
+    enabled: !!user?.id,
   });
 
   const profileComplete = !!(profile?.body_type && profile?.color_season);
