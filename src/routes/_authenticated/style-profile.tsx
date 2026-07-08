@@ -32,7 +32,6 @@ import {
   type BodyType,
   SEASON_HEX_MATRIX,
   SEASONS_MASTER_DATA,
-  matrixForSubSeason,
   type StudioTelemetry,
   SEASON_DETAIL,
   SEASON_EDUCATION,
@@ -43,14 +42,17 @@ import {
   FACE_FULL_TO_SHORT,
   CONTRAST_SHORT_TO_FULL,
   CONTRAST_FULL_TO_SHORT,
-  seasonTone,
-  seasonBrightness,
-  seasonSaturation,
-  splitBeauty,
   BODY_OPTIONS,
   MANUAL_SEASON_GROUPS,
   KNOWN_SEASON_GROUPS,
 } from "@/constants/style-profile";
+import {
+  matrixForSubSeason,
+  seasonTone,
+  seasonBrightness,
+  seasonSaturation,
+  splitBeauty,
+} from "@/lib/style-profile";
 import {
   SyncBadge,
   PerspectiveSwitcher,
