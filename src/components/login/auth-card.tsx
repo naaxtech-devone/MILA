@@ -57,7 +57,11 @@ export function AuthCard() {
 
         <Tabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as "login" | "signup")}
+          onValueChange={(v) => {
+            setActiveTab(v as "login" | "signup");
+            setEmail("");
+            setShowPassword(false);
+          }}
           className="w-full"
         >
           <TabsList className="grid w-full grid-cols-2 h-9">

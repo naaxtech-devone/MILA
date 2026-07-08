@@ -156,35 +156,37 @@ export function SignupForm({
         {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       </div>
 
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-            <div
-              className={`h-full rounded-full transition-all ${strength.bar}`}
-              style={{ width: `${(passedChecks / passwordChecks.length) * 100}%` }}
-            />
+      {password && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+              <div
+                className={`h-full rounded-full transition-all ${strength.bar}`}
+                style={{ width: `${(passedChecks / passwordChecks.length) * 100}%` }}
+              />
+            </div>
+            <span className={`text-[10px] font-medium uppercase tracking-wider ${strength.text}`}>
+              {strength.label}
+            </span>
           </div>
-          <span className={`text-[10px] font-medium uppercase tracking-wider ${strength.text}`}>
-            {strength.label}
-          </span>
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+            {passwordChecks.map((c) => {
+              const ok = c.test(password);
+              return (
+                <li
+                  key={c.label}
+                  className={`flex items-center gap-1.5 text-[11px] ${
+                    ok ? "text-emerald-600" : "text-muted-foreground"
+                  }`}
+                >
+                  {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                  {c.label}
+                </li>
+              );
+            })}
+          </ul>
         </div>
-        <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
-          {passwordChecks.map((c) => {
-            const ok = c.test(password);
-            return (
-              <li
-                key={c.label}
-                className={`flex items-center gap-1.5 text-[11px] ${
-                  ok ? "text-emerald-600" : "text-muted-foreground"
-                }`}
-              >
-                {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
-                {c.label}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      )}
 
       <div className="flex justify-center">
         <HCaptcha
