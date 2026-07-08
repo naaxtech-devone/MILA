@@ -291,6 +291,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      support_messages: {
+        Row: {
+          created_at: string;
+          id: string;
+          kind: string;
+          message: string;
+          resolved: boolean;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          kind: string;
+          message: string;
+          resolved?: boolean;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          message?: string;
+          resolved?: boolean;
+        };
+        Relationships: [];
+      };
       user_entitlements: {
         Row: {
           ads_removed: boolean;

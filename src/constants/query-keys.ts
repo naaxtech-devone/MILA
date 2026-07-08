@@ -7,4 +7,5 @@ export const queryKeys = {
   isAdminGate: ["isAdmin:gate"] as const,
   adminUsers: ["admin:users"] as const,
   adminPosts: ["admin:posts"] as const,
+  adminSupportMessages: ["admin:support-messages"] as const,
 };

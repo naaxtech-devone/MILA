@@ -209,6 +209,48 @@ export const adminDeletePost = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export interface AdminSupportMessageRow {
+  id: string;
+  kind: "help" | "feedback";
+  message: string;
+  resolved: boolean;
+  created_at: string;
+}
+
+export const adminListSupportMessages = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AdminSupportMessageRow[]> => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data, error } = await supabaseAdmin
+      .from("support_messages")
+      .select("id,kind,message,resolved,created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as AdminSupportMessageRow[];
+  });
+
+const ResolveSupportMessageInput = z.object({
+  message_id: z.string().uuid(),
+  resolved: z.boolean(),
+});
+
+export const adminResolveSupportMessage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => ResolveSupportMessageInput.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("support_messages")
+      .update({ resolved: data.resolved })
+      .eq("id", data.message_id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const adminAmIAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

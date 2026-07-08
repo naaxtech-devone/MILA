@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { submitSupportMessage } from "@/lib/support.functions";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -72,6 +74,7 @@ function LoginPage() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const captchaRef = useRef<HCaptcha>(null);
+  const submitSupport = useServerFn(submitSupportMessage);
 
   const {
     register,
@@ -168,16 +171,20 @@ function LoginPage() {
     e.preventDefault();
     if (!feedbackText.trim()) return;
     setIsSubmittingFeedback(true);
-    setTimeout(() => {
+    try {
+      await submitSupport({ data: { kind: feedbackType, message: feedbackText.trim() } });
       toast.success(
         feedbackType === "help"
           ? "Help request received. A Mila concierge technician will review your session shortly."
           : "Studio feedback logged. Thank you for refining Mila's design intelligence.",
       );
       setFeedbackText("");
-      setIsSubmittingFeedback(false);
       setFeedbackOpen(false);
-    }, 700);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't send that. Please try again.");
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
   };
 
   return (
