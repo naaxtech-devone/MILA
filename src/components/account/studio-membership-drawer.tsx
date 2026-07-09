@@ -40,7 +40,7 @@ export function StudioMembershipDrawer({
   const [view, setView] = useState<
     "membership" | "preferences" | "location" | "privacy" | "security"
   >("membership");
-  const { user: authUser, signOut } = useAuth();
+  const { user: authUser, signOut, signingOut } = useAuth();
   const [defaultHubId, setDefaultHubId] = useState<string>(() => localDefaultHubId() ?? HUBS[0].id);
 
   useEffect(() => {
@@ -339,13 +339,12 @@ export function StudioMembershipDrawer({
 
               <div className="pt-4 border-t border-porcelain/30">
                 <button
-                  onClick={() => {
-                    onClose();
-                    signOut();
-                  }}
-                  className="w-full py-3 rounded-lg border border-destructive/30 text-destructive text-[11px] uppercase tracking-[0.25em] hover:bg-destructive/5 transition-colors"
+                  onClick={() => signOut()}
+                  disabled={signingOut}
+                  className="w-full py-3 rounded-lg border border-destructive/30 text-destructive text-[11px] uppercase tracking-[0.25em] hover:bg-destructive/5 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Sign Out of Studio
+                  {signingOut && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  {signingOut ? "Signing Out…" : "Sign Out of Studio"}
                 </button>
               </div>
             </div>
