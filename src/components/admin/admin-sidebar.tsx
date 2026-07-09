@@ -11,14 +11,14 @@ export const ADMIN_LINKS = [
   { to: "/admin/support", label: "Support", icon: LifeBuoy },
 ] as const;
 
-export function AdminSidebar({ path }: { path: string }) {
+export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
   const { user } = useAuth();
   const { signingOut, handleSignOut } = useSignOut();
 
   const initial = (user?.email?.[0] ?? "M").toUpperCase();
 
   return (
-    <aside className="hidden md:flex h-full w-76 shrink-0 flex-col border-r border-porcelain/60 bg-atelier-panel/30 px-5 py-6">
+    <div className="flex h-full w-76 shrink-0 flex-col border-r border-porcelain/60 bg-atelier-panel/30 px-5 py-6">
       <div className="mb-8 px-1">
         <div className="text-[9px] uppercase tracking-[0.28em] text-stone">Atelier</div>
         <div className="mt-1 font-serif text-xl tracking-[0.14em] uppercase text-ink">
@@ -33,6 +33,7 @@ export function AdminSidebar({ path }: { path: string }) {
             <Link
               key={to}
               to={to}
+              onClick={() => onNavigate?.()}
               className={cn(
                 "flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
                 active
@@ -74,6 +75,6 @@ export function AdminSidebar({ path }: { path: string }) {
           </button>
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
