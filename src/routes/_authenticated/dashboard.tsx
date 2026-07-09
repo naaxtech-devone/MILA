@@ -49,7 +49,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 type Vibe = (typeof VIBES)[number];
 
-export function Dashboard() {
+function Dashboard() {
   const { user } = useAuth();
 
   const { data: profile } = useQuery({
