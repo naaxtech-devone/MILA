@@ -1,0 +1,19 @@
+# Mila — End of Day Update, 2026-07-08
+
+[DONE]
+- added favicon and a cleaner logo across the navigation
+- added a support message system — users can submit messages, admins can manage them
+- added email/password management to the membership panel
+- reworked login and signup — added Google sign-in and spam protection (hCaptcha)
+- refreshed the landing page with new sections: community, dossier, dupe hunter, final call-to-action
+- added the Stylist Concierge and Upgrade Slots popups
+- added full color profile, seasonal palette, and body type details to the style profile
+- polished spacing on the style profile screen
+- github webhook is now working
+- dashboard weather is now always live and accurate — removed the old placeholder weather, and Generate Look waits for real weather before running
+- cleaned up how profile data loads so the navbar and dashboard always stay in sync
+- general code cleanup behind the dashboard and navigation for speed and easier updates going forward
+
+[TO DO]
+- Add the domain in Resend so confirmation emails can be sent from our own address
+-AI features are still in progress
