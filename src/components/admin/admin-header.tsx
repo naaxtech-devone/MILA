@@ -1,5 +1,4 @@
 import { Menu } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const PAGE_META: Record<string, { title: string; subtitle: string }> = {
@@ -18,7 +17,6 @@ export function AdminHeader({
   sidebarOpen: boolean;
   onOpenSidebar: () => void;
 }) {
-  const { user } = useAuth();
   const meta = PAGE_META[path] ?? { title: "Admin", subtitle: "" };
 
   return (
@@ -49,7 +47,6 @@ export function AdminHeader({
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden lg:block text-xs text-stone truncate max-w-48">{user?.email}</div>
           <ThemeToggle />
         </div>
       </div>
