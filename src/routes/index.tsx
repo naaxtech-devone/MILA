@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { adminAmIAdmin } from "@/lib/admin.functions";
 import { SiteHeader } from "@/components/landing/site-header";
 import { HeroSection } from "@/components/landing/hero-section";
 import { TestimonialsSection } from "@/components/landing/testimonials-section";
@@ -14,7 +15,9 @@ export const Route = createFileRoute("/")({
   beforeLoad: async () => {
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ to: "/dashboard" });
+    if (!data.session) return;
+    const gate = await adminAmIAdmin();
+    throw redirect({ to: gate.is_admin ? "/admin" : "/dashboard" });
   },
   component: LandingPage,
 });

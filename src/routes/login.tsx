@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
+import { adminGateQueryOptions } from "@/lib/queries/admin";
 import { AuthCard } from "@/components/login/auth-card";
 import { SupportDialog } from "@/components/login/support-dialog";
 
@@ -11,10 +13,13 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+  const { data: gate } = useQuery({ ...adminGateQueryOptions(), enabled: !!session });
 
   useEffect(() => {
-    if (!loading && session) navigate({ to: "/dashboard" });
-  }, [loading, session, navigate]);
+    if (!loading && session && gate !== undefined) {
+      navigate({ to: gate.is_admin ? "/admin" : "/dashboard" });
+    }
+  }, [loading, session, gate, navigate]);
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
