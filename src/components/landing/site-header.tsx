@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { useAuth } from "@/hooks/use-auth";
 
 export function SiteHeader() {
+  const { session } = useAuth();
+
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
       <span className="flex items-center gap-2.5 font-serif text-xl font-bold tracking-[0.35em] text-foreground">
@@ -11,10 +14,10 @@ export function SiteHeader() {
       <div className="flex items-center gap-4">
         <ThemeToggle />
         <Link
-          to="/login"
+          to={session ? "/dashboard" : "/login"}
           className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
         >
-          Sign in
+          {session ? "Dashboard" : "Sign in"}
         </Link>
       </div>
     </header>
