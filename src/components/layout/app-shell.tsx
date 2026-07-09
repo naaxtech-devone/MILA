@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Camera, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
-import { useIsAdmin } from "@/hooks/use-is-admin";
 import { supabase } from "@/integrations/supabase/client";
 import { StudioMembershipDrawer } from "@/components/account/studio-membership-drawer";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -22,7 +21,6 @@ import { queryKeys } from "@/constants/query-keys";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
-  const isAdmin = useIsAdmin();
   const [isMembershipOpen, setIsMembershipOpen] = useState(false);
   const [isLensOpen, setIsLensOpen] = useState(false);
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
@@ -106,7 +104,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <DesktopNav
             path={path}
-            isAdmin={isAdmin}
             onOpenLens={() => setIsLensOpen(true)}
             onOpenConcierge={() => setIsConciergeOpen(true)}
           />

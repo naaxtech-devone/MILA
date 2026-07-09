@@ -251,6 +251,101 @@ export const adminResolveSupportMessage = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export interface AdminDashboardStats {
+  totalMembers: number;
+  totalStewards: number;
+  aiCreditsAvailable: number;
+  totalPosts: number;
+  hiddenPosts: number;
+  openSupportMessages: number;
+  recentMembers: {
+    id: string;
+    full_name: string | null;
+    username: string | null;
+    created_at: string;
+  }[];
+  recentPosts: {
+    id: string;
+    author_name: string | null;
+    caption: string | null;
+    hidden: boolean;
+    created_at: string;
+  }[];
+}
+
+export const adminDashboardStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AdminDashboardStats> => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const [
+      membersCount,
+      stewardsCount,
+      entitlements,
+      postsCount,
+      hiddenPostsCount,
+      openSupportCount,
+      recentMembersRes,
+      recentPostsRes,
+    ] = await Promise.all([
+      supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
+      supabaseAdmin
+        .from("user_roles")
+        .select("*", { count: "exact", head: true })
+        .eq("role", "admin"),
+      supabaseAdmin.from("user_entitlements").select("ai_credits"),
+      supabaseAdmin.from("posts").select("*", { count: "exact", head: true }),
+      supabaseAdmin.from("posts").select("*", { count: "exact", head: true }).eq("hidden", true),
+      supabaseAdmin
+        .from("support_messages")
+        .select("*", { count: "exact", head: true })
+        .eq("resolved", false),
+      supabaseAdmin
+        .from("profiles")
+        .select("id,full_name,username,created_at")
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabaseAdmin
+        .from("posts")
+        .select("id,user_id,caption,hidden,created_at")
+        .order("created_at", { ascending: false })
+        .limit(5),
+    ]);
+
+    // TODO: no credits ledger table exists yet — this is the current running
+    // balance across all members, not a historical "issued" total.
+    const aiCreditsAvailable = (entitlements.data ?? []).reduce(
+      (sum: number, e: any) => sum + (e.ai_credits ?? 0),
+      0,
+    );
+
+    const recentPostUserIds = Array.from(
+      new Set((recentPostsRes.data ?? []).map((p: any) => p.user_id)),
+    );
+    const authorNames = recentPostUserIds.length
+      ? await supabaseAdmin.from("profiles").select("id,full_name").in("id", recentPostUserIds)
+      : { data: [] as any[] };
+    const nameMap = new Map((authorNames.data ?? []).map((p: any) => [p.id, p.full_name]));
+
+    return {
+      totalMembers: membersCount.count ?? 0,
+      totalStewards: stewardsCount.count ?? 0,
+      aiCreditsAvailable,
+      totalPosts: postsCount.count ?? 0,
+      hiddenPosts: hiddenPostsCount.count ?? 0,
+      openSupportMessages: openSupportCount.count ?? 0,
+      recentMembers: (recentMembersRes.data ?? []) as AdminDashboardStats["recentMembers"],
+      recentPosts: (recentPostsRes.data ?? []).map((p: any) => ({
+        id: p.id,
+        author_name: nameMap.get(p.user_id) ?? null,
+        caption: p.caption,
+        hidden: p.hidden,
+        created_at: p.created_at,
+      })),
+    };
+  });
+
 export const adminAmIAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

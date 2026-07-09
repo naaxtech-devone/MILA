@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Images } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export const Route = createFileRoute("/_authenticated/history")({
+export const Route = createFileRoute("/_authenticated/_app/history")({
   component: History,
 });
 

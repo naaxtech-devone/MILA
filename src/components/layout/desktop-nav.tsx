@@ -8,12 +8,10 @@ const topNavItems: { to: string; label: string }[] = [
 
 export function DesktopNav({
   path,
-  isAdmin,
   onOpenLens,
   onOpenConcierge,
 }: {
   path: string;
-  isAdmin: boolean;
   onOpenLens: () => void;
   onOpenConcierge: () => void;
 }) {
@@ -57,17 +55,6 @@ export function DesktopNav({
       >
         Concierge
       </button>
-      {isAdmin && (
-        <Link
-          to="/admin"
-          className={cn(
-            "text-xs uppercase tracking-[0.2em] transition-colors",
-            path === "/admin" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
-          )}
-        >
-          Admin
-        </Link>
-      )}
     </nav>
   );
 }

@@ -67,7 +67,9 @@ import { BodyTypeQuiz } from "@/components/style-profile/body-type-quiz";
 import { VisualDiagnosticViewfinder } from "@/components/style-profile/visual-diagnostic-viewfinder";
 import { StudioPortfolioView } from "@/components/style-profile/studio-portfolio-view";
 
-export const Route = createFileRoute("/_authenticated/style-profile")({ component: StyleProfile });
+export const Route = createFileRoute("/_authenticated/_app/style-profile")({
+  component: StyleProfile,
+});
 
 function studioToDossier(p: StudioColorProfile, prev?: StudioDossier): StudioDossier {
   const season = p.season as Season;
