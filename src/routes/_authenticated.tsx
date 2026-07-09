@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthLayout() {
-  const { session, loading, signOut } = useAuth();
+  const { session, loading, signOut, signingOut } = useAuth();
   const navigate = useNavigate();
 
   const userId = session?.user.id;
@@ -37,8 +37,8 @@ function AuthLayout() {
   });
 
   useEffect(() => {
-    if (!loading && !session) navigate({ to: "/login" });
-  }, [loading, session, navigate]);
+    if (!loading && !session && !signingOut) navigate({ to: "/login" });
+  }, [loading, session, signingOut, navigate]);
 
   if (loading || !session) {
     return (

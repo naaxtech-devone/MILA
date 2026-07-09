@@ -6,6 +6,7 @@ interface AuthCtx {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  signingOut: boolean;
   signOut: () => Promise<void>;
 }
 
@@ -14,6 +15,7 @@ const Ctx = createContext<AuthCtx | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
     const {
@@ -35,7 +37,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: session?.user ?? null,
         session,
         loading,
+        signingOut,
         signOut: async () => {
+          setSigningOut(true);
           await supabase.auth.signOut();
           window.location.href = "/";
         },
