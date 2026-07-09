@@ -48,32 +48,30 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
         })}
       </nav>
 
-      <div className="mt-auto pt-6">
-        <div className="rounded-2xl border border-porcelain/60 bg-background/60 overflow-hidden">
-          <div className="flex items-center gap-2.5 px-3 py-3">
-            <div className="h-8 w-8 shrink-0 rounded-full border border-porcelain/60 bg-atelier-panel flex items-center justify-center font-serif text-xs text-ink">
-              {initial}
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs text-ink truncate">{user?.email ?? "Steward"}</div>
-              <div className="text-[9px] uppercase tracking-[0.18em] text-stone">Administrator</div>
-            </div>
+      <div className="mt-auto border-t border-porcelain/50 pt-4">
+        <div className="flex items-center gap-2.5 px-1 py-1">
+          <div className="h-8 w-8 shrink-0 rounded-full border border-porcelain/60 bg-atelier-panel flex items-center justify-center font-serif text-xs text-ink">
+            {initial}
           </div>
-          <button
-            type="button"
-            onClick={handleSignOut}
-            disabled={signingOut}
-            aria-label="Sign out"
-            className="flex w-full items-center justify-center gap-2 border-t border-porcelain/40 px-3 py-2.5 text-[10px] uppercase tracking-[0.22em] text-stone hover:text-ink hover:bg-background/40 transition-colors disabled:opacity-50"
-          >
-            {signingOut ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <LogOut className="h-3.5 w-3.5" strokeWidth={1.5} />
-            )}
-            Sign Out
-          </button>
+          <div className="min-w-0">
+            <div className="text-xs text-ink truncate">{user?.email ?? "Steward"}</div>
+            <div className="text-[9px] uppercase tracking-[0.18em] text-stone">Administrator</div>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={handleSignOut}
+          disabled={signingOut}
+          aria-label="Sign out"
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-porcelain/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-stone transition-colors hover:border-atelier-gold/40 hover:text-ink disabled:opacity-50"
+        >
+          {signingOut ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <LogOut className="h-3.5 w-3.5" strokeWidth={1.5} />
+          )}
+          Sign Out
+        </button>
       </div>
     </div>
   );

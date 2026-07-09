@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { adminGateQueryOptions } from "@/lib/queries/admin";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
@@ -50,19 +51,31 @@ export function AdminShell() {
         <AdminSidebar path={path} />
       </div>
 
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button
-            type="button"
-            className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
-            aria-label="Close admin navigation"
-            onClick={() => setSidebarOpen(false)}
-          />
-          <aside className="relative h-full w-[min(20rem,85vw)] shadow-atelier-soft">
-            <AdminSidebar path={path} onNavigate={() => setSidebarOpen(false)} />
-          </aside>
-        </div>
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <div key="admin-mobile-drawer" className="fixed inset-0 z-50 lg:hidden">
+            <motion.button
+              type="button"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-background/90 backdrop-blur-md"
+              aria-label="Close admin navigation"
+              onClick={() => setSidebarOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: "-100%", opacity: 0.96 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0.96 }}
+              transition={{ type: "spring", stiffness: 320, damping: 32 }}
+              className="relative h-full w-[min(22rem,88vw)]"
+            >
+              <AdminSidebar path={path} onNavigate={() => setSidebarOpen(false)} />
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
 
       <div className="flex min-w-0 flex-1 flex-col min-h-0">
         <AdminHeader
