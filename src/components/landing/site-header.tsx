@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { adminGateQueryOptions } from "@/lib/queries/admin";
 
@@ -18,12 +19,14 @@ export function SiteHeader() {
       </span>
       <div className="flex items-center gap-4">
         <ThemeToggle />
-        <Link
-          to={destination}
-          className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="rounded-full text-[11px] uppercase tracking-[0.2em]"
         >
-          {label}
-        </Link>
+          <Link to={destination}>{label}</Link>
+        </Button>
       </div>
     </header>
   );
