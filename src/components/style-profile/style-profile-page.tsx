@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { type StudioColorProfile } from "@/lib/analyzePersonalColor.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { queryKeys } from "@/constants/query-keys";
 import { Camera, Loader2, Check } from "lucide-react";
 import { ColorDossierSection } from "@/components/studio/style-profile";
 import {
@@ -110,6 +112,7 @@ function normalizeStoredProfile(raw: any): StudioDossier | null {
 
 export function StyleProfile() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     full_name: "",
@@ -212,11 +215,20 @@ export function StyleProfile() {
           if (normalized && !localStudioUpdateRef.current) {
             setDossier(normalized);
             setHasRealDossier(true);
+            // Restore the "Select Your Known Color Profile" tile selection
+            // from the loaded dossier — it was previously never hydrated,
+            // so a saved selection always rendered as unselected on refresh.
+            const matchedGroup = KNOWN_SEASON_GROUPS.find((g) => g.season === normalized.season);
+            const matchedTile = matchedGroup?.tiles.find(
+              (t) => SEASONS_MASTER_DATA[t.key].subSeason === normalized.subSeason,
+            );
+            setKnownTileId(matchedTile?.id ?? null);
           }
+          const persistedSeason = (json?.season ?? data.color_season) || null;
           lastSavedRef.current = JSON.stringify({
             skin_undertone:
               (json?.undertone ?? json?.calculatedUndertone ?? data.skin_undertone) || null,
-            color_season: (json?.season ?? data.color_season) || null,
+            color_season: persistedSeason,
             body_type: (json?.bodyType ?? data.body_type) || null,
             face_shape: resolvedFace,
             hair_type: resolvedHair,
@@ -224,6 +236,14 @@ export function StyleProfile() {
               ? bp.filter((x: unknown) => typeof x === "string")
               : [],
           });
+          // The sync badge previously only ever left its "idle" default via
+          // a side-effect of the debounced auto-save below, so a page that
+          // loaded already-saved data still showed "Awaiting Edits" until
+          // the user touched something. Seed it from what's actually
+          // persisted instead.
+          if (persistedSeason) {
+            setSyncStatus("synced");
+          }
 
           console.log("[StyleProfile] hydrated profile", {
             color_season: (json?.season ?? data.color_season) || null,
@@ -378,40 +398,71 @@ export function StyleProfile() {
   }
 
   async function handleStudioComplete(p: StudioColorProfile, t?: StudioTelemetry) {
+    if (!user) return;
     localStudioUpdateRef.current = true;
     const next = studioToDossier(p, hasRealDossier ? dossier : undefined);
     const undertone = (["Spring", "Autumn"] as string[]).includes(next.season) ? "Warm" : "Cool";
-
-    if (t) setTelemetry(t);
 
     setDiagOpen(false);
     setManualOpen(false);
     setQuizOpen(false);
     setBodyQuizOpen(false);
-    setDossier({ ...next });
-    setHasRealDossier(true);
-    setProfileRevision((n) => n + 1);
-    setForm((f) => ({
-      ...f,
-      color_season: next.season,
-      skin_undertone: f.skin_undertone || undertone,
-      body_type: next.bodyType,
-    }));
+    setSyncStatus("syncing");
 
-    if (user) {
-      const { error } = await supabase.from("profiles").upsert({
-        id: user.id,
+    // Wait for persistence before reflecting success in the UI — a card
+    // selection alone must never imply the dossier is synced. Update, not
+    // upsert: the profiles row always already exists (created by the
+    // handle_new_user trigger at signup), and upsert's ON CONFLICT DO
+    // UPDATE path still evaluates the INSERT policy's WITH CHECK (which
+    // requires a valid username) even though no insert actually happens —
+    // this 403s for any account whose username is still NULL (a reachable
+    // state: handle_new_user drops an invalid/taken username rather than
+    // fail signup).
+    const { error } = await supabase
+      .from("profiles")
+      .update({
         color_season: next.season,
         skin_undertone: undertone,
         body_type: next.bodyType,
         color_profile: next as any,
         updated_at: new Date().toISOString(),
-      } as any);
-      if (error) {
-        console.error("Studio profile save error:", error);
-        toast.error("Showing your look, but we couldn't save it just now.");
-      }
+      } as any)
+      .eq("id", user.id);
+
+    if (error) {
+      console.error("Studio profile save error:", error);
+      setSyncStatus("error");
+      toast.error(
+        "We couldn't save your color profile. Your selection is still here — try syncing again.",
+      );
+      return;
     }
+
+    if (t) setTelemetry(t);
+    setDossier({ ...next });
+    setHasRealDossier(true);
+    setProfileRevision((n) => n + 1);
+    const updatedSkinUndertone = form.skin_undertone || undertone;
+    setForm((f) => ({
+      ...f,
+      color_season: next.season,
+      skin_undertone: updatedSkinUndertone,
+      body_type: next.bodyType,
+    }));
+    // Keep the debounced auto-save effect from immediately re-saving the
+    // same values we just persisted above (it watches these same form
+    // fields and would otherwise fire a redundant, color_profile-less
+    // update 600ms later).
+    lastSavedRef.current = JSON.stringify({
+      skin_undertone: updatedSkinUndertone || null,
+      color_season: next.season || null,
+      body_type: next.bodyType || null,
+      face_shape: holistic.face_shape,
+      hair_type: holistic.hair_type,
+      beauty_preferences: beautyPrefs,
+    });
+    setSyncStatus("synced");
+    void queryClient.invalidateQueries({ queryKey: queryKeys.profile(user.id) });
 
     window.setTimeout(() => {
       portfolioRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
