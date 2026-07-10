@@ -15,7 +15,7 @@ Today, destination logic after sign-in is duplicated and incomplete:
 
 ## Decision: reuse, don't rebuild
 
-`/onboarding/style-profile` renders the *same* `StyleProfile` component as `/style-profile`, extracted into its own module and imported by both route files. The only difference between the two routes is layout chrome (minimal logo+logout for onboarding vs. full `AppShell` for the manage view) and guard position (onboarding sits outside the completeness guard; manage sits inside it). This satisfies "reuse existing forms, don't build a second unrelated implementation" and avoids re-implementing quiz-step sequencing that doesn't exist today.
+`/onboarding/style-profile` renders the _same_ `StyleProfile` component as `/style-profile`, extracted into its own module and imported by both route files. The only difference between the two routes is layout chrome (minimal logo+logout for onboarding vs. full `AppShell` for the manage view) and guard position (onboarding sits outside the completeness guard; manage sits inside it). This satisfies "reuse existing forms, don't build a second unrelated implementation" and avoids re-implementing quiz-step sequencing that doesn't exist today.
 
 Consequence: there is no discrete "step N of 7" onboarding wizard, because the underlying page isn't structured that way. The existing page already lets a returning incomplete user "resume" naturally — whatever's unfilled just still shows as unfilled when they reopen it. A literal step-by-step progress indicator is out of scope for this pass; noted as a possible follow-up, not implemented here.
 
@@ -50,15 +50,15 @@ export type AuthenticatedViewerState = {
 ```
 
 - `resolveAuthenticatedDestination({ isAdmin, isStyleProfileComplete }): Destination` — pure, synchronous. Admin check strictly before completeness check, per the required priority.
-- `loadAuthenticatedViewerState(queryClient, userId): Promise<AuthenticatedViewerState>` — route-loader-friendly; calls `queryClient.ensureQueryData` on the *existing* `adminGateQueryOptions()` and `profileQueryOptions(userId)`, runs `isStyleProfileComplete`, then `resolveAuthenticatedDestination`. No new server function, no new network round-trip beyond what already exists — this composes two already-cached queries.
+- `loadAuthenticatedViewerState(queryClient, userId): Promise<AuthenticatedViewerState>` — route-loader-friendly; calls `queryClient.ensureQueryData` on the _existing_ `adminGateQueryOptions()` and `profileQueryOptions(userId)`, runs `isStyleProfileComplete`, then `resolveAuthenticatedDestination`. No new server function, no new network round-trip beyond what already exists — this composes two already-cached queries.
 - `useAuthenticatedViewerState()` — thin React hook wrapping the same two queries via `useQuery`, for component-level use (e.g. dashboard could show a "complete your profile" nudge without a hard redirect, or `login.tsx`'s post-login effect).
 
-Suspension is deliberately **not** part of this resolver's output. `_authenticated.tsx` already checks `profiles.suspended` and renders a full-screen suspended notice for *any* nested route, regardless of destination — so whichever destination the resolver picks, a suspended user still gets intercepted by the existing, unmodified suspension gate before any of `/admin`, `/dashboard`, or `/onboarding` render. Duplicating that check into the resolver would be redundant, not defense-in-depth (same client, same request path, same trust level).
+Suspension is deliberately **not** part of this resolver's output. `_authenticated.tsx` already checks `profiles.suspended` and renders a full-screen suspended notice for _any_ nested route, regardless of destination — so whichever destination the resolver picks, a suspended user still gets intercepted by the existing, unmodified suspension gate before any of `/admin`, `/dashboard`, or `/onboarding` render. Duplicating that check into the resolver would be redundant, not defense-in-depth (same client, same request path, same trust level).
 
 ## Route changes
 
 - **Extract**: `StyleProfile` component moves from `_app/style-profile.tsx` into `src/components/style-profile/style-profile-page.tsx` (named export), unchanged internals — pure move, not a rewrite.
-- **New**: `src/routes/_authenticated/onboarding.tsx` — pathless layout, minimal shell (Mila logo, sign-out button), no `AppShell`/bottom-nav/top-nav. Sits directly under `_authenticated`, sibling to `_app` and `admin`, so it is *not* subject to the `_app` completeness guard.
+- **New**: `src/routes/_authenticated/onboarding.tsx` — pathless layout, minimal shell (Mila logo, sign-out button), no `AppShell`/bottom-nav/top-nav. Sits directly under `_authenticated`, sibling to `_app` and `admin`, so it is _not_ subject to the `_app` completeness guard.
 - **New**: `src/routes/_authenticated/onboarding/style-profile.tsx` — renders the extracted `StyleProfile` component under the onboarding layout.
 - **Modify**: `_app/style-profile.tsx` becomes a thin wrapper importing the same extracted component (keeps the `/style-profile` URL and `AppShell` chrome for the manage/edit experience).
 - **Modify**: `_authenticated/_app.tsx` — add `beforeLoad` using `loadAuthenticatedViewerState`: `isAdmin` → redirect `/admin`; `!isStyleProfileComplete` → redirect `/onboarding/style-profile` (both `replace: true`). This single guard covers `/dashboard`, `/feed`, `/history`, and `/style-profile` (manage) since they all nest under `_app`.
@@ -71,7 +71,7 @@ No changes to `_authenticated.tsx` itself (session + suspension gate already cor
 
 ## Redirect-loop prevention
 
-- `/onboarding/style-profile` is a sibling of `_app`, not nested inside it — the completeness guard that would send an incomplete user *to* onboarding never runs *for* onboarding itself.
+- `/onboarding/style-profile` is a sibling of `_app`, not nested inside it — the completeness guard that would send an incomplete user _to_ onboarding never runs _for_ onboarding itself.
 - `/admin`'s guard and `_app`'s guard are on disjoint route subtrees; an admin visiting a member route is bounced once (`_app` guard) to `/admin`, which has no further redirect for an admin. A non-admin visiting `/admin` is bounced once to their member destination, which is never `/admin` again.
 - All corrective redirects use `replace: true` (no extra history entries, no back-button loop).
 

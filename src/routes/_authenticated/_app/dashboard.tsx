@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
+import { isStyleProfileComplete } from "@/lib/style-profile/completion";
 import { greet } from "@/lib/greet";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
@@ -57,7 +58,18 @@ function Dashboard() {
     enabled: !!user?.id,
   });
 
-  const profileComplete = !!(profile?.body_type && profile?.color_season);
+  const profileComplete = isStyleProfileComplete(
+    profile
+      ? {
+          skin_undertone: profile.skin_undertone,
+          color_season: profile.color_season_base,
+          body_type: profile.body_type,
+          face_shape: profile.face_shape,
+          hair_type: profile.hair_type,
+          color_profile: profile.color_profile,
+        }
+      : null,
+  );
 
   const [generating, setGenerating] = useState(false);
   const [look, setLook] = useState<DailyLook | null>(null);

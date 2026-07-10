@@ -23,10 +23,12 @@
 ### Task 1: Completion contract + central resolver
 
 **Files:**
+
 - Create: `src/lib/style-profile/completion.ts`
 - Create: `src/lib/queries/auth.ts`
 
 **Interfaces:**
+
 - Produces: `isStyleProfileComplete(profile)`, `AuthenticatedViewerState` type, `resolveAuthenticatedDestination(input)`, `loadAuthenticatedViewerState(queryClient, userId)`, `useAuthenticatedViewerState()`. Every later task imports these — do not rename once written.
 - Consumes: `adminGateQueryOptions` (`@/lib/queries/admin`), `profileQueryOptions` (`@/lib/queries/profile`), `UNDERTONES`/`SEASONS`/`BODIES`/`FACE_SHAPES`/`HAIR_TYPES` (`@/constants/style-profile`).
 
@@ -56,9 +58,7 @@ function isNonEmptyColorProfile(value: unknown): boolean {
  * quiz." beauty_preferences and default_location are intentionally
  * excluded — see docs/superpowers/specs/2026-07-10-auth-routing-onboarding-design.md.
  */
-export function isStyleProfileComplete(
-  profile: StyleProfileRow | null | undefined,
-): boolean {
+export function isStyleProfileComplete(profile: StyleProfileRow | null | undefined): boolean {
   if (!profile) return false;
   return (
     (UNDERTONES as readonly string[]).includes(profile.skin_undertone ?? "") &&
@@ -76,6 +76,7 @@ export function isStyleProfileComplete(
 ```bash
 grep -n "^export" src/constants/style-profile/index.ts | grep -E "UNDERTONES|SEASONS|BODIES|FACE_SHAPES|HAIR_TYPES"
 ```
+
 Expected: all five are re-exported from the barrel file (`index.ts`) — confirmed present in `data.ts` per repo inspection; adjust the import path in Step 1 to `@/constants/style-profile/data` only if the barrel doesn't re-export them.
 
 - [ ] **Step 3: the resolver**
@@ -138,7 +139,9 @@ export function useAuthenticatedViewerState(userId: string | undefined) {
   const gateQuery = useQuery({ ...adminGateQueryOptions(), enabled: !!userId });
   const profileQuery = useQuery({ ...profileQueryOptions(userId), enabled: !!userId });
   const isAdmin = !!gateQuery.data?.is_admin;
-  const complete = isStyleProfileComplete(profileQuery.data as unknown as StyleProfileRow | undefined);
+  const complete = isStyleProfileComplete(
+    profileQuery.data as unknown as StyleProfileRow | undefined,
+  );
   return {
     isLoading: gateQuery.isLoading || profileQuery.isLoading,
     isAdmin,
@@ -183,10 +186,12 @@ EOF
 ### Task 2: Extract the style-profile page component
 
 **Files:**
+
 - Create: `src/components/style-profile/style-profile-page.tsx`
 - Modify: `src/routes/_authenticated/_app/style-profile.tsx`
 
 **Interfaces:**
+
 - Produces: `export function StyleProfile()` from the new file — identical implementation to what exists today, only the file location and export keyword change.
 - Consumes: nothing new; all of the existing file's imports move with it.
 
@@ -213,6 +218,7 @@ bunx tsc --noEmit
 bun run lint
 bun run build
 ```
+
 Expected: no errors — this step is a pure move, so any error indicates a missed import.
 
 - [ ] **Step 4: Manual check**
@@ -239,10 +245,12 @@ EOF
 ### Task 3: Onboarding layout and route
 
 **Files:**
+
 - Create: `src/routes/_authenticated/onboarding.tsx`
 - Create: `src/routes/_authenticated/onboarding/style-profile.tsx`
 
 **Interfaces:**
+
 - Consumes: `StyleProfile` (Task 2), `useSignOut` (`@/hooks/use-sign-out`), `Button`/`IconButton` (`@/components/ui/`).
 - Produces: route `/onboarding/style-profile`, reachable by any authenticated non-suspended user (admin or not — admins are redirected away from it by Task 4's guard on `_app`, not by this route itself, since this route has no completeness gate of its own by design).
 
@@ -265,15 +273,13 @@ function OnboardingLayout() {
   return (
     <div className="mila-page flex min-h-screen flex-col">
       <header className="mila-container flex items-center justify-between py-6">
-        <Link to="/onboarding/style-profile" className="font-display text-xl tracking-[0.2em] text-ink">
+        <Link
+          to="/onboarding/style-profile"
+          className="font-display text-xl tracking-[0.2em] text-ink"
+        >
           MILA
         </Link>
-        <IconButton
-          variant="ghost"
-          label="Sign out"
-          onClick={handleSignOut}
-          disabled={signingOut}
-        >
+        <IconButton variant="ghost" label="Sign out" onClick={handleSignOut} disabled={signingOut}>
           <LogOut className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
         </IconButton>
       </header>
@@ -304,6 +310,7 @@ bunx tsc --noEmit
 bun run lint
 bun run build
 ```
+
 The TanStack Router Vite plugin regenerates `src/routeTree.gen.ts` automatically on `bun run dev`/`build` — do not hand-edit that file.
 
 - [ ] **Step 4: Manual check**
@@ -332,9 +339,11 @@ EOF
 ### Task 4: Guard the member (`_app`) layout
 
 **Files:**
+
 - Modify: `src/routes/_authenticated/_app.tsx`
 
 **Interfaces:**
+
 - Consumes: `loadAuthenticatedViewerState` (Task 1), `useRouteContext`/`Route.useRouteContext` pattern already used elsewhere in the repo for `queryClient` access (see `__root.tsx`'s `createRootRouteWithContext<{ queryClient: QueryClient }>()`).
 
 - [ ] **Step 1: Add `beforeLoad`**
@@ -413,6 +422,7 @@ EOF
 ### Task 5: Guard the admin layout
 
 **Files:**
+
 - Modify: `src/routes/_authenticated/admin.tsx`
 
 - [ ] **Step 1: Add `beforeLoad`**
@@ -478,11 +488,13 @@ EOF
 ### Task 6: Landing, login, and OAuth callback use the shared resolver
 
 **Files:**
+
 - Modify: `src/routes/index.tsx`
 - Modify: `src/routes/login.tsx`
 - Modify: `src/routes/auth/callback.tsx`
 
 **Interfaces:**
+
 - Consumes: `loadAuthenticatedViewerState` (route loaders), `useAuthenticatedViewerState` (login.tsx's effect-based redirect).
 
 - [ ] **Step 1: `index.tsx`**
@@ -571,6 +583,7 @@ EOF
 ### Task 7: Replace dashboard's local completion check; final validation
 
 **Files:**
+
 - Modify: `src/routes/_authenticated/_app/dashboard.tsx`
 
 - [ ] **Step 1: Replace the weak inline check**
@@ -617,6 +630,7 @@ bun run lint
 bunx tsc --noEmit
 bun run build
 ```
+
 Review `git status` after `format` — if it touched files outside this feature's scope, revert those (same caution as prior passes in this repo).
 
 - [ ] **Step 5: Commit**
