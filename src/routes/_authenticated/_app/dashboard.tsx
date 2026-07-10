@@ -313,10 +313,7 @@ function Dashboard() {
       </motion.section>
 
       {profile?.color_season && (
-        <motion.section
-          variants={cardItemVariants}
-          className="mb-14 rounded-card bg-card border border-border p-6 md:p-8 shadow-paper"
-        >
+        <motion.section variants={cardItemVariants}>
           <DailyPaletteGenerator userColorSeason={profile.color_season} />
         </motion.section>
       )}
