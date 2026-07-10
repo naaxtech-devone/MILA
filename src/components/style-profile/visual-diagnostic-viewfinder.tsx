@@ -311,7 +311,7 @@ export function VisualDiagnosticViewfinder({
   return !calibrated ? (
     <div className="fixed inset-0 z-50 bg-background flex flex-col">
       <div className="flex items-center justify-between px-5 py-4 border-b-[0.5px] border-border">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-(--atelier-gold)">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-accent">
           Seoul Atelier · Find your light
         </span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
@@ -320,7 +320,7 @@ export function VisualDiagnosticViewfinder({
       </div>
       <div className="flex-1 overflow-y-auto flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-lg border-[0.5px] border-border bg-card text-card-foreground px-7 py-9">
-          <p className="text-[9px] uppercase tracking-[0.42em] text-(--atelier-gold) text-center">
+          <p className="text-[9px] uppercase tracking-[0.42em] text-accent text-center">
             Let's find your light
           </p>
           <h3 className="mt-3 font-serif text-3xl tracking-tight text-center text-foreground">
@@ -370,7 +370,7 @@ export function VisualDiagnosticViewfinder({
           >
             Open the camera
           </button>
-          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.32em] text-(--atelier-gold)">
+          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.32em] text-accent">
             Your camera stays off until you're ready.
           </p>
         </div>

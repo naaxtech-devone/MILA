@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { generateDailyPalette } from "@/lib/color-analysis/paletteGenerator";
 import { migrateLegacySeason } from "@/lib/color-analysis/schemaMigration";
 import type { SeasonId } from "@/lib/color-analysis/types";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
 
 function hexToRgba(hex: string, alpha: number): string {
   const clean = hex.replace("#", "");
@@ -50,7 +52,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
   );
 
   return (
-    <div className="bg-card rounded-4xl shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] border border-border p-5 space-y-5">
+    <div className="bg-card rounded-card shadow-paper border border-border p-5 space-y-5">
       <div className="flex items-center justify-between">
         <span className="atelier-kicker">{today}</span>
         <span
@@ -89,9 +91,9 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
 
       <div className="rounded-xl bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) p-3">
         <div className="flex items-start gap-2">
-          <Sparkles className="h-4 w-4 text-(--atelier-gold) mt-0.5 shrink-0" />
+          <Sparkles className="h-4 w-4 text-accent mt-0.5 shrink-0" />
           <p className="text-[13px] text-muted-foreground leading-snug">
-            <strong className="text-(--atelier-gold)">Mila&apos;s take —</strong>{" "}
+            <strong className="text-accent">Mila&apos;s take —</strong>{" "}
             {look.isSisterSeasonIncluded
               ? "I borrowed the accent from your Sister Season for a little range without leaving your palette."
               : look.insight}
@@ -100,26 +102,18 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
       </div>
 
       <div className="flex gap-2">
-        <button
+        <IconButton
           onClick={() => setSaved((s) => !s)}
-          className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${
-            saved
-              ? "bg-[#2B2B2F] text-white dark:bg-zinc-100 dark:text-zinc-900"
-              : "bg-[#F2EDE6] text-[#2B2B2F] dark:bg-secondary dark:text-foreground"
-          }`}
-          aria-label={saved ? "Unsave palette" : "Save palette"}
+          variant={saved ? "primary" : "outline"}
+          label={saved ? "Unsave palette" : "Save palette"}
         >
-          <Bookmark className="w-4 h-4" fill={saved ? "currentColor" : "none"} />
-        </button>
+          <Bookmark className="w-4 h-4" fill={saved ? "currentColor" : "none"} aria-hidden="true" />
+        </IconButton>
 
-        <button
-          onClick={handleShuffle}
-          disabled={isRotating}
-          className="flex-1 flex items-center justify-center space-x-2 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-black py-2.5 px-4 rounded-xl transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? "animate-spin" : ""}`} />
+        <Button onClick={handleShuffle} loading={isRotating} className="flex-1">
+          <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Generate Next Look</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

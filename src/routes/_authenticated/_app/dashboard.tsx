@@ -200,14 +200,14 @@ function Dashboard() {
                 </>
               ) : climate ? (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate look —{" "}
+                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-accent" /> Generate look —{" "}
                   {climate.tempC}°C{" "}
                   {climate.label.replace(/^[-\d.]+\s*°[CF]\s*/i, "").split(/[\s,]+/)[0] ||
                     climate.condition}
                 </>
               ) : (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-(--atelier-gold)" /> Generate look
+                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-accent" /> Generate look
                 </>
               )}
             </Button>
@@ -292,7 +292,7 @@ function Dashboard() {
                     onClick={generateLook}
                     className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
                   >
-                    <Sparkles className="h-4 w-4 mr-2 text-(--atelier-gold)" /> Try another
+                    <Sparkles className="h-4 w-4 mr-2 text-accent" /> Try another
                   </Button>
                 </motion.div>
               </motion.div>
@@ -315,7 +315,7 @@ function Dashboard() {
       {profile?.color_season && (
         <motion.section
           variants={cardItemVariants}
-          className="mb-14 rounded-4xl bg-card border border-border p-6 md:p-8 shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)]"
+          className="mb-14 rounded-card bg-card border border-border p-6 md:p-8 shadow-paper"
         >
           <DailyPaletteGenerator userColorSeason={profile.color_season} />
         </motion.section>

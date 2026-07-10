@@ -105,7 +105,7 @@ function ClimateGlyph({ icon, className }: { icon: ClimateIcon; className?: stri
 
 export function ClimateSyncChip({ value }: { value: ClimateState }) {
   return (
-    <div className="inline-flex items-center gap-3 rounded-full border border-atelier-champagne/40 bg-linear-to-r from-atelier-ivory/70 via-background/60 to-atelier-champagne/20 backdrop-blur px-4 py-2 shadow-[0_2px_18px_-8px_rgba(0,0,0,0.25)]">
+    <div className="inline-flex items-center gap-3 rounded-full border border-atelier-champagne/40 bg-linear-to-r from-atelier-ivory/70 via-background/60 to-atelier-champagne/20 backdrop-blur px-4 py-2 shadow-paper">
       <span className="grid place-items-center h-7 w-7 rounded-full border border-atelier-champagne/50 bg-background/70 text-foreground">
         <ClimateGlyph icon={value.icon} className="h-3.5 w-3.5" />
       </span>

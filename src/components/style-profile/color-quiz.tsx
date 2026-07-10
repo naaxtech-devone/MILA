@@ -107,7 +107,7 @@ export function ColorQuiz({
     <div className="fixed inset-0 z-50 bg-background flex items-center justify-center p-0 sm:p-4">
       <div className="bg-card w-full sm:border sm:border-border max-w-2xl h-full sm:h-auto sm:max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl">
         <div className="px-6 py-4 border-b-[0.5px] border-border flex items-center justify-between shrink-0">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-(--atelier-gold)">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-accent">
             Color Quiz · Step {step + 1} of 8
           </p>
           <button
@@ -433,7 +433,7 @@ export function LightingStep({ onConfirm }: { onConfirm: () => void }) {
           I'm currently in soft, indirect natural daylight.
         </span>
       </label>
-      <p className="text-[10px] uppercase tracking-[0.22em] text-(--atelier-gold) leading-relaxed">
+      <p className="text-[10px] uppercase tracking-[0.22em] text-accent leading-relaxed">
         Prefer a live AI scan? Close this quiz and tap{" "}
         <span className="text-foreground">Run Visual Diagnostic</span> on the studio dossier to
         launch the camera viewfinder.
@@ -466,7 +466,7 @@ export function DetailedColorResultView({
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-foreground text-background text-[9px] uppercase tracking-widest font-medium">
           <ShieldCheck className="h-3.5 w-3.5" /> SEOUL DIGITAL DIAGNOSTIC REUSE
         </div>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-(--atelier-gold) mt-5 mb-1">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-accent mt-5 mb-1">
           Your Diagnostic Palette
         </p>
         <h3 className="font-serif text-3xl sm:text-4xl tracking-tight font-medium">
@@ -477,7 +477,7 @@ export function DetailedColorResultView({
         </p>
         {profile.stylistNote && (
           <div className="mt-5 border-l-2 border-foreground/40 pl-3 text-left max-w-md mx-auto">
-            <p className="text-[9px] uppercase tracking-[0.25em] text-(--atelier-gold) mb-1">
+            <p className="text-[9px] uppercase tracking-[0.25em] text-accent mb-1">
               Stylist Note
               {typeof profile.aiConfidence === "number"
                 ? ` · ${Math.round(profile.aiConfidence)}% confidence`
@@ -508,7 +508,7 @@ export function DetailedColorResultView({
       </div>
 
       <div>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-(--atelier-gold) font-semibold mb-3">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-semibold mb-3">
           I. Best Draping Swatches
         </p>
         <div className="grid grid-cols-4 gap-2">
@@ -518,9 +518,7 @@ export function DetailedColorResultView({
                 className="h-12 border-[0.5px] border-border"
                 style={{ backgroundColor: s.hex }}
               />
-              <p className="text-[9px] uppercase tracking-wide text-(--atelier-gold) truncate">
-                {s.name}
-              </p>
+              <p className="text-[9px] uppercase tracking-wide text-accent truncate">{s.name}</p>
             </div>
           ))}
         </div>

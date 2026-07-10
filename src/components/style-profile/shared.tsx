@@ -81,9 +81,7 @@ export function DossierField({
   return (
     <section className="space-y-4">
       <div className="space-y-1.5">
-        {eyebrow && (
-          <p className="text-[9px] uppercase tracking-[0.42em] text-(--atelier-gold)">{eyebrow}</p>
-        )}
+        {eyebrow && <p className="text-[9px] uppercase tracking-[0.42em] text-accent">{eyebrow}</p>}
         <h3 className="font-serif text-2xl tracking-tight text-foreground">{title}</h3>
         {caption && (
           <p className="text-[12px] text-muted-foreground leading-relaxed max-w-xl">{caption}</p>
@@ -120,7 +118,7 @@ export function DossierAccordion({
       <AccordionTrigger className="py-6 hover:no-underline">
         <div className="flex items-center justify-between w-full gap-3">
           <div className="flex flex-col items-start text-left gap-1">
-            <p className="text-[10px] uppercase tracking-[0.42em] text-(--atelier-gold)">
+            <p className="text-[10px] uppercase tracking-[0.42em] text-accent">
               {eyebrow.split(" / ")[0]}
             </p>
             <h2 className="font-serif text-xl sm:text-2xl tracking-tight text-foreground">
@@ -173,7 +171,7 @@ export function PillRow({
               "group inline-flex items-center gap-2 px-4 py-2.5 border transition-all duration-200",
               "text-[11px] uppercase tracking-[0.22em] rounded-full",
               active
-                ? "bg-(--atelier-gold-light) border-(--atelier-gold) text-[#2B2320]"
+                ? "bg-(--atelier-gold-light) border-accent text-[#2B2320]"
                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >
@@ -248,7 +246,7 @@ export function BeautyPillTray({
               "inline-flex items-center gap-2 px-4 py-2.5 border rounded-full transition-all duration-200",
               "text-[11px] uppercase tracking-[0.22em]",
               isActive
-                ? "bg-(--atelier-gold-light) border-(--atelier-gold) text-[#2B2320]"
+                ? "bg-(--atelier-gold-light) border-accent text-[#2B2320]"
                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >
@@ -274,7 +272,7 @@ export function CardMatrix({
     <section className="space-y-5">
       <div className="flex items-center gap-3">
         <span className="h-px flex-1 bg-border" />
-        <p className="text-[10px] uppercase tracking-[0.42em] text-(--atelier-gold) whitespace-nowrap">
+        <p className="text-[10px] uppercase tracking-[0.42em] text-accent whitespace-nowrap">
           {label}
         </p>
         <span className="h-px flex-1 bg-border" />
@@ -287,9 +285,9 @@ export function CardMatrix({
               key={o.value}
               type="button"
               onClick={() => onPick(o.value)}
-              className={`group relative text-left rounded-4xl p-5 sm:p-6 min-h-30 transition-all duration-300 bg-card hover:bg-card shadow-[0_4px_24px_rgba(43,35,28,0.07),0_1px_4px_rgba(43,35,28,0.04)] ${
+              className={`group relative text-left rounded-card p-5 sm:p-6 min-h-30 transition-all duration-300 bg-card hover:bg-card shadow-paper ${
                 active
-                  ? "border border-foreground bg-foreground/4 shadow-[0_0_0_1px_hsl(var(--foreground))] -translate-y-px"
+                  ? "border border-foreground bg-foreground/4 ring-1 ring-foreground -translate-y-px"
                   : "border border-transparent hover:border-foreground/20"
               }`}
             >

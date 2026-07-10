@@ -147,7 +147,7 @@ function FeedPage() {
 
             <div className="fixed inset-x-0 bottom-0 top-16 z-30 flex items-center justify-center px-6">
               <div className="pointer-events-none absolute inset-0 backdrop-blur-xl bg-background/40" />
-              <div className="relative max-w-md w-full rounded-[2rem] border border-porcelain/70 bg-background/80 backdrop-blur-2xl shadow-atelier-float p-8 md:p-10 text-center space-y-6">
+              <div className="relative max-w-md w-full rounded-overlay border border-porcelain/70 bg-background/80 backdrop-blur-2xl shadow-atelier-float p-8 md:p-10 text-center space-y-6">
                 <div className="mx-auto h-14 w-14 rounded-full border border-porcelain/70 bg-atelier-ivory/70 flex items-center justify-center">
                   <Lock className="h-5 w-5 text-ink" strokeWidth={1.25} />
                 </div>

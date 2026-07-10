@@ -255,7 +255,7 @@ export function StylistConciergeDrawer({
           {sending && (
             <div className="flex gap-3 items-start">
               <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-(--atelier-gold)" strokeWidth={1.5} />
+                <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
               </div>
               <div className="rounded-2xl bg-secondary/70 text-muted-foreground px-4 py-2.5 text-sm flex items-center gap-2 text-muted-foreground shadow-sm">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Mila is composing…
@@ -274,7 +274,7 @@ export function StylistConciergeDrawer({
           <Select value="" onValueChange={(v) => v && send(v)} disabled={sending || !profileReady}>
             <SelectTrigger className="h-9 rounded-full border-foreground/15 bg-background/70 px-4 text-[11px] uppercase tracking-[0.22em] text-muted-foreground focus:ring-0">
               <div className="inline-flex items-center gap-2">
-                <Wand2 className="h-3.5 w-3.5 text-(--atelier-gold)" strokeWidth={1.5} />
+                <Wand2 className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
                 <SelectValue placeholder="Quick prompts" />
               </div>
             </SelectTrigger>
@@ -325,7 +325,7 @@ function MessageBubble({ msg }: { msg: Msg }) {
     <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
         <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-(--atelier-gold)" strokeWidth={1.5} />
+          <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
         </div>
       )}
       <div className={cn("max-w-[80%] flex flex-col gap-1", isUser && "items-end")}>
