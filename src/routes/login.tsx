@@ -13,13 +13,17 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
-  const { data: gate } = useQuery({ ...adminGateQueryOptions(), enabled: !!session });
+  const { data: gate, isError } = useQuery({
+    ...adminGateQueryOptions(),
+    enabled: !!session,
+    retry: false,
+  });
 
   useEffect(() => {
-    if (!loading && session && gate !== undefined) {
-      navigate({ to: gate.is_admin ? "/admin" : "/dashboard" });
+    if (!loading && session && (gate !== undefined || isError)) {
+      navigate({ to: gate?.is_admin ? "/admin" : "/dashboard" });
     }
-  }, [loading, session, gate, navigate]);
+  }, [loading, session, gate, isError, navigate]);
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
