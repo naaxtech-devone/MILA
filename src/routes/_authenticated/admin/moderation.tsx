@@ -54,7 +54,7 @@ function ModerationPage() {
         {rows.map((p) => (
           <article
             key={p.id}
-            className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 overflow-hidden flex flex-col"
+            className="rounded-panel border border-porcelain/60 bg-atelier-panel/40 overflow-hidden flex flex-col"
           >
             <div className="relative aspect-3/4 bg-background">
               {p.image_url_back ? (
@@ -126,7 +126,7 @@ function ModerationPage() {
         ))}
       </div>
       {!isLoading && rows.length === 0 && (
-        <div className="px-5 py-16 text-center text-sm text-stone border border-porcelain/40 rounded-2xl">
+        <div className="px-5 py-16 text-center text-sm text-stone border border-porcelain/40 rounded-panel">
           No posts to moderate.
         </div>
       )}

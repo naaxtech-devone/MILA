@@ -49,7 +49,7 @@ function AdminDashboard() {
           <h2 className="text-[10px] uppercase tracking-[0.22em] text-stone mb-4">
             Recent Members
           </h2>
-          <div className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
+          <div className="rounded-panel border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
             {(stats?.recentMembers ?? []).map((m) => (
               <div
                 key={m.id}
@@ -84,7 +84,7 @@ function AdminDashboard() {
           <h2 className="text-[10px] uppercase tracking-[0.22em] text-stone mb-4">
             Recent Activity
           </h2>
-          <div className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
+          <div className="rounded-panel border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
             {(stats?.recentPosts ?? []).map((p) => (
               <div
                 key={p.id}

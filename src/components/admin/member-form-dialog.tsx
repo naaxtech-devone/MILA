@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormField } from "@/components/ui/form-field";
 import { adminCreateMember, adminUpdateMember, type AdminUserRow } from "@/lib/admin.functions";
 
 interface MemberFormDialogProps {
@@ -85,38 +85,44 @@ export function MemberFormDialog({ open, onOpenChange, member, onSaved }: Member
         <form onSubmit={handleSubmit} className="space-y-3">
           {!isEdit && (
             <>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Email Address</Label>
+              <FormField label="Email Address" htmlFor="member-email" required>
                 <Input
+                  id="member-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Password</Label>
+              </FormField>
+              <FormField label="Password" htmlFor="member-password" required>
                 <Input
+                  id="member-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   minLength={8}
                   required
                 />
-              </div>
+              </FormField>
             </>
           )}
-          <div className="space-y-1.5">
-            <Label className="text-xs">Full Name</Label>
-            <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs">Username</Label>
-            <Input value={username} onChange={(e) => setUsername(e.target.value)} />
-          </div>
+          <FormField label="Full Name" htmlFor="member-full-name">
+            <Input
+              id="member-full-name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </FormField>
+          <FormField label="Username" htmlFor="member-username">
+            <Input
+              id="member-username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </FormField>
           <DialogFooter className="pt-1">
-            <Button type="submit" disabled={submitting} className="h-9 text-xs px-4">
-              {submitting ? "Saving…" : isEdit ? "Save Changes" : "Create Member"}
+            <Button type="submit" loading={submitting} size="sm">
+              {isEdit ? "Save Changes" : "Create Member"}
             </Button>
           </DialogFooter>
         </form>

@@ -12,7 +12,7 @@ export function AdminStatCard({
   sublabel?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 p-5 flex flex-col gap-3">
+    <div className="rounded-panel border border-porcelain/60 bg-atelier-panel/40 p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <span className="text-[9px] uppercase tracking-[0.22em] text-stone">{label}</span>
         <Icon className="h-4 w-4 text-accent" strokeWidth={1.5} />
