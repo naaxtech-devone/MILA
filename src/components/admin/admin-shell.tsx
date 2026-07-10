@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { Outlet, useRouterState } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, ShieldAlert } from "lucide-react";
-import { adminGateQueryOptions } from "@/lib/queries/admin";
+import { useAuth } from "@/hooks/use-auth";
+import { useAuthenticatedViewerState } from "@/lib/queries/auth";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
 
 export function AdminShell() {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const { data: gate, isLoading } = useQuery(adminGateQueryOptions());
+  const { user } = useAuth();
+  const viewer = useAuthenticatedViewerState(user?.id);
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -21,7 +23,16 @@ export function AdminShell() {
     return () => window.removeEventListener("keydown", onKey);
   }, [sidebarOpen]);
 
-  if (isLoading) {
+  // SSR can't resolve admin status (session lives in localStorage), so this
+  // component-level check — not admin.tsx's beforeLoad — is what actually
+  // protects this route tree once hydrated. See _app.tsx for the same
+  // pattern and why beforeLoad alone isn't sufficient in this SSR app.
+  useEffect(() => {
+    if (!user || viewer.isLoading || viewer.isAdmin) return;
+    navigate({ to: viewer.destination, replace: true });
+  }, [user, viewer.isLoading, viewer.isAdmin, viewer.destination, navigate]);
+
+  if (!user || viewer.isLoading) {
     return (
       <div className="h-dvh flex items-center justify-center bg-background text-stone">
         <Loader2 className="size-4 animate-spin" />
@@ -29,7 +40,7 @@ export function AdminShell() {
     );
   }
 
-  if (!gate?.is_admin) {
+  if (!viewer.isAdmin) {
     return (
       <div className="h-dvh flex items-center justify-center bg-background px-6">
         <div className="max-w-md text-center">
