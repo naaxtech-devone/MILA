@@ -112,6 +112,60 @@ export const adminSetSuspended = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+const usernameSchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(30)
+  .regex(/^[a-zA-Z0-9_-]+$/, "3-30 letters, numbers, - or _ only.");
+
+const CreateMemberInput = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  full_name: z.string().trim().max(100).optional(),
+  username: usernameSchema.optional(),
+});
+
+export const adminCreateMember = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => CreateMemberInput.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { full_name: data.full_name ?? "", username: data.username },
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+const UpdateMemberInput = z.object({
+  user_id: z.string().uuid(),
+  full_name: z.string().trim().max(100).optional(),
+  username: usernameSchema.optional().or(z.literal("")),
+});
+
+export const adminUpdateMember = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => UpdateMemberInput.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ full_name: data.full_name ?? null, username: data.username || null })
+      .eq("id", data.user_id);
+    if (error) {
+      throw new Error(
+        error.message.includes("duplicate") ? "Username already taken." : error.message,
+      );
+    }
+    return { ok: true };
+  });
+
 export interface AdminPostRow {
   id: string;
   user_id: string;

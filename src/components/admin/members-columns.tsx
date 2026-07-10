@@ -1,9 +1,15 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { UserX, UserCheck } from "lucide-react";
+import { UserX, UserCheck, MoreHorizontal, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import type { AdminUserRow } from "@/lib/admin.functions";
 
@@ -11,12 +17,14 @@ interface MembersColumnsOptions {
   currentUserId?: string;
   onToggleAdmin: (id: string, grant: boolean) => void;
   onToggleSuspended: (id: string, suspended: boolean) => void;
+  onEdit: (member: AdminUserRow) => void;
 }
 
 export function getMembersColumns({
   currentUserId,
   onToggleAdmin,
   onToggleSuspended,
+  onEdit,
 }: MembersColumnsOptions): ColumnDef<AdminUserRow>[] {
   return [
     {
@@ -63,29 +71,52 @@ export function getMembersColumns({
     {
       id: "status",
       header: () => <div className="text-right">Status</div>,
-      cell: ({ row }) => (
-        <div className="flex justify-end items-center gap-2">
-          {row.original.suspended ? (
+      cell: ({ row }) =>
+        row.original.suspended ? (
+          <div className="flex justify-end">
             <Badge
               variant="outline"
               className="border-destructive/50 text-destructive text-[9px] uppercase tracking-[0.18em]"
             >
               Suspended
             </Badge>
-          ) : null}
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-8 px-2 text-stone hover:text-ink"
-            onClick={() => onToggleSuspended(row.original.id, !row.original.suspended)}
-            title={row.original.suspended ? "Reinstate" : "Suspend"}
-          >
-            {row.original.suspended ? (
-              <UserCheck className="h-4 w-4" />
-            ) : (
-              <UserX className="h-4 w-4" />
-            )}
-          </Button>
+          </div>
+        ) : null,
+    },
+    {
+      id: "actions",
+      header: () => <div className="text-right sr-only">Actions</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-stone hover:text-ink">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Open actions</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                <Pencil className="mr-2 h-3.5 w-3.5" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onToggleSuspended(row.original.id, !row.original.suspended)}
+              >
+                {row.original.suspended ? (
+                  <>
+                    <UserCheck className="mr-2 h-3.5 w-3.5" />
+                    Reinstate
+                  </>
+                ) : (
+                  <>
+                    <UserX className="mr-2 h-3.5 w-3.5" />
+                    Suspend
+                  </>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ),
     },

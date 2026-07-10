@@ -33,6 +33,8 @@ interface DataTableProps<TData, TValue> {
   countLabel?: string;
   isLoading?: boolean;
   emptyMessage?: string;
+  /** Replaces the row count with custom content, e.g. an "Add" button. */
+  action?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,6 +46,7 @@ export function DataTable<TData, TValue>({
   countLabel = "results",
   isLoading,
   emptyMessage = "No results.",
+  action,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -77,9 +80,11 @@ export function DataTable<TData, TValue>({
         ) : (
           <div />
         )}
-        <div className="text-[10px] uppercase tracking-[0.22em] text-stone">
-          {isLoading ? "Loading…" : `${table.getFilteredRowModel().rows.length} ${countLabel}`}
-        </div>
+        {action ?? (
+          <div className="text-[10px] uppercase tracking-[0.22em] text-stone">
+            {isLoading ? "Loading…" : `${table.getFilteredRowModel().rows.length} ${countLabel}`}
+          </div>
+        )}
       </div>
 
       <div className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
