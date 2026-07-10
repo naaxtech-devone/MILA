@@ -25,7 +25,7 @@ export function DesktopNav({
             to={it.to}
             className={cn(
               "text-xs uppercase tracking-[0.2em] transition-colors",
-              active ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
+              active ? "text-accent" : "text-muted hover:text-ink",
             )}
           >
             {it.label}
@@ -35,7 +35,7 @@ export function DesktopNav({
       <button
         type="button"
         onClick={onOpenLens}
-        className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
+        className="text-xs uppercase tracking-[0.2em] text-muted hover:text-ink transition-colors"
       >
         Lens
       </button>
@@ -43,7 +43,7 @@ export function DesktopNav({
         to="/style-profile"
         className={cn(
           "text-xs uppercase tracking-[0.2em] transition-colors",
-          path === "/style-profile" ? "text-(--atelier-gold)" : "text-stone hover:text-ink",
+          path === "/style-profile" ? "text-accent" : "text-muted hover:text-ink",
         )}
       >
         Studio
@@ -51,7 +51,7 @@ export function DesktopNav({
       <button
         type="button"
         onClick={onOpenConcierge}
-        className="text-xs uppercase tracking-[0.2em] text-stone hover:text-ink transition-colors"
+        className="text-xs uppercase tracking-[0.2em] text-muted hover:text-ink transition-colors"
       >
         Concierge
       </button>

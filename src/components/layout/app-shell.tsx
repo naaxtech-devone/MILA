@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 aria-label={`${credits} AI credits — get more`}
                 className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
               >
-                <Coins className="h-3.5 w-3.5 text-(--atelier-gold)" strokeWidth={1.5} />
+                <Coins className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
                 {credits}
               </button>
             )}

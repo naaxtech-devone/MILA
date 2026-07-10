@@ -63,7 +63,7 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
           onClick={handleSignOut}
           disabled={signingOut}
           aria-label="Sign out"
-          className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-porcelain/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-stone transition-colors hover:border-atelier-gold/40 hover:text-ink disabled:opacity-50"
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-porcelain/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-stone transition-colors hover:border-accent/40 hover:text-ink disabled:opacity-50"
         >
           {signingOut ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

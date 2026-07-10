@@ -1,5 +1,6 @@
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme, type Theme } from "@/components/layout/theme-provider";
+import { IconButton } from "@/components/ui/icon-button";
 
 const NEXT: Record<Theme, Theme> = { light: "dark", dark: "system", system: "light" };
 
@@ -10,14 +11,15 @@ export function ThemeToggle() {
   const Icon = ICONS[theme];
 
   return (
-    <button
-      type="button"
+    <IconButton
+      variant="outline"
+      size="sm"
       onClick={() => setTheme(NEXT[theme])}
-      aria-label={`Theme: ${theme}. Switch to ${NEXT[theme]}`}
+      label={`Theme: ${theme}. Switch to ${NEXT[theme]}`}
       title={`Theme: ${theme}`}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-ink hover:border-porcelain transition-colors"
+      className="rounded-pill border-line/60 bg-canvas/60 backdrop-blur hover:border-line"
     >
-      <Icon className="h-4 w-4" strokeWidth={1.5} />
-    </button>
+      <Icon className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
+    </IconButton>
   );
 }
