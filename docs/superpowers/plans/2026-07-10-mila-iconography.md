@@ -24,12 +24,14 @@
 ### Task 1: `Input` leading/trailing icon support + `PasswordVisibilityButton`
 
 **Files:**
+
 - Modify: `src/components/ui/input.tsx`
 - Create: `src/components/ui/password-visibility-button.tsx`
 - Modify: `src/components/login/login-form.tsx`
 - Modify: `src/components/login/signup-form.tsx`
 
 **Interfaces:**
+
 - Produces: `Input` gains `leadingIcon?: LucideIcon`, `trailingIcon?: LucideIcon`, `trailingElement?: React.ReactNode` props (all optional, none change existing call sites' behavior). `PasswordVisibilityButton` component: props `{ visible: boolean; onToggle: () => void; className?: string }`.
 - Consumes: `cn` from `@/lib/utils`, `LucideIcon` type from `lucide-react`.
 
@@ -50,7 +52,17 @@ export interface InputProps extends React.ComponentProps<"input"> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, leadingIcon: LeadingIcon, trailingIcon: TrailingIcon, trailingElement, ...props }, ref) => {
+  (
+    {
+      className,
+      type,
+      leadingIcon: LeadingIcon,
+      trailingIcon: TrailingIcon,
+      trailingElement,
+      ...props
+    },
+    ref,
+  ) => {
     const hasTrailing = Boolean(TrailingIcon || trailingElement);
 
     if (!LeadingIcon && !hasTrailing) {
@@ -121,7 +133,11 @@ export interface PasswordVisibilityButtonProps {
   className?: string;
 }
 
-export function PasswordVisibilityButton({ visible, onToggle, className }: PasswordVisibilityButtonProps) {
+export function PasswordVisibilityButton({
+  visible,
+  onToggle,
+  className,
+}: PasswordVisibilityButtonProps) {
   return (
     <button
       type="button"
@@ -150,7 +166,7 @@ Replace the imports `Eye, EyeOff` (keep `ArrowRight`) and the inline `<button>..
 ```tsx
 import { PasswordVisibilityButton } from "@/components/ui/password-visibility-button";
 // ...
-          <PasswordVisibilityButton visible={showPassword} onToggle={onToggleShowPassword} />
+<PasswordVisibilityButton visible={showPassword} onToggle={onToggleShowPassword} />;
 ```
 
 - [ ] **Step 4: Wire into `signup-form.tsx`**
@@ -163,6 +179,7 @@ Same replacement (keep `ArrowRight, Check, X`, drop `Eye, EyeOff` from the impor
 bunx tsc --noEmit
 bun run lint
 ```
+
 Expected: no errors. `tsc` will catch it if any other call site was relying on `Input`'s old non-generic prop shape (none should be, since `InputProps` is a strict superset of the previous `React.ComponentProps<"input">`).
 
 - [ ] **Step 6: Manual check**
@@ -190,9 +207,11 @@ EOF
 ### Task 2: Admin sidebar icon and accessibility fixes
 
 **Files:**
+
 - Modify: `src/components/admin/admin-sidebar.tsx`
 
 **Interfaces:**
+
 - Consumes: `Input` unchanged; no new consumers.
 
 - [ ] **Step 1: Type the nav config and swap the Dashboard icon**
@@ -265,6 +284,7 @@ EOF
 ### Task 3: Admin header mobile toggle Menu/X swap
 
 **Files:**
+
 - Modify: `src/components/admin/admin-header.tsx`
 
 - [ ] **Step 1: Swap the icon and label based on `sidebarOpen`**
@@ -274,19 +294,19 @@ Read the file first (`onOpenSidebar`/`sidebarOpen` props already exist per `admi
 ```tsx
 import { Menu, X } from "lucide-react";
 // ...
-          <button
-            type="button"
-            onClick={onOpenSidebar}
-            aria-label={sidebarOpen ? "Close admin navigation" : "Open admin navigation"}
-            aria-expanded={sidebarOpen}
-            className="lg:hidden inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 text-ink hover:border-porcelain transition-colors"
-          >
-            {sidebarOpen ? (
-              <X className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            ) : (
-              <Menu className="size-4" strokeWidth={1.75} aria-hidden="true" />
-            )}
-          </button>
+<button
+  type="button"
+  onClick={onOpenSidebar}
+  aria-label={sidebarOpen ? "Close admin navigation" : "Open admin navigation"}
+  aria-expanded={sidebarOpen}
+  className="lg:hidden inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 text-ink hover:border-porcelain transition-colors"
+>
+  {sidebarOpen ? (
+    <X className="size-4" strokeWidth={1.75} aria-hidden="true" />
+  ) : (
+    <Menu className="size-4" strokeWidth={1.75} aria-hidden="true" />
+  )}
+</button>;
 ```
 
 Note: `onOpenSidebar` only opens today (per `AdminShell`, closing happens via backdrop click or Escape) — this step only changes the icon/label to reflect state, it does not add new close-click behavior, since that would be a logic change outside this pass's scope. If `onOpenSidebar` unconditionally sets `sidebarOpen(true)`, clicking while open is a no-op, which matches current behavior (button was previously always `Menu` regardless of state, so this is a pure visual/accessibility improvement, not a regression).
@@ -315,6 +335,7 @@ EOF
 ### Task 4: `DataTable` search icon, pagination icons, empty-state icon
 
 **Files:**
+
 - Modify: `src/components/ui/data-table.tsx`
 - Modify: `src/components/ui/data-table-column-header.tsx`
 
@@ -344,6 +365,7 @@ In `data-table.tsx`, import `Search, ChevronLeft, ChevronRight, Inbox` from `luc
   <ChevronRight aria-hidden="true" />
 </Button>
 ```
+
 (`Button`'s own `[&_svg]:size-4` handles sizing — no manual className needed.)
 
 - [ ] **Step 3: Empty-row icon**
@@ -358,6 +380,7 @@ Change the empty `TableCell` body to:
   </div>
 </TableCell>
 ```
+
 (Only the empty-results branch — leave the `isLoading` branch's plain "Loading…" text as-is, a spinner there is a separate, larger change not required by this pass.)
 
 - [ ] **Step 4: Sort icon stroke width**
@@ -393,6 +416,7 @@ EOF
 ### Task 5: Admin table action icon consistency + micro empty-state icons
 
 **Files:**
+
 - Modify: `src/components/admin/members-columns.tsx`
 - Modify: `src/routes/_authenticated/admin/index.tsx`
 - Modify: `src/routes/_authenticated/admin/moderation.tsx`
@@ -411,6 +435,7 @@ Read the file first (`"No members yet."` / `"No activity yet."` blocks). Import 
   No members yet.
 </div>
 ```
+
 ```tsx
 <div className="px-5 py-8 text-center text-sm text-stone flex flex-col items-center gap-2">
   <Inbox className="size-5 text-muted" strokeWidth={1.75} aria-hidden="true" />
@@ -456,6 +481,7 @@ grep -rnoE 'className="[^"]*\bh-4 w-4\b[^"]*"' src --include="*.tsx"
 grep -rnoE 'className="[^"]*\bh-5 w-5\b[^"]*"' src --include="*.tsx"
 grep -rnoE 'className="[^"]*\bh-3 w-3\b[^"]*"' src --include="*.tsx"
 ```
+
 For each match inside a Lucide-icon-element className (not an unrelated element — check context), replace `h-N w-N` with `size-N` in that exact className string. `h-3 w-3` (12px, not one of the spec's tiers) → round up to `size-3.5` (nearest tier) only where it's a Lucide icon.
 
 - [ ] **Step 2: Add/normalize `strokeWidth`**
@@ -463,6 +489,7 @@ For each match inside a Lucide-icon-element className (not an unrelated element 
 ```bash
 grep -rn "strokeWidth={1.5}" src --include="*.tsx"
 ```
+
 Change each to `strokeWidth={1.75}`. Then, for icon elements touched in Step 1 (i.e. already being edited on that line) that have no `strokeWidth` prop at all, add `strokeWidth={1.75}`. Do not touch `strokeWidth` on lines/files not already being edited in Step 1 — this avoids a blind whole-repo sweep of icons this task isn't otherwise looking at.
 
 - [ ] **Step 3: Remove unused imports**
@@ -470,6 +497,7 @@ Change each to `strokeWidth={1.75}`. Then, for icon elements touched in Step 1 (
 ```bash
 bunx eslint . --quiet 2>&1 | grep -i "no-unused-vars\|is defined but never used"
 ```
+
 Fix any `lucide-react` imports left unused by Tasks 1-6's edits (e.g. `MoreHorizontal` in `members-columns.tsx` from Task 5, or `Eye`/`EyeOff` in `login-form.tsx`/`signup-form.tsx` from Task 1 if not already cleaned up).
 
 - [ ] **Step 4: Verify**
@@ -506,6 +534,7 @@ EOF
 bun run format
 git status --short
 ```
+
 Review the diff — stage only files this pass actually touched (same caution as the design-system pass: `bun run format` can reformat unrelated files if run repo-wide; revert anything outside `src/` or the two spec/plan docs).
 
 - [ ] **Step 2: Full validation**
@@ -515,6 +544,7 @@ bunx tsc --noEmit
 bun run lint
 bun run build
 ```
+
 Expected: all exit 0, 11 pre-existing fast-refresh warnings only (no new errors).
 
 - [ ] **Step 3: Grep-based completion check**
@@ -524,6 +554,7 @@ grep -rln "MoreHorizontal" src --include="*.tsx"
 grep -rn "strokeWidth={1.5}" src --include="*.tsx"
 grep -rln "import \* as [A-Za-z]* from \"lucide-react\"" src --include="*.tsx"
 ```
+
 Expected: `MoreHorizontal` gone from `members-columns.tsx` (other files may legitimately still use it if not touched), no remaining `strokeWidth={1.5}`, no wildcard `lucide-react` imports anywhere (there shouldn't be any — confirms the "no full-namespace import" rule was never violated).
 
 - [ ] **Step 4: Commit** (only if Step 1 produced a diff)
