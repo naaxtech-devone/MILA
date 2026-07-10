@@ -1,15 +1,22 @@
 import { Link } from "@tanstack/react-router";
-import { LayoutGrid, Users, ShieldAlert, LifeBuoy, LogOut, Loader2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { LayoutDashboard, Users, ShieldAlert, LifeBuoy, LogOut, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useSignOut } from "@/hooks/use-sign-out";
 
-export const ADMIN_LINKS = [
-  { to: "/admin", label: "Dashboard", icon: LayoutGrid },
+interface AdminNavItem {
+  to: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+export const ADMIN_LINKS: AdminNavItem[] = [
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/members", label: "Members", icon: Users },
   { to: "/admin/moderation", label: "Moderation", icon: ShieldAlert },
   { to: "/admin/support", label: "Support", icon: LifeBuoy },
-] as const;
+];
 
 export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
   const { user } = useAuth();
@@ -34,6 +41,7 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
               key={to}
               to={to}
               onClick={() => onNavigate?.()}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
                 active
@@ -41,7 +49,7 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
                   : "text-stone hover:text-ink hover:bg-background/60",
               )}
             >
-              <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
               {label}
             </Link>
           );
