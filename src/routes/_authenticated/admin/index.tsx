@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Users, ShieldCheck, Coins, Images, EyeOff, LifeBuoy, Loader2 } from "lucide-react";
+import { Users, ShieldCheck, Coins, Images, EyeOff, LifeBuoy, Loader2, Inbox } from "lucide-react";
 import { adminDashboardQueryOptions } from "@/lib/queries/admin";
 import { AdminStatCard } from "@/components/admin/admin-stat-card";
 
@@ -69,7 +69,10 @@ function AdminDashboard() {
               </div>
             ))}
             {stats?.recentMembers.length === 0 && (
-              <div className="px-5 py-8 text-center text-sm text-stone">No members yet.</div>
+              <div className="flex flex-col items-center gap-2 px-5 py-8 text-center text-sm text-stone">
+                <Users className="size-5 text-muted" strokeWidth={1.75} aria-hidden="true" />
+                No members yet.
+              </div>
             )}
           </div>
           <Link
@@ -109,7 +112,10 @@ function AdminDashboard() {
               </div>
             ))}
             {stats?.recentPosts.length === 0 && (
-              <div className="px-5 py-8 text-center text-sm text-stone">No activity yet.</div>
+              <div className="flex flex-col items-center gap-2 px-5 py-8 text-center text-sm text-stone">
+                <Inbox className="size-5 text-muted" strokeWidth={1.75} aria-hidden="true" />
+                No activity yet.
+              </div>
             )}
           </div>
           <Link

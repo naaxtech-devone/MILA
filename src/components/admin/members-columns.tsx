@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { UserX, UserCheck, MoreHorizontal, Pencil } from "lucide-react";
+import { UserX, UserCheck, Ellipsis, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -91,13 +91,13 @@ export function getMembersColumns({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-stone hover:text-ink">
-                <MoreHorizontal className="h-4 w-4" />
+                <Ellipsis className="size-4" strokeWidth={1.75} aria-hidden="true" />
                 <span className="sr-only">Open actions</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                <Pencil className="mr-2 h-3.5 w-3.5" />
+                <Pencil className="mr-2 size-4" strokeWidth={1.75} aria-hidden="true" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -105,12 +105,12 @@ export function getMembersColumns({
               >
                 {row.original.suspended ? (
                   <>
-                    <UserCheck className="mr-2 h-3.5 w-3.5" />
+                    <UserCheck className="mr-2 size-4" strokeWidth={1.75} aria-hidden="true" />
                     Reinstate
                   </>
                 ) : (
                   <>
-                    <UserX className="mr-2 h-3.5 w-3.5" />
+                    <UserX className="mr-2 size-4" strokeWidth={1.75} aria-hidden="true" />
                     Suspend
                   </>
                 )}

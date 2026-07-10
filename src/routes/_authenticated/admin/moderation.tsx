@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { EyeOff, Eye, Trash2 } from "lucide-react";
+import { EyeOff, Eye, Trash2, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { queryKeys } from "@/constants/query-keys";
@@ -101,12 +101,12 @@ function ModerationPage() {
                 >
                   {p.hidden ? (
                     <>
-                      <Eye className="h-3.5 w-3.5 mr-1.5" />
+                      <Eye className="size-4 mr-1.5" strokeWidth={1.75} aria-hidden="true" />
                       Restore
                     </>
                   ) : (
                     <>
-                      <EyeOff className="h-3.5 w-3.5 mr-1.5" />
+                      <EyeOff className="size-4 mr-1.5" strokeWidth={1.75} aria-hidden="true" />
                       Hide
                     </>
                   )}
@@ -116,9 +116,10 @@ function ModerationPage() {
                   variant="ghost"
                   className="h-8 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
                   onClick={() => remove(p.id)}
+                  aria-label={`Delete post by ${p.author_name || "member"}`}
                   title="Delete"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="size-4" strokeWidth={1.75} aria-hidden="true" />
                 </Button>
               </div>
             </div>
@@ -126,7 +127,8 @@ function ModerationPage() {
         ))}
       </div>
       {!isLoading && rows.length === 0 && (
-        <div className="px-5 py-16 text-center text-sm text-stone border border-porcelain/40 rounded-panel">
+        <div className="flex flex-col items-center gap-2 px-5 py-16 text-center text-sm text-stone border border-porcelain/40 rounded-panel">
+          <Inbox className="size-6 text-muted" strokeWidth={1.75} aria-hidden="true" />
           No posts to moderate.
         </div>
       )}
