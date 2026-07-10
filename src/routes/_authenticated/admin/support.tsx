@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CheckCircle2, Circle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { DataTable } from "@/components/ui/data-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getSupportColumns } from "@/components/admin/support-columns";
 import { queryKeys } from "@/constants/query-keys";
 import { adminResolveSupportMessage } from "@/lib/admin.functions";
 import { adminSupportQueryOptions } from "@/lib/queries/admin";
@@ -28,55 +29,45 @@ function SupportPage() {
   }
 
   const rows = data ?? [];
+  const helpRows = rows.filter((m) => m.kind === "help");
+  const feedbackRows = rows.filter((m) => m.kind === "feedback");
+  const columns = getSupportColumns({ onToggleResolved: toggleResolved });
 
   return (
-    <div>
-      <div className="mb-6 text-[10px] uppercase tracking-[0.22em] text-stone">
-        {isLoading ? "Loading…" : `${rows.length} messages`}
-      </div>
+    <Tabs defaultValue="help" className="w-full">
+      <TabsList className="h-9">
+        <TabsTrigger value="help" className="text-xs uppercase tracking-[0.18em]">
+          Help Desk ({helpRows.length})
+        </TabsTrigger>
+        <TabsTrigger value="feedback" className="text-xs uppercase tracking-[0.18em]">
+          Feedback ({feedbackRows.length})
+        </TabsTrigger>
+      </TabsList>
 
-      <div className="rounded-2xl border border-porcelain/60 bg-atelier-panel/40 overflow-hidden">
-        {rows.map((m) => (
-          <div
-            key={m.id}
-            className="flex items-start gap-4 px-5 py-4 border-b border-porcelain/30 last:border-0 hover:bg-background/40 transition-colors"
-          >
-            <button
-              type="button"
-              onClick={() => toggleResolved(m.id, !m.resolved)}
-              title={m.resolved ? "Mark unresolved" : "Mark resolved"}
-              className="mt-0.5 shrink-0 text-stone hover:text-ink transition-colors"
-            >
-              {m.resolved ? (
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              ) : (
-                <Circle className="h-4 w-4" />
-              )}
-            </button>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <Badge
-                  variant="outline"
-                  className="text-[9px] uppercase tracking-[0.18em] border-porcelain/60"
-                >
-                  {m.kind === "help" ? "Help Desk" : "Feedback"}
-                </Badge>
-                <span className="text-[10px] uppercase tracking-[0.18em] text-stone">
-                  {new Date(m.created_at).toLocaleString()}
-                </span>
-              </div>
-              <p
-                className={`mt-2 text-sm leading-relaxed ${m.resolved ? "text-stone line-through" : "text-ink"}`}
-              >
-                {m.message}
-              </p>
-            </div>
-          </div>
-        ))}
-        {!isLoading && rows.length === 0 && (
-          <div className="px-5 py-10 text-center text-sm text-stone">No messages yet.</div>
-        )}
-      </div>
-    </div>
+      <TabsContent value="help" className="mt-6">
+        <DataTable
+          columns={columns}
+          data={helpRows}
+          isLoading={isLoading}
+          searchable
+          searchPlaceholder="Search help desk messages"
+          searchText={(m) => m.message}
+          countLabel="messages"
+          emptyMessage="No help desk messages."
+        />
+      </TabsContent>
+      <TabsContent value="feedback" className="mt-6">
+        <DataTable
+          columns={columns}
+          data={feedbackRows}
+          isLoading={isLoading}
+          searchable
+          searchPlaceholder="Search feedback"
+          searchText={(m) => m.message}
+          countLabel="messages"
+          emptyMessage="No feedback yet."
+        />
+      </TabsContent>
+    </Tabs>
   );
 }
