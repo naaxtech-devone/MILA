@@ -29,11 +29,11 @@ export function DataTableColumnHeader<TData, TValue>({
     >
       {title}
       {sorted === "asc" ? (
-        <ArrowUp className="h-3.5 w-3.5" />
+        <ArrowUp className="size-3.5" strokeWidth={1.75} aria-hidden="true" />
       ) : sorted === "desc" ? (
-        <ArrowDown className="h-3.5 w-3.5" />
+        <ArrowDown className="size-3.5" strokeWidth={1.75} aria-hidden="true" />
       ) : (
-        <ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+        <ArrowUpDown className="size-3.5 opacity-50" strokeWidth={1.75} aria-hidden="true" />
       )}
     </Button>
   );

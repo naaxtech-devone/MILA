@@ -9,6 +9,7 @@ import {
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight, Inbox, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,6 +73,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between gap-4 mb-6">
         {searchable ? (
           <Input
+            leadingIcon={Search}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             placeholder={searchPlaceholder}
@@ -127,8 +129,11 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow className="border-porcelain/30 hover:bg-transparent">
-                <TableCell colSpan={columns.length} className="h-24 text-center text-sm text-stone">
-                  {emptyMessage}
+                <TableCell colSpan={columns.length} className="h-32 text-center text-sm text-stone">
+                  <div className="flex flex-col items-center gap-2">
+                    <Inbox className="size-6 text-muted" strokeWidth={1.75} aria-hidden="true" />
+                    {emptyMessage}
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -144,6 +149,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
+            <ChevronLeft aria-hidden="true" />
             Previous
           </Button>
           <Button
@@ -153,6 +159,7 @@ export function DataTable<TData, TValue>({
             disabled={!table.getCanNextPage()}
           >
             Next
+            <ChevronRight aria-hidden="true" />
           </Button>
         </div>
       )}
