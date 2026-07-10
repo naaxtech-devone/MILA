@@ -13,7 +13,7 @@ export function SiteHeader() {
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
       <span className="flex items-center gap-2.5 font-serif text-xl font-bold tracking-[0.35em] text-foreground">
-        <img src="/favicon.svg" alt="" className="h-6 w-6" />
+        <img src="/favicon.svg" alt="" className="size-6" />
         MILA
       </span>
       <div className="flex items-center gap-4">

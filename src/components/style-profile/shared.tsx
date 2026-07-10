@@ -130,13 +130,13 @@ export function DossierAccordion({
           </div>
           {complete && (
             <CheckCircle2
-              className="h-5 w-5 text-emerald-600 shrink-0"
+              className="size-5 text-emerald-600 shrink-0"
               aria-label="Section complete"
             />
           )}
           {partial && (
             <span className="inline-flex items-center gap-1.5 text-muted-foreground shrink-0">
-              <Circle className="h-4 w-4" />
+              <Circle className="size-4" />
               <span className="text-[10px] uppercase tracking-[0.22em]">
                 {filled}/{total}
               </span>
@@ -303,9 +303,9 @@ export function CardMatrix({
                   </p>
                 </div>
                 <span
-                  className={`mt-0.5 h-5 w-5 shrink-0 rounded-full flex items-center justify-center transition-all ${active ? "bg-foreground text-background scale-100" : "border-[0.5px] border-border scale-90 opacity-60"}`}
+                  className={`mt-0.5 size-5 shrink-0 rounded-full flex items-center justify-center transition-all ${active ? "bg-foreground text-background scale-100" : "border-[0.5px] border-border scale-90 opacity-60"}`}
                 >
-                  {active && <Check className="h-3 w-3" />}
+                  {active && <Check className="size-3" />}
                 </span>
               </div>
             </button>

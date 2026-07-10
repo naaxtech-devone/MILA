@@ -115,7 +115,7 @@ export function LoginForm({
 
       <Button type="submit" disabled={busy || !captchaToken} className="w-full h-10 gap-2">
         {busy ? "Please wait…" : "Enter Mila Studio"}
-        <ArrowRight className="h-4 w-4" />
+        <ArrowRight className="size-4" />
       </Button>
     </form>
   );

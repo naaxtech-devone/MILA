@@ -122,7 +122,7 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
             alt="The fit"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute top-4 left-4 h-20 w-20 rounded-full overflow-hidden border-2 border-atelier-ivory shadow-atelier-float">
+          <div className="absolute top-4 left-4 size-20 rounded-full overflow-hidden border-2 border-atelier-ivory shadow-atelier-float">
             <img
               src={URL.createObjectURL(front)}
               alt="Face & hair"
@@ -184,11 +184,11 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
           >
             {submitting ? (
               <span className="inline-flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" /> Posting…
+                <Loader2 className="size-4 animate-spin" /> Posting…
               </span>
             ) : (
               <span className="inline-flex items-center gap-2">
-                <Check className="h-4 w-4" /> Post Today's OOTD
+                <Check className="size-4" /> Post Today's OOTD
               </span>
             )}
           </Button>
@@ -220,11 +220,11 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
           )}
         >
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
-            <div className="h-16 w-16 rounded-full border border-porcelain/70 bg-background/60 backdrop-blur flex items-center justify-center mb-5">
+            <div className="size-16 rounded-full border border-porcelain/70 bg-background/60 backdrop-blur flex items-center justify-center mb-5">
               {starting ? (
-                <Loader2 className="h-6 w-6 animate-spin" />
+                <Loader2 className="size-6 animate-spin" />
               ) : (
-                <Camera className="h-6 w-6" strokeWidth={1.25} />
+                <Camera className="size-6" strokeWidth={1.25} />
               )}
             </div>
             <p className="font-serif text-xl mb-1">
@@ -251,24 +251,24 @@ export function DualCapture({ onSubmit, onCancel, submitting = false }: DualCapt
               stopStream();
               setActive(false);
             }}
-            className="absolute top-3 right-3 h-9 w-9 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-black/70"
+            className="absolute top-3 right-3 size-9 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-black/70"
             aria-label="Close camera"
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </button>
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-6 p-6 bg-linear-to-t from-black/70 to-transparent">
             <button
               type="button"
               onClick={() => startCamera(copy.facing)}
-              className="h-10 w-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60"
+              className="size-10 rounded-full bg-black/40 backdrop-blur text-white flex items-center justify-center hover:bg-black/60"
               aria-label="Restart camera"
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="size-4" />
             </button>
             <button
               type="button"
               onClick={() => snap(step)}
-              className="h-16 w-16 rounded-full bg-white ring-4 ring-white/30 hover:ring-white/50 transition-shadow"
+              className="size-16 rounded-full bg-white ring-4 ring-white/30 hover:ring-white/50 transition-shadow"
               aria-label="Capture"
             />
             <span className="w-10" />

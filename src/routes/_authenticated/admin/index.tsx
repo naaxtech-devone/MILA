@@ -14,7 +14,7 @@ function AdminDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-[40vh] flex items-center justify-center text-stone">
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Loader2 className="size-4 animate-spin" />
       </div>
     );
   }

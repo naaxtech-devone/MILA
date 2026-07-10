@@ -148,8 +148,8 @@ function FeedPage() {
             <div className="fixed inset-x-0 bottom-0 top-16 z-30 flex items-center justify-center px-6">
               <div className="pointer-events-none absolute inset-0 backdrop-blur-xl bg-background/40" />
               <div className="relative max-w-md w-full rounded-overlay border border-porcelain/70 bg-background/80 backdrop-blur-2xl shadow-atelier-float p-8 md:p-10 text-center space-y-6">
-                <div className="mx-auto h-14 w-14 rounded-full border border-porcelain/70 bg-atelier-ivory/70 flex items-center justify-center">
-                  <Lock className="h-5 w-5 text-ink" strokeWidth={1.25} />
+                <div className="mx-auto size-14 rounded-full border border-porcelain/70 bg-atelier-ivory/70 flex items-center justify-center">
+                  <Lock className="size-5 text-ink" strokeWidth={1.25} />
                 </div>
                 <div className="space-y-3">
                   <p className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">
@@ -168,7 +168,7 @@ function FeedPage() {
                   onClick={() => setIsPostOpen(true)}
                   className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-full bg-ink text-atelier-ivory text-[10px] uppercase tracking-[0.32em] hover:bg-ink/90 transition-colors shadow-atelier-soft"
                 >
-                  <Camera className="h-4 w-4" strokeWidth={1.5} />
+                  <Camera className="size-4" strokeWidth={1.75} />
                   Post Today's OOTD
                 </button>
               </div>

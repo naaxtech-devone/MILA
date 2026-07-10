@@ -42,7 +42,7 @@ export function AuthCard() {
           onClick={handleGoogleOAuth}
           className="w-full h-10 gap-2"
         >
-          <img src="/google.svg" alt="google-icon" className="h-5 w-5" />
+          <img src="/google.svg" alt="google-icon" className="size-5" />
           Continue with Google
         </Button>
 
@@ -94,7 +94,7 @@ export function AuthCard() {
 
       <div className="px-6 pb-5 -mt-1">
         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground/80 justify-center">
-          <ShieldCheck className="h-3 w-3" />
+          <ShieldCheck className="size-3" />
           Production-grade encrypted ecosystem authentication.
         </div>
       </div>

@@ -95,19 +95,19 @@ async function fetchClimate(lat: number, lon: number, location: string): Promise
 }
 
 function ClimateGlyph({ icon, className }: { icon: ClimateIcon; className?: string }) {
-  const cls = className ?? "h-4 w-4";
-  if (icon === "sun") return <Sun className={cls} strokeWidth={1.5} />;
-  if (icon === "rain") return <CloudRain className={cls} strokeWidth={1.5} />;
-  if (icon === "snow") return <CloudSnow className={cls} strokeWidth={1.5} />;
-  if (icon === "wind") return <Wind className={cls} strokeWidth={1.5} />;
-  return <Cloud className={cls} strokeWidth={1.5} />;
+  const cls = className ?? "size-4";
+  if (icon === "sun") return <Sun className={cls} strokeWidth={1.75} />;
+  if (icon === "rain") return <CloudRain className={cls} strokeWidth={1.75} />;
+  if (icon === "snow") return <CloudSnow className={cls} strokeWidth={1.75} />;
+  if (icon === "wind") return <Wind className={cls} strokeWidth={1.75} />;
+  return <Cloud className={cls} strokeWidth={1.75} />;
 }
 
 export function ClimateSyncChip({ value }: { value: ClimateState }) {
   return (
     <div className="inline-flex items-center gap-3 rounded-full border border-atelier-champagne/40 bg-linear-to-r from-atelier-ivory/70 via-background/60 to-atelier-champagne/20 backdrop-blur px-4 py-2 shadow-paper">
-      <span className="grid place-items-center h-7 w-7 rounded-full border border-atelier-champagne/50 bg-background/70 text-foreground">
-        <ClimateGlyph icon={value.icon} className="h-3.5 w-3.5" />
+      <span className="grid place-items-center size-7 rounded-full border border-atelier-champagne/50 bg-background/70 text-foreground">
+        <ClimateGlyph icon={value.icon} className="size-3.5" />
       </span>
       <p className="text-[11px] sm:text-xs font-medium tracking-[0.04em] text-foreground/85 leading-snug">
         {climateSyncLine(value)}
@@ -197,8 +197,8 @@ export function ClimateWidget({
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-white/20 bg-background/40 backdrop-blur px-4 py-3 min-w-55">
       <div className="flex items-center gap-3">
-        <span className="grid place-items-center h-8 w-8 rounded-full border border-white/20 bg-foreground/4 text-foreground">
-          <ClimateGlyph icon={value?.icon ?? "cloud"} className="h-4 w-4" />
+        <span className="grid place-items-center size-8 rounded-full border border-white/20 bg-foreground/4 text-foreground">
+          <ClimateGlyph icon={value?.icon ?? "cloud"} className="size-4" />
         </span>
         <div className="leading-tight">
           <p className="text-xs font-medium">{statusLabel}</p>
@@ -227,12 +227,12 @@ export function ClimateWidget({
           onClick={detect}
           disabled={loading}
           title="Use my location"
-          className="shrink-0 inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/20 bg-background/60 hover:bg-foreground hover:text-background transition-colors"
+          className="shrink-0 inline-flex items-center justify-center size-8 rounded-full border border-white/20 bg-background/60 hover:bg-foreground hover:text-background transition-colors"
         >
           {loading ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="size-3.5 animate-spin" />
           ) : (
-            <MapPin className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <MapPin className="size-3.5" strokeWidth={1.75} />
           )}
         </button>
       </div>

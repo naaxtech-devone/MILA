@@ -99,7 +99,7 @@ export function CameraCapture({
         />
         {analyzing && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/55 backdrop-blur-sm text-white">
-            <Loader2 className="h-8 w-8 animate-spin mb-3" />
+            <Loader2 className="size-8 animate-spin mb-3" />
             <p className="font-serif text-xl">Analyzing outfit silhouettes and tones…</p>
           </div>
         )}
@@ -119,11 +119,11 @@ export function CameraCapture({
           <div className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
           <div className="relative h-full w-full flex flex-col items-center justify-center text-center px-8">
-            <div className="h-16 w-16 rounded-full border border-white/25 bg-background/40 backdrop-blur flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+            <div className="size-16 rounded-full border border-white/25 bg-background/40 backdrop-blur flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
               {starting ? (
-                <Loader2 className="h-6 w-6 animate-spin" />
+                <Loader2 className="size-6 animate-spin" />
               ) : (
-                <Camera className="h-6 w-6" strokeWidth={1.25} />
+                <Camera className="size-6" strokeWidth={1.25} />
               )}
             </div>
             <p className="font-serif text-2xl md:text-3xl mb-2">
@@ -145,7 +145,7 @@ export function CameraCapture({
             disabled={disabled}
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ImageIcon className="h-3.5 w-3.5" />
+            <ImageIcon className="size-3.5" />
             Or choose a photo from gallery
           </button>
         </div>
@@ -175,10 +175,10 @@ export function CameraCapture({
       <button
         type="button"
         onClick={close}
-        className="absolute top-3 right-3 h-9 w-9 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-black/70"
+        className="absolute top-3 right-3 size-9 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-black/70"
         aria-label="Close camera"
       >
-        <X className="h-4 w-4" />
+        <X className="size-4" />
       </button>
 
       <div className="absolute inset-x-0 bottom-0 px-5 pb-5 pt-14 bg-linear-to-t from-black/80 via-black/45 to-transparent">
@@ -189,13 +189,13 @@ export function CameraCapture({
             className="justify-self-end mr-5 h-11 w-11 rounded-full bg-black/45 backdrop-blur text-white flex items-center justify-center hover:bg-black/65 transition-colors"
             aria-label="Restart camera"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="size-4" />
           </button>
 
           <button
             type="button"
             onClick={snap}
-            className="h-16 w-16 mx-3 rounded-full bg-white ring-[6px] ring-white/25 shadow-lg shadow-black/30 hover:ring-white/40 transition-shadow"
+            className="size-16 mx-3 rounded-full bg-white ring-[6px] ring-white/25 shadow-lg shadow-black/30 hover:ring-white/40 transition-shadow"
             aria-label="Capture photo"
           />
 
@@ -205,7 +205,7 @@ export function CameraCapture({
             className="justify-self-start ml-5 h-11 rounded-full bg-black/45 backdrop-blur px-4 text-white flex items-center gap-2 hover:bg-black/65 transition-colors"
             aria-label="Choose from gallery"
           >
-            <ImageIcon className="h-4 w-4" />
+            <ImageIcon className="size-4" />
             <span className="text-[10px] uppercase tracking-[0.22em]">Gallery</span>
           </button>
         </div>

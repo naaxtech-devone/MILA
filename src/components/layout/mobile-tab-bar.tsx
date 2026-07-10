@@ -34,7 +34,7 @@ export function MobileTabBar({
               active ? "text-accent" : "text-surface/50",
             )}
           >
-            <Icon className="h-4.5 w-4.5" strokeWidth={1.5} />
+            <Icon className="size-4.5" strokeWidth={1.75} />
             <span>{it.label}</span>
           </Link>
         );
@@ -44,7 +44,7 @@ export function MobileTabBar({
         onClick={onOpenLens}
         className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-surface/50"
       >
-        <Camera className="h-4.5 w-4.5" strokeWidth={1.5} />
+        <Camera className="size-4.5" strokeWidth={1.75} />
         <span>Lens</span>
       </button>
       <Link
@@ -54,7 +54,7 @@ export function MobileTabBar({
           path === "/style-profile" ? "text-accent" : "text-surface/50",
         )}
       >
-        <Palette className="h-4.5 w-4.5" strokeWidth={1.5} />
+        <Palette className="size-4.5" strokeWidth={1.75} />
         <span>Studio</span>
       </Link>
       <button
@@ -62,7 +62,7 @@ export function MobileTabBar({
         onClick={onOpenConcierge}
         className="relative flex-1 flex flex-col items-center gap-0.5 py-1.5 text-[9px] uppercase tracking-[0.18em] text-surface/50"
       >
-        <MessageCircle className="h-4.5 w-4.5" strokeWidth={1.5} />
+        <MessageCircle className="size-4.5" strokeWidth={1.75} />
         <span>Concierge</span>
       </button>
     </nav>

@@ -38,7 +38,7 @@ function LoginPage() {
             to="/login"
             className="inline-flex items-center gap-2.5 font-serif text-2xl tracking-[0.32em]"
           >
-            <img src="/favicon.svg" alt="" className="h-7 w-7" />
+            <img src="/favicon.svg" alt="" className="size-7" />
             MILA
           </Link>
           <p className="atelier-kicker mt-3">Personal AI Fashion Stylist</p>

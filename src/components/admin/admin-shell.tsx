@@ -24,7 +24,7 @@ export function AdminShell() {
   if (isLoading) {
     return (
       <div className="h-dvh flex items-center justify-center bg-background text-stone">
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Loader2 className="size-4 animate-spin" />
       </div>
     );
   }
@@ -33,7 +33,7 @@ export function AdminShell() {
     return (
       <div className="h-dvh flex items-center justify-center bg-background px-6">
         <div className="max-w-md text-center">
-          <ShieldAlert className="mx-auto h-8 w-8 text-stone" strokeWidth={1.2} />
+          <ShieldAlert className="mx-auto size-8 text-stone" strokeWidth={1.2} />
           <h1 className="mt-6 font-serif text-2xl tracking-[0.2em] uppercase text-ink">
             Restricted
           </h1>

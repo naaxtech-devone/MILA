@@ -153,7 +153,7 @@ export function BodyTypeQuiz({
                 onClick={() => setStep(1)}
                 className="text-xs uppercase rounded-none"
               >
-                <ArrowLeft className="h-3 w-3 mr-1" /> Back
+                <ArrowLeft className="size-3 mr-1" /> Back
               </Button>
               <Button
                 disabled={!balance}

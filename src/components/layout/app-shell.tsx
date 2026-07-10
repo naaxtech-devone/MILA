@@ -98,7 +98,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             to="/dashboard"
             className="inline-flex items-center gap-2 font-serif text-xl md:text-2xl uppercase tracking-[0.32em] text-ink"
           >
-            <img src="/favicon.svg" alt="" className="h-6 w-6 md:h-7 md:w-7" />
+            <img src="/favicon.svg" alt="" className="size-6 md:h-7 md:w-7" />
             Mila
           </Link>
 
@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 aria-label={`${credits} AI credits — get more`}
                 className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
               >
-                <Coins className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
+                <Coins className="size-3.5 text-accent" strokeWidth={1.75} />
                 {credits}
               </button>
             )}
@@ -127,13 +127,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               aria-label="Open the Studio Lens"
               className="md:hidden inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
             >
-              <Camera className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Camera className="size-3.5" strokeWidth={1.75} />
               Lens
             </button>
             <button
               onClick={() => setIsMembershipOpen(true)}
               aria-label="Open membership"
-              className="h-10 w-10 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
+              className="size-10 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
             >
               {initial}
             </button>

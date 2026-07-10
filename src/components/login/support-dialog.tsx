@@ -51,7 +51,7 @@ export function SupportDialog() {
             onClick={() => setFeedbackType("help")}
             className="flex items-center gap-1.5 hover:text-foreground transition-colors"
           >
-            <HelpCircle className="h-3.5 w-3.5" />
+            <HelpCircle className="size-3.5" />
             Studio Help Desk
           </button>
         </DialogTrigger>
@@ -62,7 +62,7 @@ export function SupportDialog() {
             onClick={() => setFeedbackType("feedback")}
             className="flex items-center gap-1.5 hover:text-foreground transition-colors"
           >
-            <MessageSquare className="h-3.5 w-3.5" />
+            <MessageSquare className="size-3.5" />
             Send Feedback
           </button>
         </DialogTrigger>

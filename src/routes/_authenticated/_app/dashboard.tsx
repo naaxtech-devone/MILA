@@ -196,18 +196,18 @@ function Dashboard() {
             >
               {generating ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Composing…
+                  <Loader2 className="size-4 mr-2 animate-spin" /> Composing…
                 </>
               ) : climate ? (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-accent" /> Generate look —{" "}
+                  <Wand2 className="size-4 mr-2 shrink-0 text-accent" /> Generate look —{" "}
                   {climate.tempC}°C{" "}
                   {climate.label.replace(/^[-\d.]+\s*°[CF]\s*/i, "").split(/[\s,]+/)[0] ||
                     climate.condition}
                 </>
               ) : (
                 <>
-                  <Wand2 className="h-4 w-4 mr-2 shrink-0 text-accent" /> Generate look
+                  <Wand2 className="size-4 mr-2 shrink-0 text-accent" /> Generate look
                 </>
               )}
             </Button>
@@ -240,7 +240,7 @@ function Dashboard() {
                     {climate && (
                       <>
                         <span className="h-1 w-1 rounded-full bg-foreground/40" />
-                        <ClimateGlyph icon={climate.icon} className="h-3 w-3" />
+                        <ClimateGlyph icon={climate.icon} className="size-3" />
                         <span className="text-muted-foreground">{climate.label}</span>
                       </>
                     )}
@@ -275,15 +275,15 @@ function Dashboard() {
                   >
                     {lookSaved ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 mr-2" /> Saved
+                        <CheckCircle2 className="size-4 mr-2" /> Saved
                       </>
                     ) : savingLook ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving
+                        <Loader2 className="size-4 mr-2 animate-spin" /> Saving
                       </>
                     ) : (
                       <>
-                        <Bookmark className="h-4 w-4 mr-2" /> Save to history
+                        <Bookmark className="size-4 mr-2" /> Save to history
                       </>
                     )}
                   </Button>
@@ -292,7 +292,7 @@ function Dashboard() {
                     onClick={generateLook}
                     className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
                   >
-                    <Sparkles className="h-4 w-4 mr-2 text-accent" /> Try another
+                    <Sparkles className="size-4 mr-2 text-accent" /> Try another
                   </Button>
                 </motion.div>
               </motion.div>

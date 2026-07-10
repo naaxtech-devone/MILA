@@ -59,7 +59,7 @@ function History() {
         <div className="text-sm text-muted-foreground">Loading…</div>
       ) : items.length === 0 ? (
         <div className="atelier-card p-10 sm:p-16 text-center">
-          <Images className="h-8 w-8 mx-auto text-muted-foreground mb-4" strokeWidth={1.25} />
+          <Images className="size-8 mx-auto text-muted-foreground mb-4" strokeWidth={1.25} />
           <p className="font-serif text-2xl mb-2">No outfits yet</p>
           <p className="text-sm text-muted-foreground">Analyzed outfits will be collected here.</p>
         </div>

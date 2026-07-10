@@ -401,7 +401,7 @@ export function ColorQuiz({
               onClick={() => setStep(step - 1)}
               className="text-xs uppercase tracking-widest mt-6 rounded-none gap-1"
             >
-              <ArrowLeft className="h-3 w-3" /> Back
+              <ArrowLeft className="size-3" /> Back
             </Button>
           )}
         </div>
@@ -415,7 +415,7 @@ export function LightingStep({ onConfirm }: { onConfirm: () => void }) {
   return (
     <div className="space-y-5">
       <h3 className="font-serif text-2xl flex items-center gap-2 tracking-tight">
-        <Sun className="h-5 w-5" /> Let's find your light
+        <Sun className="size-5" /> Let's find your light
       </h3>
       <p className="text-xs text-muted-foreground leading-relaxed">
         Find a spot with soft, natural day lighting so I can see your true tones. Step away from
@@ -464,7 +464,7 @@ export function DetailedColorResultView({
     <div className="space-y-8 animate-fade-in text-left max-w-xl mx-auto">
       <div className="text-center border-b-[0.5px] border-border pb-6">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-foreground text-background text-[9px] uppercase tracking-widest font-medium">
-          <ShieldCheck className="h-3.5 w-3.5" /> SEOUL DIGITAL DIAGNOSTIC REUSE
+          <ShieldCheck className="size-3.5" /> SEOUL DIGITAL DIAGNOSTIC REUSE
         </div>
         <p className="text-[10px] uppercase tracking-[0.25em] text-accent mt-5 mb-1">
           Your Diagnostic Palette
@@ -545,7 +545,7 @@ export function DetailedColorResultView({
 
       <div className="border border-destructive/10 bg-destructive/1 p-4">
         <p className="text-[10px] uppercase text-destructive tracking-widest mb-2 flex items-center gap-1">
-          <XIcon className="h-3 w-3" /> Grave Tone Exclusions
+          <XIcon className="size-3" /> Grave Tone Exclusions
         </p>
         <div className="flex flex-col gap-1.5">
           {profile.avoid.map((a) => (

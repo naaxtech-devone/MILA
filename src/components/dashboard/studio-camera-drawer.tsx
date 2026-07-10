@@ -175,7 +175,7 @@ export function StudioCameraDrawer({
                 onClick={() => !postingSubmitting && setPostingOpen(false)}
                 className="inline-flex items-center gap-1.5 mx-auto text-[10px] uppercase tracking-[0.28em] text-stone hover:text-ink"
               >
-                <ArrowLeft className="h-3 w-3" /> Back to Lens
+                <ArrowLeft className="size-3" /> Back to Lens
               </button>
               <p className="text-[10px] uppercase tracking-[0.42em] text-muted-foreground">
                 Daily Drop
@@ -215,8 +215,8 @@ export function StudioCameraDrawer({
               className="group mx-auto mb-6 flex max-w-md w-full items-center justify-between gap-4 rounded-2xl border border-porcelain/70 bg-linear-to-r from-atelier-ivory via-background to-atelier-ivory/70 backdrop-blur-xl px-5 py-4 text-left shadow-atelier-soft hover:shadow-atelier-float transition-shadow"
             >
               <span className="flex items-center gap-3">
-                <span className="h-10 w-10 rounded-full border border-porcelain/70 bg-background flex items-center justify-center">
-                  <Camera className="h-4 w-4 text-ink" strokeWidth={1.5} />
+                <span className="size-10 rounded-full border border-porcelain/70 bg-background flex items-center justify-center">
+                  <Camera className="size-4 text-ink" strokeWidth={1.75} />
                 </span>
                 <span className="flex flex-col">
                   <span className="text-[9px] uppercase tracking-[0.32em] text-stone">
@@ -308,11 +308,11 @@ export function StudioCameraDrawer({
 
                 {dupeLoading && (
                   <div className="flex flex-col items-center justify-center gap-4 py-12">
-                    <div className="relative h-16 w-16">
+                    <div className="relative size-16">
                       <span className="absolute inset-0 rounded-full border border-atelier-champagne/40 animate-ping" />
                       <span className="absolute inset-2 rounded-full border border-atelier-champagne/60 animate-pulse" />
                       <Loader2
-                        className="absolute inset-0 m-auto h-5 w-5 text-atelier-champagne animate-spin"
+                        className="absolute inset-0 m-auto size-5 text-atelier-champagne animate-spin"
                         strokeWidth={1.25}
                       />
                     </div>
@@ -329,7 +329,7 @@ export function StudioCameraDrawer({
                         <img
                           src={inspirationPreview}
                           alt="Your inspiration"
-                          className="h-16 w-16 rounded-xl object-cover border border-porcelain/60"
+                          className="size-16 rounded-xl object-cover border border-porcelain/60"
                         />
                       )}
                       <div className="min-w-0">
@@ -406,7 +406,7 @@ export function StudioCameraDrawer({
                                     className="inline-flex items-center justify-center gap-1.5 h-9 rounded-full bg-ink text-atelier-ivory text-[10px] uppercase tracking-[0.28em] hover:bg-ink/90 transition-colors"
                                   >
                                     Shop the Dupe{" "}
-                                    <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+                                    <ExternalLink className="size-3" strokeWidth={1.75} />
                                   </a>
                                 </div>
                               </div>

@@ -28,7 +28,7 @@ export function AdminHeader({
             onClick={onOpenSidebar}
             aria-label={sidebarOpen ? "Close admin navigation" : "Open admin navigation"}
             aria-expanded={sidebarOpen}
-            className="lg:hidden inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 text-ink hover:border-porcelain transition-colors"
+            className="lg:hidden inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 text-ink hover:border-porcelain transition-colors"
           >
             {sidebarOpen ? (
               <X className="size-4" strokeWidth={1.75} aria-hidden="true" />

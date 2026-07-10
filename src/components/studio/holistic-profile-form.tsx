@@ -97,7 +97,7 @@ export function HolisticProfileForm({ userId, initial }: Props) {
               >
                 <span className="text-[11px] uppercase tracking-[0.22em] text-ink flex items-center justify-between gap-2">
                   {shape}
-                  {active && <Check className="h-3 w-3" />}
+                  {active && <Check className="size-3" />}
                 </span>
               </button>
             );
@@ -131,7 +131,7 @@ export function HolisticProfileForm({ userId, initial }: Props) {
               >
                 <span className="text-[11px] uppercase tracking-[0.22em] text-ink flex items-center justify-between gap-2">
                   {hair}
-                  {active && <Check className="h-3 w-3" />}
+                  {active && <Check className="size-3" />}
                 </span>
               </button>
             );
@@ -149,9 +149,9 @@ export function HolisticProfileForm({ userId, initial }: Props) {
           className="text-xs uppercase tracking-widest h-11 px-8 rounded-none bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40"
         >
           {mutation.isPending ? (
-            <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
+            <Loader2 className="size-3.5 mr-2 animate-spin" />
           ) : (
-            <Check className="h-3.5 w-3.5 mr-2" />
+            <Check className="size-3.5 mr-2" />
           )}
           Save Holistic Profile
         </Button>

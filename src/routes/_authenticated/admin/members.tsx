@@ -77,7 +77,7 @@ function MembersPage() {
         emptyMessage="No members found."
         action={
           <Button size="sm" className="h-9 text-xs gap-1.5" onClick={openCreate}>
-            <Plus className="h-3.5 w-3.5" />
+            <Plus className="size-3.5" />
             Add Member
           </Button>
         }

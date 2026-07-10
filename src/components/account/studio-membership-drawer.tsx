@@ -209,7 +209,7 @@ export function StudioMembershipDrawer({
                     onClick={onClose}
                     className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-full border border-amber-400/40 bg-amber-50/60 text-amber-800 text-[10px] uppercase tracking-[0.2em] hover:bg-amber-50 transition-colors"
                   >
-                    <AlertCircle className="h-3 w-3" strokeWidth={1.6} />
+                    <AlertCircle className="size-3" strokeWidth={1.6} />
                     Complete {missing.join(", ")} in the Studio
                   </Link>
                 )}
@@ -276,7 +276,7 @@ export function StudioMembershipDrawer({
                   className="flex items-center justify-between px-5 py-4 bg-background hover:bg-porcelain/20 transition-colors"
                 >
                   <span className="text-xs uppercase tracking-[0.2em] text-ink flex items-center gap-2">
-                    <Archive className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <Archive className="size-3.5" strokeWidth={1.75} />
                     Outfit Archive
                   </span>
                   <span className="text-stone">→</span>
@@ -343,7 +343,7 @@ export function StudioMembershipDrawer({
                   disabled={signingOut}
                   className="w-full py-3 rounded-lg border border-destructive/30 text-destructive text-[11px] uppercase tracking-[0.25em] hover:bg-destructive/5 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {signingOut && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  {signingOut && <Loader2 className="size-3.5 animate-spin" />}
                   {signingOut ? "Signing Out…" : "Sign Out of Studio"}
                 </button>
               </div>
@@ -366,7 +366,7 @@ export function StudioMembershipDrawer({
                     <span className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-stone">
                       {h.tagline}
                       {defaultHubId === h.id && (
-                        <Check className="h-3.5 w-3.5 text-ink" strokeWidth={1.6} />
+                        <Check className="size-3.5 text-ink" strokeWidth={1.6} />
                       )}
                     </span>
                   </button>
@@ -438,7 +438,7 @@ export function StudioMembershipDrawer({
                             ok ? "text-emerald-600" : "text-stone"
                           }`}
                         >
-                          {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                          {ok ? <Check className="size-3" /> : <X className="size-3" />}
                           {c.label}
                         </li>
                       );
@@ -477,9 +477,9 @@ export function StudioMembershipDrawer({
                   className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-accent-soft dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-3 disabled:opacity-60"
                 >
                   {exporting ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <Loader2 className="size-3.5 animate-spin" />
                   ) : (
-                    <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <Download className="size-3.5" strokeWidth={1.75} />
                   )}
                   <span>{exporting ? "Preparing export…" : "Download My Data"}</span>
                 </button>

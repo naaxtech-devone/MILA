@@ -645,7 +645,7 @@ function StyleProfile() {
                             >
                               <p className="text-[11px] uppercase tracking-[0.22em] text-foreground flex items-center justify-between gap-2">
                                 <span>{tile.label}</span>
-                                {active && <Check className="h-3 w-3" />}
+                                {active && <Check className="size-3" />}
                               </p>
                               <p className="mt-1 text-[10px] text-muted-foreground leading-relaxed">
                                 {SEASONS_MASTER_DATA[tile.key].subSeason}
@@ -676,9 +676,9 @@ function StyleProfile() {
                     }}
                   >
                     {confirmingKnown ? (
-                      <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
+                      <Loader2 className="size-3.5 mr-2 animate-spin" />
                     ) : (
-                      <Check className="h-3.5 w-3.5 mr-2" />
+                      <Check className="size-3.5 mr-2" />
                     )}
                     Confirm Selection
                   </Button>
@@ -714,7 +714,7 @@ function StyleProfile() {
                           className="w-full sm:w-auto text-xs uppercase tracking-widest h-11 px-8 rounded-none bg-foreground text-background hover:bg-foreground/90"
                           onClick={() => setDiagOpen(true)}
                         >
-                          <Camera className="h-3.5 w-3.5 mr-2" />
+                          <Camera className="size-3.5 mr-2" />
                           Open the camera
                         </Button>
                         <button
@@ -943,7 +943,7 @@ function StyleProfile() {
                             >
                               <p className="text-[11px] uppercase tracking-[0.22em] text-surface flex items-center justify-between gap-2">
                                 {k.label}
-                                {active && <Check className="h-3 w-3 text-surface/80" />}
+                                {active && <Check className="size-3 text-surface/80" />}
                               </p>
                               <p className="mt-1 text-[10px] text-surface/55 leading-relaxed line-clamp-2">
                                 {SEASONS_MASTER_DATA[k.key].subSeason}

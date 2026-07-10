@@ -41,7 +41,7 @@ export function StudioPortfolioView({
       <header className="px-6 sm:px-10 pt-10 pb-8 border-b-[0.5px] border-border">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-foreground text-background text-[9px] uppercase tracking-[0.32em] font-medium">
-            <ShieldCheck className="h-3 w-3" /> Seoul Atelier Record
+            <ShieldCheck className="size-3" /> Seoul Atelier Record
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {telemetry && !isDemo && (
@@ -51,9 +51,9 @@ export function StudioPortfolioView({
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 border-[0.5px] border-foreground/30 bg-background text-foreground/80 text-[9px] uppercase tracking-[0.32em] hover:bg-foreground hover:text-background transition-colors"
                 aria-expanded={telemetryOpen}
               >
-                <FlaskConical className="h-3 w-3" /> Studio notes
+                <FlaskConical className="size-3" /> Studio notes
                 <ChevronDown
-                  className={`h-3 w-3 transition-transform ${telemetryOpen ? "rotate-180" : ""}`}
+                  className={`size-3 transition-transform ${telemetryOpen ? "rotate-180" : ""}`}
                 />
               </button>
             )}
@@ -259,7 +259,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
               ].map((lip, i) => (
                 <div key={i} className="flex items-center gap-4 group">
                   <div
-                    className="w-10 h-10 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] border border-stone/10 shrink-0 transition-transform group-hover:scale-110"
+                    className="size-10 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] border border-stone/10 shrink-0 transition-transform group-hover:scale-110"
                     style={{ backgroundColor: lip.swatch }}
                   />
                   <div>
@@ -303,7 +303,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
               ].map((cheek, i) => (
                 <div key={i} className="flex items-center gap-4 group">
                   <div
-                    className="w-10 h-10 rounded-full shadow-inner border border-stone/10 shrink-0 relative overflow-hidden transition-transform group-hover:scale-110"
+                    className="size-10 rounded-full shadow-inner border border-stone/10 shrink-0 relative overflow-hidden transition-transform group-hover:scale-110"
                     style={{ backgroundColor: cheek.swatch }}
                   >
                     <div
@@ -351,7 +351,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
               ].map((accent, i) => (
                 <div key={i} className="flex items-center gap-4 group">
                   <div
-                    className="w-10 h-10 rounded-full shadow-inner border border-stone/10 shrink-0 relative overflow-hidden transition-transform group-hover:scale-110"
+                    className="size-10 rounded-full shadow-inner border border-stone/10 shrink-0 relative overflow-hidden transition-transform group-hover:scale-110"
                     style={{ backgroundColor: accent.swatch }}
                   >
                     <div
@@ -459,7 +459,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
               className="flex items-center gap-4 p-3 rounded-2xl bg-surface dark:bg-card border border-stone/10 shadow-atelier-soft"
             >
               <div
-                className="w-16 h-16 rounded-full shrink-0 relative overflow-hidden shadow-inner border border-stone/10"
+                className="size-16 rounded-full shrink-0 relative overflow-hidden shadow-inner border border-stone/10"
                 style={{ backgroundColor: denim.swatch }}
               >
                 <div
@@ -552,7 +552,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
           size="sm"
           className="text-[10px] uppercase tracking-[0.2em] gap-2 border-border hover:bg-accent hover:text-accent-foreground transition-colors"
         >
-          <Archive className="h-3.5 w-3.5" />
+          <Archive className="size-3.5" />
           Archive Dossier
         </Button>
       </div>
@@ -631,9 +631,9 @@ export function InfoDot({
         <button
           type="button"
           aria-label="More info"
-          className={`inline-flex items-center justify-center h-3.5 w-3.5 rounded-full transition-opacity opacity-60 hover:opacity-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40 ${tone === "destructive" ? "text-destructive/70" : "text-muted-foreground"}`}
+          className={`inline-flex items-center justify-center size-3.5 rounded-full transition-opacity opacity-60 hover:opacity-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40 ${tone === "destructive" ? "text-destructive/70" : "text-muted-foreground"}`}
         >
-          <Info className="h-3 w-3" strokeWidth={1.25} />
+          <Info className="size-3" strokeWidth={1.25} />
         </button>
       </PopoverTrigger>
       <PopoverContent

@@ -22,7 +22,7 @@ export function PostCanvas({ post }: { post: FeedPost }) {
     <article className="rounded-3xl border border-porcelain/60 bg-background/70 backdrop-blur-xl shadow-atelier-soft overflow-hidden">
       <header className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink">
+          <div className="size-9 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink">
             {initial}
           </div>
           <div className="min-w-0">
@@ -54,7 +54,7 @@ export function PostCanvas({ post }: { post: FeedPost }) {
         )}
 
         {post.image_url_front && (
-          <div className="absolute top-4 left-4 h-20 w-20 md:h-24 md:w-24 rounded-full overflow-hidden border-2 border-atelier-ivory shadow-atelier-float ring-1 ring-ink/10">
+          <div className="absolute top-4 left-4 size-20 md:h-24 md:w-24 rounded-full overflow-hidden border-2 border-atelier-ivory shadow-atelier-float ring-1 ring-ink/10">
             <img
               src={post.image_url_front}
               alt={`${author}'s portrait`}
@@ -76,7 +76,7 @@ export function PostCanvas({ post }: { post: FeedPost }) {
             to="/history"
             className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.28em] text-stone hover:text-ink transition-colors"
           >
-            <Sparkles className="h-3 w-3" strokeWidth={1.5} />
+            <Sparkles className="size-3" strokeWidth={1.75} />
             View AI Blueprint
           </Link>
         )}

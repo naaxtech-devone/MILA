@@ -173,7 +173,7 @@ export function SignupForm({
                     ok ? "text-emerald-600" : "text-muted-foreground"
                   }`}
                 >
-                  {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                  {ok ? <Check className="size-3" /> : <X className="size-3" />}
                   {c.label}
                 </li>
               );
@@ -197,7 +197,7 @@ export function SignupForm({
         className="w-full h-10 gap-2"
       >
         {busy ? "Please wait…" : "Create Atelier Account"}
-        <ArrowRight className="h-4 w-4" />
+        <ArrowRight className="size-4" />
       </Button>
     </form>
   );

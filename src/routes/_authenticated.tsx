@@ -54,7 +54,7 @@ function AuthLayout() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-6">
         <div className="max-w-md text-center">
-          <ShieldAlert className="mx-auto h-8 w-8 text-stone" strokeWidth={1.2} />
+          <ShieldAlert className="mx-auto size-8 text-stone" strokeWidth={1.2} />
           <h1 className="mt-6 font-serif text-2xl tracking-[0.2em] uppercase text-ink">
             Membership Suspended
           </h1>

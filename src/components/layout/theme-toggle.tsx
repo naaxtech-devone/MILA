@@ -19,7 +19,7 @@ export function ThemeToggle() {
       title={`Theme: ${theme}`}
       className="rounded-pill border-line/60 bg-canvas/60 backdrop-blur hover:border-line"
     >
-      <Icon className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
+      <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />
     </IconButton>
   );
 }

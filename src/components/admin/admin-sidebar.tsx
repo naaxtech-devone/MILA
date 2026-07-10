@@ -58,7 +58,7 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
 
       <div className="mt-auto border-t border-porcelain/50 pt-4">
         <div className="flex items-center gap-2.5 px-1 py-1">
-          <div className="h-8 w-8 shrink-0 rounded-full border border-porcelain/60 bg-atelier-panel flex items-center justify-center font-serif text-xs text-ink">
+          <div className="size-8 shrink-0 rounded-full border border-porcelain/60 bg-atelier-panel flex items-center justify-center font-serif text-xs text-ink">
             {initial}
           </div>
           <div className="min-w-0">
@@ -74,9 +74,9 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
           className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-porcelain/60 px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-stone transition-colors hover:border-accent/40 hover:text-ink disabled:opacity-50"
         >
           {signingOut ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="size-3.5 animate-spin" />
           ) : (
-            <LogOut className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <LogOut className="size-3.5" strokeWidth={1.75} />
           )}
           Sign Out
         </button>

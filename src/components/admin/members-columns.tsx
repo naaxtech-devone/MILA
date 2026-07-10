@@ -90,7 +90,7 @@ export function getMembersColumns({
         <div className="flex justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-stone hover:text-ink">
+              <Button size="sm" variant="ghost" className="size-8 p-0 text-stone hover:text-ink">
                 <Ellipsis className="size-4" strokeWidth={1.75} aria-hidden="true" />
                 <span className="sr-only">Open actions</span>
               </Button>

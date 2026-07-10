@@ -73,7 +73,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 18, delay: i * 0.06 }}
-              className="h-10 w-10 rounded-full border-2 border-white shadow-sm"
+              className="size-10 rounded-full border-2 border-white shadow-sm"
               style={{ backgroundColor: s.hex }}
             />
             <div className="mt-2.5 space-y-0.5">
@@ -88,7 +88,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
 
       <div className="rounded-xl bg-accent-soft border-l-[3px] border-l-accent p-3">
         <div className="flex items-start gap-2">
-          <Sparkles className="h-4 w-4 text-accent mt-0.5 shrink-0" />
+          <Sparkles className="size-4 text-accent mt-0.5 shrink-0" />
           <p className="text-[13px] text-muted-foreground leading-snug">
             <strong className="text-accent">Mila&apos;s take —</strong>{" "}
             {look.isSisterSeasonIncluded
@@ -104,11 +104,11 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
           variant={saved ? "primary" : "outline"}
           label={saved ? "Unsave palette" : "Save palette"}
         >
-          <Bookmark className="w-4 h-4" fill={saved ? "currentColor" : "none"} aria-hidden="true" />
+          <Bookmark className="size-4" fill={saved ? "currentColor" : "none"} aria-hidden="true" />
         </IconButton>
 
         <Button onClick={handleShuffle} loading={isRotating} className="flex-1">
-          <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
+          <RefreshCw className="size-3.5" aria-hidden="true" />
           <span>Generate Next Look</span>
         </Button>
       </div>

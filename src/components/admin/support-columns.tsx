@@ -44,9 +44,9 @@ export function getSupportColumns({
             className="text-stone hover:text-ink transition-colors"
           >
             {row.original.resolved ? (
-              <CheckCircle2 className="h-4 w-4 text-success" />
+              <CheckCircle2 className="size-4 text-success" />
             ) : (
-              <Circle className="h-4 w-4" />
+              <Circle className="size-4" />
             )}
           </button>
         </div>

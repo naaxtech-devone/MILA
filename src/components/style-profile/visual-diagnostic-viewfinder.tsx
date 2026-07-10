@@ -47,7 +47,7 @@ export function BriefingRule({
 }) {
   return (
     <li className="flex items-start gap-4">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center border-[0.5px] border-white/30 text-white/90">
+      <span className="flex size-9 shrink-0 items-center justify-center border-[0.5px] border-white/30 text-white/90">
         {icon}
       </span>
       <div className="min-w-0">
@@ -315,7 +315,7 @@ export function VisualDiagnosticViewfinder({
           Seoul Atelier · Find your light
         </span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-          <XIcon className="h-5 w-5" />
+          <XIcon className="size-5" />
         </button>
       </div>
       <div className="flex-1 overflow-y-auto flex items-center justify-center px-6 py-10">
@@ -333,17 +333,17 @@ export function VisualDiagnosticViewfinder({
           </p>
           <ul className="mt-7 space-y-5">
             <BriefingRule
-              icon={<Sun className="h-4 w-4" />}
+              icon={<Sun className="size-4" />}
               title="Face the window"
               body="Natural daylight from the front. No backlight, no direct sun."
             />
             <BriefingRule
-              icon={<Lightbulb className="h-4 w-4" />}
+              icon={<Lightbulb className="size-4" />}
               title="Switch off yellow bulbs"
               body="Warm overhead lamps throw the read off."
             />
             <BriefingRule
-              icon={<Shirt className="h-4 w-4" />}
+              icon={<Shirt className="size-4" />}
               title="Wear something neutral"
               body="Saturated tops can cast color onto your skin."
             />
@@ -383,7 +383,7 @@ export function VisualDiagnosticViewfinder({
           Seoul Atelier · Studio Camera
         </span>
         <button onClick={onClose} className="text-white/80 hover:text-white">
-          <XIcon className="h-5 w-5" />
+          <XIcon className="size-5" />
         </button>
       </div>
 
@@ -461,10 +461,10 @@ export function VisualDiagnosticViewfinder({
               aria-expanded={telemetryOpen}
             >
               <span className="inline-flex items-center gap-1.5">
-                <FlaskConical className="h-3 w-3" /> Studio notes
+                <FlaskConical className="size-3" /> Studio notes
               </span>
               <ChevronDown
-                className={`h-3 w-3 transition-transform ${telemetryOpen ? "rotate-180" : ""}`}
+                className={`size-3 transition-transform ${telemetryOpen ? "rotate-180" : ""}`}
               />
             </button>
             {telemetryOpen && (
@@ -477,7 +477,7 @@ export function VisualDiagnosticViewfinder({
 
         {streamErr && !analyzing && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 text-center px-8 bg-black/85 text-white">
-            <Camera className="h-6 w-6" />
+            <Camera className="size-6" />
             <p className="text-xs leading-relaxed max-w-xs">{streamErr}</p>
           </div>
         )}
@@ -515,19 +515,19 @@ export function VisualDiagnosticViewfinder({
           aria-label="Take photo"
         >
           <span className="absolute inset-0 rounded-full border-2 border-white/80 bg-black/10 backdrop-blur-sm" />
-          <span className="relative flex items-center justify-center h-14 w-14 rounded-full bg-white/90 shadow-sm">
-            {analyzing ? <Loader2 className="h-5 w-5 animate-spin text-black/80" /> : null}
+          <span className="relative flex items-center justify-center size-14 rounded-full bg-white/90 shadow-sm">
+            {analyzing ? <Loader2 className="size-5 animate-spin text-black/80" /> : null}
           </span>
         </button>
         <button
           type="button"
           onClick={() => capture({ stressTest: true })}
           disabled={analyzing || !!streamErr}
-          className="absolute right-6 inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/30 bg-black/40 text-white/70 hover:text-white hover:border-white/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="absolute right-6 inline-flex items-center justify-center size-8 rounded-full border border-white/30 bg-black/40 text-white/70 hover:text-white hover:border-white/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Try a tricky-light sample"
           title="Sample look · backlit, high contrast"
         >
-          <FlaskConical className="h-3.5 w-3.5" />
+          <FlaskConical className="size-3.5" />
         </button>
       </div>
 

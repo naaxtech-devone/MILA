@@ -17,8 +17,8 @@ export const ColorDossierSection: React.FC<StyleProfileProps> = ({ profile }) =>
   if (!seasonData) {
     return (
       <div className="rounded-card bg-card border border-border shadow-paper p-8 text-center max-w-2xl">
-        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-foreground/6">
-          <Sparkles className="h-5 w-5 text-accent" />
+        <div className="mx-auto mb-4 inline-flex size-10 items-center justify-center rounded-full bg-foreground/6">
+          <Sparkles className="size-5 text-accent" />
         </div>
         <h3 className="font-serif text-xl text-foreground tracking-tight">
           Your Color Dossier Awaits

@@ -21,8 +21,8 @@ export function UpgradeSlotsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <div className="mx-auto sm:mx-0 mb-2 inline-flex items-center justify-center h-12 w-12 rounded-full bg-atelier-champagne/20 ring-1 ring-atelier-champagne/40">
-            <Zap className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+          <div className="mx-auto sm:mx-0 mb-2 inline-flex items-center justify-center size-12 rounded-full bg-atelier-champagne/20 ring-1 ring-atelier-champagne/40">
+            <Zap className="size-5 text-foreground" strokeWidth={1.75} />
           </div>
           <DialogTitle className="font-serif text-2xl">Studio Energy Depleted</DialogTitle>
           <DialogDescription>
@@ -40,7 +40,7 @@ export function UpgradeSlotsDialog({
               className="w-full flex items-center justify-between gap-4 border border-border p-4 text-left hover:border-foreground/60 transition-colors"
             >
               <div className="flex items-start gap-3">
-                <Sparkles className="h-4 w-4 mt-0.5 text-atelier-champagne" />
+                <Sparkles className="size-4 mt-0.5 text-atelier-champagne" />
                 <div>
                   <p className="text-sm font-medium">{p.name}</p>
                   <p className="text-xs text-muted-foreground">{p.description}</p>

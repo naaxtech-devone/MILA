@@ -211,7 +211,7 @@ export function StylistConciergeDrawer({
 
           {item && (
             <div className="mt-5 flex items-center gap-3 rounded-xl border border-foreground/10 bg-background/50 p-2.5 shadow-sm">
-              <div className="h-14 w-14 rounded-lg bg-muted overflow-hidden shrink-0 ring-1 ring-foreground/5">
+              <div className="size-14 rounded-lg bg-muted overflow-hidden shrink-0 ring-1 ring-foreground/5">
                 {item.imageUrl ? (
                   <img
                     src={item.imageUrl}
@@ -220,7 +220,7 @@ export function StylistConciergeDrawer({
                   />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-muted-foreground">
-                    <Shirt className="h-5 w-5" strokeWidth={1.25} />
+                    <Shirt className="size-5" strokeWidth={1.25} />
                   </div>
                 )}
               </div>
@@ -238,7 +238,7 @@ export function StylistConciergeDrawer({
 
         {tip && (
           <div className="flex items-start gap-3 border-b border-foreground/5 dark:border-white/10 bg-secondary/60 backdrop-blur-sm px-8 py-4">
-            <Lightbulb className="h-4 w-4 mt-0.5 text-foreground shrink-0" strokeWidth={1.5} />
+            <Lightbulb className="size-4 mt-0.5 text-foreground shrink-0" strokeWidth={1.75} />
             <div>
               <p className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
                 Stylist's Note
@@ -254,11 +254,11 @@ export function StylistConciergeDrawer({
           ))}
           {sending && (
             <div className="flex gap-3 items-start">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
+              <div className="shrink-0 size-8 rounded-full bg-foreground text-background flex items-center justify-center">
+                <Sparkles className="size-4 text-accent" strokeWidth={1.75} />
               </div>
               <div className="rounded-2xl bg-secondary/70 text-muted-foreground px-4 py-2.5 text-sm flex items-center gap-2 text-muted-foreground shadow-sm">
-                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Mila is composing…
+                <Loader2 className="size-3.5 animate-spin" /> Mila is composing…
               </div>
             </div>
           )}
@@ -274,7 +274,7 @@ export function StylistConciergeDrawer({
           <Select value="" onValueChange={(v) => v && send(v)} disabled={sending || !profileReady}>
             <SelectTrigger className="h-9 rounded-full border-foreground/15 bg-background/70 px-4 text-[11px] uppercase tracking-[0.22em] text-muted-foreground focus:ring-0">
               <div className="inline-flex items-center gap-2">
-                <Wand2 className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
+                <Wand2 className="size-3.5 text-accent" strokeWidth={1.75} />
                 <SelectValue placeholder="Quick prompts" />
               </div>
             </SelectTrigger>
@@ -304,13 +304,9 @@ export function StylistConciergeDrawer({
               type="submit"
               size="icon"
               disabled={sending || !input.trim() || !profileReady}
-              className="rounded-full h-10 w-10 shrink-0 shadow-sm"
+              className="rounded-full size-10 shrink-0 shadow-sm"
             >
-              {sending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
+              {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
             </Button>
           </div>
         </form>
@@ -324,8 +320,8 @@ function MessageBubble({ msg }: { msg: Msg }) {
   return (
     <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
-        <div className="shrink-0 h-8 w-8 rounded-full bg-foreground text-background flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
+        <div className="shrink-0 size-8 rounded-full bg-foreground text-background flex items-center justify-center">
+          <Sparkles className="size-4 text-accent" strokeWidth={1.75} />
         </div>
       )}
       <div className={cn("max-w-[80%] flex flex-col gap-1", isUser && "items-end")}>
