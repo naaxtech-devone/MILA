@@ -9,7 +9,7 @@ export function HowItWorksSection() {
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         {STEPS.map((s) => (
           <div key={s.n} className="atelier-card p-6">
-            <span className="font-serif text-3xl text-(--atelier-gold)">{s.n}</span>
+            <span className="font-serif text-3xl text-accent">{s.n}</span>
             <h3 className="mt-3 font-serif text-xl text-foreground">{s.title}</h3>
             <p className="mt-2 text-sm leading-relaxed">{s.body}</p>
           </div>

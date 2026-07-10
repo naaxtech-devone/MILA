@@ -15,7 +15,7 @@ export function FinalCtaSection() {
           <CtaButton />
         </div>
         <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Lock className="h-3 w-3" /> Your profile stays private. Always.
+          <Lock className="h-3 w-3" aria-hidden="true" /> Your profile stays private. Always.
         </p>
       </div>
     </Reveal>

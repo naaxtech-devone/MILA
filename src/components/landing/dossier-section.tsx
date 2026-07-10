@@ -38,7 +38,7 @@ export function DossierSection() {
             <span>80%</span>
           </div>
           <div className="mt-2 h-1.5 rounded-full bg-border">
-            <div className="h-full w-4/5 rounded-full bg-(--atelier-gold)" />
+            <div className="h-full w-4/5 rounded-full bg-accent" />
           </div>
         </div>
       </div>

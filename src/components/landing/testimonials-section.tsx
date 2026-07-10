@@ -9,7 +9,7 @@ export function TestimonialsSection() {
       <div className="flex snap-x gap-4 overflow-x-auto pb-2">
         {TESTIMONIALS.map((t) => (
           <figure key={t.name} className="atelier-card w-72 shrink-0 snap-start p-5">
-            <div className="flex gap-0.5 text-(--atelier-gold)">
+            <div className="flex gap-0.5 text-accent" aria-hidden="true">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="h-3.5 w-3.5 fill-current" />
               ))}

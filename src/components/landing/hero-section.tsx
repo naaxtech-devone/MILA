@@ -23,7 +23,10 @@ export function HeroSection() {
       </div>
 
       <div className="atelier-card relative overflow-hidden p-7 sm:p-9">
-        <div className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-atelier-champagne/25 blur-3xl" />
+        <div
+          className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-accent/25 blur-3xl"
+          aria-hidden="true"
+        />
         <div className="relative">
           <div className="flex items-center justify-between">
             <SeasonTag season="True Summer" />
