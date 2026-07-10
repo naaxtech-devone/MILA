@@ -320,14 +320,18 @@ export function StyleProfile() {
         : base.fullPalette,
     };
     const undertone = (["Spring", "Autumn"] as string[]).includes(season) ? "Warm" : "Cool";
-    const { error } = await supabase.from("profiles").upsert({
-      id: user.id,
-      color_season: season,
-      skin_undertone: undertone,
-      body_type: bodyType,
-      color_profile: next as any,
-      updated_at: new Date().toISOString(),
-    } as any);
+    // update, not upsert — see handleStudioComplete for why upsert 403s
+    // for accounts whose username is still NULL.
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        color_season: season,
+        skin_undertone: undertone,
+        body_type: bodyType,
+        color_profile: next as any,
+        updated_at: new Date().toISOString(),
+      } as any)
+      .eq("id", user.id);
     if (error) {
       toast.error(error.message);
       return;
@@ -340,6 +344,7 @@ export function StyleProfile() {
       skin_undertone: f.skin_undertone || undertone,
       body_type: bodyType,
     }));
+    void queryClient.invalidateQueries({ queryKey: queryKeys.profile(user.id) });
     toast.success("Saved. Your look is locked in.");
   }
 
@@ -381,6 +386,7 @@ export function StyleProfile() {
       }
       lastSavedRef.current = sig;
       setSyncStatus("synced");
+      void queryClient.invalidateQueries({ queryKey: queryKeys.profile(user.id) });
     }, 600);
     return () => window.clearTimeout(t);
   }, [
@@ -391,6 +397,7 @@ export function StyleProfile() {
     holistic.face_shape,
     holistic.hair_type,
     beautyPrefs,
+    queryClient,
   ]);
 
   function toggleBeauty(tag: string) {

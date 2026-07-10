@@ -17,15 +17,32 @@ function OnboardingLayout() {
   const { signingOut, handleSignOut } = useSignOut();
 
   // Admins never go through mandatory onboarding — send them to /admin
-  // even if they navigate here directly. Non-admins with a complete
-  // profile are allowed to stay (this route also serves as a page they
-  // can revisit, not just a one-time gate).
+  // even if they navigate here directly.
+  //
+  // Regular users are redirected to /dashboard the moment their style
+  // profile is complete. This is intentionally reactive rather than an
+  // imperative "await save, then navigate" call inside the save
+  // handlers: viewer.isStyleProfileComplete is derived from
+  // useAuthenticatedViewerState, which reads the same profileQueryOptions
+  // cache every save path (handleStudioComplete, commitManual, the
+  // debounced auto-save effect) invalidates on success — so this fires
+  // only once real, persisted data confirms completion, regardless of
+  // which save action was the one that finished it, and never from local
+  // form state. StyleProfile is also rendered at /style-profile (the
+  // post-onboarding manage view) under a different layout that doesn't
+  // import this effect, so completing an edit there never triggers it.
   useEffect(() => {
-    if (!user || viewer.isLoading || !viewer.isAdmin) return;
-    navigate({ to: "/admin", replace: true });
-  }, [user, viewer.isLoading, viewer.isAdmin, navigate]);
+    if (!user || viewer.isLoading) return;
+    if (viewer.isAdmin) {
+      navigate({ to: "/admin", replace: true });
+      return;
+    }
+    if (viewer.isStyleProfileComplete) {
+      navigate({ to: "/dashboard", replace: true });
+    }
+  }, [user, viewer.isLoading, viewer.isAdmin, viewer.isStyleProfileComplete, navigate]);
 
-  if (!user || viewer.isLoading || viewer.isAdmin) {
+  if (!user || viewer.isLoading || viewer.isAdmin || viewer.isStyleProfileComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-stone">
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
