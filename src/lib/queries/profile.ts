@@ -7,21 +7,27 @@ import type { Json } from "@/integrations/supabase/types";
 export type DashboardProfile = {
   body_type: string | null;
   color_season: string | null;
+  /** Raw `profiles.color_season` column (base season only) — use this,
+   * not `color_season`, for style-profile completion checks. */
+  color_season_base: string | null;
   skin_undertone: string | null;
   full_name: string | null;
   face_shape: string | null;
   hair_type: string | null;
   beauty_preferences: Json | null;
+  color_profile: Json | null;
 };
 
 const EMPTY_PROFILE: DashboardProfile = {
   body_type: null,
   color_season: null,
+  color_season_base: null,
   skin_undertone: null,
   full_name: null,
   face_shape: null,
   hair_type: null,
   beauty_preferences: null,
+  color_profile: null,
 };
 
 function normalizeFirstWord(v: unknown): string | null {
@@ -60,11 +66,13 @@ function buildDashboardProfile(
   return {
     body_type: data.body_type ?? null,
     color_season: json?.subSeason ?? metrics.season ?? null,
+    color_season_base: data.color_season ?? null,
     skin_undertone: metrics.undertone,
     full_name: data.full_name ?? null,
     face_shape: faceShape,
     hair_type: hairType,
     beauty_preferences: data.beauty_preferences ?? null,
+    color_profile: data.color_profile ?? null,
   };
 }
 
