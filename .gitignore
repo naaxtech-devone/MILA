@@ -33,4 +33,4 @@ dist-ssr
 supabase/.temp/
 
 # Generated files
-.txt
+*.txt
