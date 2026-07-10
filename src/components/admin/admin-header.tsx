@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const PAGE_META: Record<string, { title: string; subtitle: string }> = {
@@ -26,11 +26,15 @@ export function AdminHeader({
           <button
             type="button"
             onClick={onOpenSidebar}
-            aria-label="Open admin navigation"
+            aria-label={sidebarOpen ? "Close admin navigation" : "Open admin navigation"}
             aria-expanded={sidebarOpen}
             className="lg:hidden inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-porcelain/60 bg-background/60 text-ink hover:border-porcelain transition-colors"
           >
-            <Menu className="h-4 w-4" strokeWidth={1.5} />
+            {sidebarOpen ? (
+              <X className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            ) : (
+              <Menu className="size-4" strokeWidth={1.75} aria-hidden="true" />
+            )}
           </button>
 
           <div className="min-w-0">
