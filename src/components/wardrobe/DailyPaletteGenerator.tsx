@@ -55,10 +55,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
     <div className="bg-card rounded-card shadow-paper border border-border p-5 space-y-5">
       <div className="flex items-center justify-between">
         <span className="atelier-kicker">{today}</span>
-        <span
-          className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-[0.2em]"
-          style={{ backgroundColor: "var(--atelier-gold-light)", color: "var(--atelier-gold)" }}
-        >
+        <span className="inline-flex items-center rounded-pill bg-accent-soft px-2.5 py-0.5 text-[10px] uppercase tracking-[0.2em] text-accent">
           {look.styleVibe}
         </span>
         <span className="atelier-kicker">Mix {String(mixCount).padStart(2, "0")}</span>
@@ -89,7 +86,7 @@ export function DailyPaletteGenerator({ userColorSeason }: { userColorSeason: st
         ))}
       </div>
 
-      <div className="rounded-xl bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) p-3">
+      <div className="rounded-xl bg-accent-soft border-l-[3px] border-l-accent p-3">
         <div className="flex items-start gap-2">
           <Sparkles className="h-4 w-4 text-accent mt-0.5 shrink-0" />
           <p className="text-[13px] text-muted-foreground leading-snug">

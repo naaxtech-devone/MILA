@@ -121,7 +121,9 @@
   --muted-foreground: oklch(0.502 0.018 67.4); /* Warm Stone #6B6259 */
   --accent: oklch(0.75 0.085 82.1); /* Champagne Gold #C9A96E — brand accent */
   --accent-foreground: var(--ink);
-  --accent-soft: oklch(0.945 0.027 85.7); /* Parchment #F5ECD9 — soft gold wash, used for hover/highlight surfaces */
+  --accent-soft: oklch(
+    0.945 0.027 85.7
+  ); /* Parchment #F5ECD9 — soft gold wash, used for hover/highlight surfaces */
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.98 0.005 75);
   --success: oklch(0.52 0.1 152); /* muted forest, warm-compatible */

@@ -171,7 +171,7 @@ export function PillRow({
               "group inline-flex items-center gap-2 px-4 py-2.5 border transition-all duration-200",
               "text-[11px] uppercase tracking-[0.22em] rounded-full",
               active
-                ? "bg-(--atelier-gold-light) border-accent text-[#2B2320]"
+                ? "bg-accent-soft border-accent text-ink"
                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >
@@ -246,7 +246,7 @@ export function BeautyPillTray({
               "inline-flex items-center gap-2 px-4 py-2.5 border rounded-full transition-all duration-200",
               "text-[11px] uppercase tracking-[0.22em]",
               isActive
-                ? "bg-(--atelier-gold-light) border-accent text-[#2B2320]"
+                ? "bg-accent-soft border-accent text-ink"
                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-[#C9A96E]/40",
             ].join(" ")}
           >

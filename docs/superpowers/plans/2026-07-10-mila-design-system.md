@@ -16,7 +16,7 @@
 - Preserve Radix accessibility behavior, portals, keyboard interactions, ARIA attributes, focus management.
 - `cn()` at `src/lib/utils.ts` is canonical — do not create another.
 - Radius hierarchy: `rounded-control` (buttons/inputs/compact controls), `rounded-panel` (secondary panels), `rounded-card` (main cards), `rounded-overlay` (dialogs/sheets), `rounded-pill` (badges/avatars/tags — numerically identical to Tailwind's native `rounded-full`, so existing `rounded-full` call sites are left as-is, not mass-renamed).
-- Color-analysis feature hex values (`style-profile/*`, `wardrobe/DailyPaletteGenerator.tsx`) are palette *data*, not UI styling — out of scope, do not touch.
+- Color-analysis feature hex values (`style-profile/*`, `wardrobe/DailyPaletteGenerator.tsx`) are palette _data_, not UI styling — out of scope, do not touch.
 - `--color-rose` (used 3×: `style-profile.tsx`, `studio/style-profile.tsx`) is a supplementary decorative token with no spec equivalent — leave its value and usages as-is.
 - Commit after each task on `main`.
 
@@ -25,9 +25,11 @@
 ### Task 1: Canonical token layer + base styles
 
 **Files:**
+
 - Modify: `src/styles.css` (full file, 286 lines)
 
 **Interfaces:**
+
 - Produces (new canonical CSS custom properties, usable as Tailwind utilities): `--color-canvas` → `bg-canvas`/`text-canvas`, `--color-accent` → `*-accent`, `--color-accent-soft` → `*-accent-soft`, `--color-line` → `*-line`, `--color-ink` → `*-ink` (already existed as bare alias, now canonical), `--color-muted` → `*-muted` (shadcn already defines `--muted`/`--muted-foreground`; this adds a flat `--color-muted` text-color alias distinct from the shadcn `muted` surface pair), `--color-surface` → `*-surface`, `--radius-control`, `--radius-panel`, `--radius-card`, `--radius-overlay`, `--radius-pill`, `--shadow-paper`, `--shadow-raised`, `--shadow-nav`, `--ease-editorial`, `--container-reading`, `--container-content`, `--container-wide`, `--font-display` (renamed from `--font-serif`), `--color-success`, `--color-warning`.
 - Produces (component classes): `.mila-page`, `.mila-container`, `.mila-section`, `.mila-card`, `.mila-panel`, `.mila-focus-ring`, `.mila-eyebrow`, `.mila-editorial-divider`, `.mila-dark-glass`, `.mila-hero-wash` (gradient wash, replaces `.atelier-hero-card`), `.mila-title` (renamed from `.atelier-title`).
 - Consumes: nothing (this is the base layer every later task builds on).
@@ -146,7 +148,9 @@ Replace lines 80-136 with (adds `--canvas`, `--ink` as primary names alongside e
   --muted-foreground: oklch(0.502 0.018 67.4); /* Warm Stone #6B6259 */
   --accent: oklch(0.75 0.085 82.1); /* Champagne Gold #C9A96E — brand accent */
   --accent-foreground: var(--ink);
-  --accent-soft: oklch(0.945 0.027 85.7); /* Parchment #F5ECD9 — soft gold wash, used for hover/highlight surfaces */
+  --accent-soft: oklch(
+    0.945 0.027 85.7
+  ); /* Parchment #F5ECD9 — soft gold wash, used for hover/highlight surfaces */
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.98 0.005 75);
   --success: oklch(0.52 0.1 152); /* muted forest, warm-compatible */
@@ -432,6 +436,7 @@ bunx tsc --noEmit
 bun run lint
 bun run build
 ```
+
 Expected: all three succeed with no new errors (styles.css changes are pure CSS, but `bun run build` exercises the Vite/Tailwind pipeline end-to-end and will fail loudly on a malformed `@theme` block).
 
 Then run `bun run dev`, open `/`, `/login`, `/dashboard` and toggle dark mode — confirm no visual regression (canvas/card/ink/accent colors should look identical to before, since values are unchanged, only re-keyed).
@@ -461,9 +466,11 @@ EOF
 ### Task 2: Button component rebuild (CVA)
 
 **Files:**
+
 - Modify: `src/components/ui/button.tsx`
 
 **Interfaces:**
+
 - Consumes: `cn` from `src/lib/utils.ts`; tokens from Task 1 (`rounded-control`, `accent`, `accent-soft`, `ink`, `surface`, `line`, `mila-focus-ring`).
 - Produces: `Button` component and `buttonVariants` CVA export with variants `primary | secondary | outline | ghost | editorial | destructive` and sizes `sm | md | lg | icon`, plus a `loading?: boolean` prop. Later tasks (IconButton, all feature components using `<Button>`) rely on this exact variant/size vocabulary — **note the existing file currently uses `variant="default"` as its default variant name; this task renames it to `"primary"` and every call site using `variant="default"` or omitting `variant` needs no change only if `"primary"` is the CVA default**, but any call site with explicit `variant="default"` must be updated to `variant="primary"` in Task 6/7/8's sweep (grep `variant="default"` before those tasks).
 
@@ -473,6 +480,7 @@ EOF
 cat src/components/ui/button.tsx
 grep -rn 'variant="default"\|variant="destructive"\|variant="outline"\|variant="ghost"\|variant="secondary"\|variant="link"' src --include="*.tsx" | wc -l
 ```
+
 Note the count — this is how many call sites Task 6/7/8 must sanity-check still resolve to a valid variant name after the rename.
 
 - [ ] **Step 2: Rewrite the component**
@@ -514,14 +522,16 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, loading = false, disabled, children, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
@@ -550,6 +560,7 @@ Note: `editorial` intentionally overrides `h-*`/`px-*`/`rounded-control` from th
 bunx tsc --noEmit
 bun run lint -- src/components/ui/button.tsx
 ```
+
 Expected: no type errors from the `ButtonProps` change. `tsc` will surface every call site using an invalid `variant` value (e.g. `"default"` or `"link"`) as a compile error — **fix each one now** by changing `variant="default"` → `variant="primary"` (or omit the prop) and `variant="link"` → `variant="editorial"`, since Task 1's constraint is that build/lint must pass after every task, not deferred to Task 6-8.
 
 - [ ] **Step 4: Manual check**
@@ -578,6 +589,7 @@ EOF
 ### Task 3: New primitives — Container, Section, IconButton, PageHeader, SectionHeader, EmptyState, LoadingState, Avatar
 
 **Files:**
+
 - Create: `src/components/ui/container.tsx`
 - Create: `src/components/ui/section.tsx`
 - Create: `src/components/ui/icon-button.tsx`
@@ -588,6 +600,7 @@ EOF
 - Create: `src/components/ui/avatar.tsx`
 
 **Interfaces:**
+
 - Consumes: `cn`, `buttonVariants`/`Button` from Task 2, Lucide icons, tokens from Task 1.
 - Produces: `Container`, `Section`, `IconButton`, `PageHeader`, `SectionHeader`, `EmptyState`, `LoadingState`, `Avatar` — all used by Tasks 5-8's route/component sweeps. Exact prop shapes below are the contract later tasks must match.
 
@@ -610,7 +623,10 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Container({ width = "content", className, ...props }: ContainerProps) {
   return (
-    <div className={cn("mx-auto w-full px-5 sm:px-8 lg:px-10", widthMap[width], className)} {...props} />
+    <div
+      className={cn("mx-auto w-full px-5 sm:px-8 lg:px-10", widthMap[width], className)}
+      {...props}
+    />
   );
 }
 ```
@@ -660,8 +676,7 @@ const iconButtonVariants = cva(
 );
 
 export interface IconButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof iconButtonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof iconButtonVariants> {
   label: string;
 }
 
@@ -695,12 +710,24 @@ export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   actions?: React.ReactNode;
 }
 
-export function PageHeader({ eyebrow, title, description, actions, className, ...props }: PageHeaderProps) {
+export function PageHeader({
+  eyebrow,
+  title,
+  description,
+  actions,
+  className,
+  ...props
+}: PageHeaderProps) {
   return (
-    <div className={cn("flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between", className)} {...props}>
+    <div
+      className={cn("flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between", className)}
+      {...props}
+    >
       <div className="max-w-reading">
         {eyebrow ? <p className="mila-eyebrow mb-2">{eyebrow}</p> : null}
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">{title}</h1>
+        <h1 className="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+          {title}
+        </h1>
         {description ? <p className="mt-3 text-base text-muted">{description}</p> : null}
       </div>
       {actions ? <div className="flex shrink-0 items-center gap-3">{actions}</div> : null}
@@ -720,11 +747,19 @@ export interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement>
   description?: React.ReactNode;
 }
 
-export function SectionHeader({ eyebrow, title, description, className, ...props }: SectionHeaderProps) {
+export function SectionHeader({
+  eyebrow,
+  title,
+  description,
+  className,
+  ...props
+}: SectionHeaderProps) {
   return (
     <div className={cn("max-w-reading", className)} {...props}>
       {eyebrow ? <p className="mila-eyebrow mb-2">{eyebrow}</p> : null}
-      <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">{title}</h2>
+      <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        {title}
+      </h2>
       {description ? <p className="mt-3 text-base text-muted">{description}</p> : null}
     </div>
   );
@@ -745,7 +780,14 @@ export interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
   action?: React.ReactNode;
 }
 
-export function EmptyState({ icon, title, description, action, className, ...props }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  className,
+  ...props
+}: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -754,7 +796,11 @@ export function EmptyState({ icon, title, description, action, className, ...pro
       )}
       {...props}
     >
-      {icon ? <div className="text-accent" aria-hidden="true">{icon}</div> : null}
+      {icon ? (
+        <div className="text-accent" aria-hidden="true">
+          {icon}
+        </div>
+      ) : null}
       <p className="font-display text-xl font-semibold text-ink">{title}</p>
       {description ? <p className="max-w-reading text-sm text-muted">{description}</p> : null}
       {action ? <div className="mt-2">{action}</div> : null}
@@ -768,9 +814,18 @@ export function EmptyState({ icon, title, description, action, className, ...pro
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function LoadingState({ label = "Loading", className }: { label?: string; className?: string }) {
+export function LoadingState({
+  label = "Loading",
+  className,
+}: {
+  label?: string;
+  className?: string;
+}) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-3 py-14 text-muted", className)} role="status">
+    <div
+      className={cn("flex flex-col items-center justify-center gap-3 py-14 text-muted", className)}
+      role="status"
+    >
       <Loader2 className="size-6 animate-spin text-accent" aria-hidden="true" />
       <span className="text-sm">{label}</span>
     </div>
@@ -806,7 +861,12 @@ export function Avatar({ src, alt, fallback, size = "md", className, ...props }:
       {...props}
     >
       {src && !errored ? (
-        <img src={src} alt={alt} className="size-full object-cover" onError={() => setErrored(true)} />
+        <img
+          src={src}
+          alt={alt}
+          className="size-full object-cover"
+          onError={() => setErrored(true)}
+        />
       ) : (
         <span aria-hidden="true">{fallback}</span>
       )}
@@ -821,6 +881,7 @@ export function Avatar({ src, alt, fallback, size = "md", className, ...props }:
 bunx tsc --noEmit
 bun run lint
 ```
+
 Expected: no errors (these are new, unused-until-wired files — `tsc`/eslint must still accept them standalone).
 
 - [ ] **Step 8: Commit**
@@ -844,12 +905,14 @@ EOF
 ### Task 4: Extract `ErrorState`, add `FormField` wrapper, migrate remaining `ui/` primitives to token scale
 
 **Files:**
+
 - Create: `src/components/ui/error-state.tsx`
 - Create: `src/components/ui/form-field.tsx`
 - Modify: `src/routes/__root.tsx` (use extracted `ErrorState` in `ErrorComponent`/`NotFoundComponent`)
 - Modify: `src/components/ui/card.tsx`, `input.tsx`, `textarea.tsx`, `select.tsx`, `dialog.tsx`, `dropdown-menu.tsx`, `popover.tsx`, `sheet.tsx`, `tabs.tsx`, `accordion.tsx`, `switch.tsx`, `badge.tsx`, `label.tsx`, `table.tsx`, `data-table.tsx`, `data-table-column-header.tsx`, `sonner.tsx`, `carousel.tsx`
 
 **Interfaces:**
+
 - Consumes: tokens from Task 1, `Button` from Task 2.
 - Produces: `ErrorState` (props: `title`, `description`, `action?`), `FormField` (props: `label`, `htmlFor`, `description?`, `error?`, `children`, `required?`) — used by Tasks 6-8 wherever a form or error boundary appears.
 
@@ -895,11 +958,17 @@ function NotFoundComponent() {
     <ErrorState
       title="404 — Page not found"
       description="The page you're looking for doesn't exist or has been moved."
-      action={{ label: "Go home", onClick: () => { window.location.href = "/"; } }}
+      action={{
+        label: "Go home",
+        onClick: () => {
+          window.location.href = "/";
+        },
+      }}
     />
   );
 }
 ```
+
 Keep `ErrorComponent`'s `router.invalidate()`/`reset()` retry logic — wrap it in the `action.onClick` callback instead of the current inline button. Add the `import { ErrorState } from "@/components/ui/error-state";` import.
 
 - [ ] **Step 3: `FormField` wrapper**
@@ -920,7 +989,15 @@ export interface FormFieldProps {
   className?: string;
 }
 
-export function FormField({ label, htmlFor, description, error, required, children, className }: FormFieldProps) {
+export function FormField({
+  label,
+  htmlFor,
+  description,
+  error,
+  required,
+  children,
+  className,
+}: FormFieldProps) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <Label htmlFor={htmlFor}>
@@ -943,19 +1020,19 @@ export function FormField({ label, htmlFor, description, error, required, childr
 
 For each file in `card.tsx`, `input.tsx`, `textarea.tsx`, `select.tsx`, `dialog.tsx`, `dropdown-menu.tsx`, `popover.tsx`, `sheet.tsx`, `tabs.tsx`, `accordion.tsx`, `switch.tsx`, `badge.tsx`, `label.tsx`, `table.tsx`, `data-table.tsx`, `data-table-column-header.tsx`, `sonner.tsx`, `carousel.tsx`: read the file, then apply this mapping to any hardcoded/legacy classes found (do not touch files/lines that don't match — this is not a blind replace):
 
-| Find | Replace with |
-|---|---|
-| `rounded-md` / `rounded-lg` on inputs, selects, buttons-in-primitives | `rounded-control` |
-| `rounded-xl` / `rounded-2xl` on Card root | `rounded-card` |
-| `rounded-lg` / `rounded-xl` on Dialog/Sheet/Popover content | `rounded-overlay` |
-| `rounded-md` on Badge | `rounded-pill` |
-| `shadow-md`, `shadow-lg`, `shadow-sm` on Card | `shadow-paper` |
-| `shadow-lg`, `shadow-xl` on Dialog/Popover/DropdownMenu content | `shadow-raised` |
-| `bg-white`, `bg-gray-50` | `bg-surface` |
-| `text-black`, `text-gray-900` | `text-ink` |
-| `text-gray-500`, `text-gray-600` | `text-muted` |
-| `border-gray-200`, `border-gray-300` | `border-line` |
-| duration values other than `150`/`200`/`300` on hover/transition | leave unless clearly arbitrary; do not force `ease-editorial` onto Radix's own open/close animations (those use `tw-animate-css` keyframes and must keep their existing timing to not break Radix's animation-based unmount) |
+| Find                                                                  | Replace with                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rounded-md` / `rounded-lg` on inputs, selects, buttons-in-primitives | `rounded-control`                                                                                                                                                                                                            |
+| `rounded-xl` / `rounded-2xl` on Card root                             | `rounded-card`                                                                                                                                                                                                               |
+| `rounded-lg` / `rounded-xl` on Dialog/Sheet/Popover content           | `rounded-overlay`                                                                                                                                                                                                            |
+| `rounded-md` on Badge                                                 | `rounded-pill`                                                                                                                                                                                                               |
+| `shadow-md`, `shadow-lg`, `shadow-sm` on Card                         | `shadow-paper`                                                                                                                                                                                                               |
+| `shadow-lg`, `shadow-xl` on Dialog/Popover/DropdownMenu content       | `shadow-raised`                                                                                                                                                                                                              |
+| `bg-white`, `bg-gray-50`                                              | `bg-surface`                                                                                                                                                                                                                 |
+| `text-black`, `text-gray-900`                                         | `text-ink`                                                                                                                                                                                                                   |
+| `text-gray-500`, `text-gray-600`                                      | `text-muted`                                                                                                                                                                                                                 |
+| `border-gray-200`, `border-gray-300`                                  | `border-line`                                                                                                                                                                                                                |
+| duration values other than `150`/`200`/`300` on hover/transition      | leave unless clearly arbitrary; do not force `ease-editorial` onto Radix's own open/close animations (those use `tw-animate-css` keyframes and must keep their existing timing to not break Radix's animation-based unmount) |
 
 Give each primitive Sonner's toast styling (`sonner.tsx`) uses tokens too: map its `--normal-bg`/`--normal-border`/`--normal-text` CSS vars (Sonner's own theming API) to `var(--card)`, `var(--border)`, `var(--foreground)` respectively so toasts match the surface system.
 
@@ -993,10 +1070,12 @@ EOF
 ### Task 5: Layout & navigation — dark glass nav, active states
 
 **Files:**
+
 - Modify: `src/components/layout/app-shell.tsx`, `desktop-nav.tsx`, `mobile-tab-bar.tsx`, `theme-provider.tsx` (read-only check, no behavior change expected), `theme-toggle.tsx`
 - Modify: `src/components/admin/admin-shell.tsx`, `admin-sidebar.tsx`, `admin-header.tsx`
 
 **Interfaces:**
+
 - Consumes: `.mila-dark-glass`, `IconButton` (Task 3), tokens from Task 1.
 - Produces: nothing new consumed downstream — this is a leaf visual task.
 
@@ -1037,10 +1116,12 @@ EOF
 ### Task 6: Landing/marketing route sweep
 
 **Files:**
+
 - Modify: `src/routes/index.tsx`
 - Modify: `src/components/landing/*.tsx` (12 files: `community-section.tsx`, `cta-button.tsx`, `dossier-section.tsx`, `dupe-hunter-section.tsx`, `final-cta-section.tsx`, `hero-section.tsx`, `how-it-works-section.tsx`, `season-tag.tsx`, `testimonials-section.tsx`, and any others in the folder)
 
 **Interfaces:**
+
 - Consumes: `Button`/`buttonVariants` (Task 2), `Container`/`Section`/`SectionHeader` (Task 3), tokens (Task 1).
 - Produces: nothing downstream.
 
@@ -1081,10 +1162,12 @@ EOF
 ### Task 7: Authenticated app route sweep (dashboard, feed, history, style-profile, login, capture, studio, wardrobe, account)
 
 **Files:**
+
 - Modify: `src/routes/login.tsx`, `src/routes/auth/callback.tsx`, `src/routes/_authenticated.tsx`, `src/routes/_authenticated/_app/dashboard.tsx`, `feed.tsx`, `history.tsx`, `style-profile.tsx`
 - Modify: `src/components/login/*.tsx` (4 files), `src/components/dashboard/*.tsx` (5 files), `src/components/feed/*.tsx`, `src/components/capture/*.tsx`, `src/components/studio/*.tsx`, `src/components/style-profile/*.tsx` (5 files, but leave palette-swatch hex values untouched per Global Constraints), `src/components/wardrobe/*.tsx` (leave palette hex untouched), `src/components/account/*.tsx`
 
 **Interfaces:**
+
 - Consumes: everything from Tasks 1-5.
 - Produces: nothing downstream.
 
@@ -1121,10 +1204,12 @@ EOF
 ### Task 8: Admin route sweep
 
 **Files:**
+
 - Modify: `src/routes/_authenticated/admin.tsx`, `admin/index.tsx`, `admin/members.tsx`, `admin/moderation.tsx`, `admin/support.tsx`
 - Modify: `src/components/admin/*.tsx` (7 files: `admin-stat-card.tsx`, `members-columns.tsx`, `support-columns.tsx`, plus `admin-shell.tsx`/`admin-sidebar.tsx`/`admin-header.tsx` already touched in Task 5 — only revisit if new issues found)
 
 **Interfaces:**
+
 - Consumes: everything from Tasks 1-5, especially `data-table.tsx`/`data-table-column-header.tsx` (Task 4) and `Badge`/`Avatar` (Task 3).
 
 - [ ] **Step 1-4: same audit/replace pattern.** Priority: `admin-stat-card.tsx` and the two `*-columns.tsx` files define TanStack Table column definitions — replace any inline badge/status styling with the shared `Badge` component and its variants (add a `success`/`warning`/`destructive` Badge variant in this task if `badge.tsx` doesn't already have one from Task 4 — check first).
@@ -1167,6 +1252,7 @@ EOF
 bun run format
 git diff --stat
 ```
+
 Expected: only whitespace/formatting diffs on already-touched files (Prettier should not reformat untouched files unless repo-wide `bun run format` was run — if it touches unrelated files, review the diff before staging and only stage files this refactor actually touched).
 
 - [ ] **Step 2: Full validation suite**
@@ -1176,6 +1262,7 @@ bunx tsc --noEmit
 bun run lint
 bun run build
 ```
+
 Expected: all three exit 0.
 
 - [ ] **Step 3: Grep-based completion check**
@@ -1185,6 +1272,7 @@ grep -rl "bg-white\b" src --include="*.tsx" | grep -v node_modules
 grep -rlE "#[0-9a-fA-F]{6}" src --include="*.tsx" | grep -vE "style-profile|wardrobe/DailyPaletteGenerator|color-analysis"
 grep -rn "rounded-\[" src --include="*.tsx"
 ```
+
 Expected: the `bg-white` and stray-hex lists are empty or down to justified exceptions noted in the final report; `rounded-[...]` count matches the 2 pre-existing occurrences noted in the design doc unless deliberately resolved.
 
 - [ ] **Step 4: Commit** (only if Step 1 produced a diff)

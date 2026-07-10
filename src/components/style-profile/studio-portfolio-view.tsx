@@ -533,7 +533,7 @@ Stylist's notes          : ${telemetry.gatekeeperNotes.length ? telemetry.gateke
         <p className="text-[9px] uppercase tracking-[0.32em] text-accent">
           VI · Analyst's Personal Critique
         </p>
-        <div className="mt-4 ml-2 sm:ml-6 border-[0.5px] border-border bg-(--atelier-gold-light) border-l-[3px] border-l-(--atelier-gold) px-6 py-6">
+        <div className="mt-4 ml-2 sm:ml-6 border-[0.5px] border-border bg-accent-soft border-l-[3px] border-l-accent px-6 py-6">
           <blockquote className="font-serif text-base sm:text-lg italic leading-relaxed text-foreground">
             "{profile.stylistNote}"
           </blockquote>
