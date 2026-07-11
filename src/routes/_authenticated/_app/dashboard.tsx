@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Sparkles, Loader2, CheckCircle2, Wand2, Bookmark } from "lucide-react";
+import { Sparkles, Loader2, CheckCircle2, Wand2, Bookmark, RotateCcw } from "lucide-react";
 import { ClimateWidget, ClimateGlyph } from "@/components/dashboard/climate-widget";
 import type { ClimateState } from "@/constants/climate";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,15 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { generateDailyLook, type DailyLook } from "@/lib/generate-outfit.functions";
+import {
+  generateDailyLook,
+  regenerateOutfitImage,
+  type DailyLook,
+  type GeneratedLook,
+} from "@/lib/generate-outfit.functions";
+import { OutfitVisual } from "@/components/dashboard/outfit-visual";
+import { OutfitResultSkeleton } from "@/components/dashboard/outfit-result-skeleton";
+import { ExpandableText } from "@/components/dashboard/expandable-text";
 import { toast } from "sonner";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { isInsufficientCreditsError } from "@/lib/credits";
@@ -72,7 +80,8 @@ function Dashboard() {
   );
 
   const [generating, setGenerating] = useState(false);
-  const [look, setLook] = useState<DailyLook | null>(null);
+  const [look, setLook] = useState<GeneratedLook | null>(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const [savingLook, setSavingLook] = useState(false);
   const [lookSaved, setLookSaved] = useState(false);
   const [vibe, setVibe] = useState<Vibe>("Casual");
@@ -80,6 +89,28 @@ function Dashboard() {
   const [climate, setClimate] = useState<ClimateState | null>(null);
 
   const generate = useServerFn(generateDailyLook);
+  const regenerateImage = useServerFn(regenerateOutfitImage);
+
+  /** Cloudflare-only step, shared by the initial post-text fetch and Retry visual. */
+  async function fetchImage(outfit: DailyLook) {
+    setImageLoading(true);
+    try {
+      const res = await regenerateImage({ data: outfit });
+      setLook((prev) => (prev ? { ...prev, ...res } : prev));
+      return res;
+    } catch (e) {
+      const message =
+        e instanceof Error
+          ? e.message
+          : "The outfit is ready, but the visual could not be generated.";
+      setLook((prev) =>
+        prev ? { ...prev, imageDataUri: null, imageGenerationError: message } : prev,
+      );
+      return { imageDataUri: null, imageGenerationError: message };
+    } finally {
+      setImageLoading(false);
+    }
+  }
 
   async function generateLook() {
     if (!user || !profile?.body_type || !profile?.color_season) {
@@ -93,6 +124,7 @@ function Dashboard() {
     setGenerating(true);
     setLook(null);
     setLookSaved(false);
+    let outfit: DailyLook;
     try {
       const payload = {
         bodyType: profile.body_type,
@@ -100,7 +132,8 @@ function Dashboard() {
         skinUndertone: profile.skin_undertone ?? null,
         faceShape: profile.face_shape ?? null,
         hairType: profile.hair_type ?? null,
-        beautyPreferences: (profile.beauty_preferences as Record<string, unknown> | null) ?? null,
+        // beautyPreferences is intentionally omitted — the server loads it
+        // itself from the authenticated user's profile.
         weather: `${climate.label} (in ${climate.location})`,
         tempF: climate.tempF,
         tempC: climate.tempC,
@@ -110,16 +143,31 @@ function Dashboard() {
       };
 
       console.log("[Dashboard] generateDailyLook payload →", payload);
-      const res = await generate({ data: payload });
-      setLook(res);
+      outfit = await generate({ data: payload });
     } catch (e) {
+      setGenerating(false);
       if (isInsufficientCreditsError(e)) {
         setCreditPaywallOpen(true);
       } else {
         toast.error(e instanceof Error ? e.message : "Couldn't generate a look.");
       }
-    } finally {
-      setGenerating(false);
+      return;
+    }
+    // The written outfit is ready — show it immediately rather than making
+    // the user wait on the (separate) Cloudflare visual too.
+    setGenerating(false);
+    setLook({ ...outfit, imageDataUri: null });
+    await fetchImage(outfit);
+  }
+
+  async function retryImage() {
+    if (!look) return;
+    const { outfit, hair, makeup, vibe_alignment_score } = look;
+    const res = await fetchImage({ outfit, hair, makeup, vibe_alignment_score });
+    if (res.imageDataUri) {
+      toast.success("Visual updated.");
+    } else if (res.imageGenerationError) {
+      toast.error(res.imageGenerationError);
     }
   }
 
@@ -203,7 +251,7 @@ function Dashboard() {
             </div>
             <Button
               onClick={generateLook}
-              disabled={generating || !profileComplete || !climate}
+              disabled={generating || !profileComplete || !climate || imageLoading}
               className="w-full sm:w-auto h-12 px-6 rounded-full bg-foreground text-background hover:bg-foreground/90 uppercase tracking-[0.2em] text-xs whitespace-normal text-center leading-snug"
             >
               {generating ? (
@@ -232,11 +280,7 @@ function Dashboard() {
 
           <div className="mt-8">
             {generating ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="aspect-3/4 rounded-2xl bg-foreground/6 animate-pulse" />
-                ))}
-              </div>
+              <OutfitResultSkeleton />
             ) : look ? (
               <motion.div
                 className="space-y-6"
@@ -258,27 +302,84 @@ function Dashboard() {
                     )}
                   </span>
                 </div>
-                <motion.div variants={resultItemVariants}>
-                  <LookSection kicker="Outfit" title={look.outfit.headline}>
-                    <p className="font-serif text-lg md:text-xl leading-relaxed text-foreground/90">
-                      {look.outfit.description}
-                    </p>
-                    <p className="text-sm text-muted-foreground italic mt-3">
-                      Styling notes — {look.outfit.styling_notes}
-                    </p>
-                  </LookSection>
-                </motion.div>
-                <motion.div variants={resultItemVariants}>
-                  <LookSection kicker="Hair" title={look.hair.style}>
-                    <p className="text-sm text-muted-foreground">{look.hair.execution_tip}</p>
-                  </LookSection>
-                </motion.div>
-                <motion.div variants={resultItemVariants}>
-                  <LookSection kicker="Makeup" title={look.makeup.palette}>
-                    <p className="text-sm text-muted-foreground">{look.makeup.details}</p>
-                  </LookSection>
-                </motion.div>
-                <motion.div variants={resultItemVariants} className="flex flex-wrap gap-3">
+
+                <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[42fr_58fr] lg:gap-8">
+                  <motion.div variants={resultItemVariants}>
+                    <OutfitVisual
+                      imageDataUri={look.imageDataUri}
+                      imageGenerationError={look.imageGenerationError}
+                      loading={imageLoading}
+                      headline={look.outfit.headline}
+                      onRetry={retryImage}
+                      retryDisabled={imageLoading || generating}
+                    />
+                  </motion.div>
+
+                  <div className="space-y-4">
+                    <motion.div variants={resultItemVariants}>
+                      <LookSection kicker="Outfit" title={look.outfit.headline}>
+                        <ExpandableText
+                          text={look.outfit.description}
+                          clampClassName="line-clamp-6"
+                          className="font-serif text-lg leading-relaxed text-foreground/90"
+                        />
+                        <div className="mt-3 border-t border-border/70 pt-3">
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-accent">
+                            Styling notes
+                          </p>
+                          <ExpandableText
+                            text={look.outfit.styling_notes}
+                            clampClassName="line-clamp-3"
+                            className="text-sm italic text-muted-foreground"
+                          />
+                        </div>
+                      </LookSection>
+                    </motion.div>
+                    <motion.div variants={resultItemVariants}>
+                      <LookSection kicker="Hair">
+                        <ExpandableText
+                          text={look.hair.style}
+                          clampClassName="line-clamp-4"
+                          className="font-serif text-base leading-relaxed text-foreground/90"
+                        />
+                        <div className="mt-3 border-t border-border/70 pt-3">
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-accent">
+                            How to
+                          </p>
+                          <ExpandableText
+                            text={look.hair.execution_tip}
+                            clampClassName="line-clamp-2"
+                            className="text-sm text-muted-foreground"
+                          />
+                        </div>
+                      </LookSection>
+                    </motion.div>
+                    <motion.div variants={resultItemVariants}>
+                      <LookSection kicker="Makeup">
+                        <ExpandableText
+                          text={look.makeup.palette}
+                          clampClassName="line-clamp-4"
+                          className="font-serif text-base leading-relaxed text-foreground/90"
+                        />
+                        <div className="mt-3 border-t border-border/70 pt-3">
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-accent">
+                            How to
+                          </p>
+                          <ExpandableText
+                            text={look.makeup.details}
+                            clampClassName="line-clamp-2"
+                            className="text-sm text-muted-foreground"
+                          />
+                        </div>
+                      </LookSection>
+                    </motion.div>
+                  </div>
+                </div>
+
+                <motion.div
+                  variants={resultItemVariants}
+                  className="flex flex-wrap items-center gap-3 border-t border-border pt-5"
+                >
                   <Button
                     variant="outline"
                     onClick={saveLookToHistory}
@@ -301,7 +402,24 @@ function Dashboard() {
                   </Button>
                   <Button
                     variant="ghost"
+                    onClick={retryImage}
+                    disabled={imageLoading || generating}
+                    className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
+                  >
+                    {imageLoading ? (
+                      <>
+                        <Loader2 className="size-4 mr-2 animate-spin" /> Retrying
+                      </>
+                    ) : (
+                      <>
+                        <RotateCcw className="size-4 mr-2" /> Retry visual
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
                     onClick={generateLook}
+                    disabled={imageLoading}
                     className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
                   >
                     <Sparkles className="size-4 mr-2 text-accent" /> Try another

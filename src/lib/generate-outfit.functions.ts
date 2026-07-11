@@ -3,14 +3,20 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChatCompletion } from "./ai.server";
 import { consumeAiCredit } from "./credits.server";
+import { normalizeBeautyPreferences, formatBeautyPreferencesForPrompt } from "./beauty-preferences";
+import { generateOutfitImage, isCloudflareRateLimitError } from "./cloudflare-image.server";
 
+// beautyPreferences is deliberately NOT part of this client-supplied input:
+// it's untrusted personalization data, so the handler loads it itself from
+// the authenticated user's profile (see below) instead of trusting whatever
+// shape the browser sends. bodyType/colorSeason/etc. remain client-supplied
+// for now — hardening those the same way is a separate, larger change.
 const Input = z.object({
   bodyType: z.string().min(1).max(64),
   colorSeason: z.string().min(1).max(64),
   skinUndertone: z.string().min(1).max(64).optional().nullable(),
   faceShape: z.string().min(1).max(64).optional().nullable(),
   hairType: z.string().min(1).max(64).optional().nullable(),
-  beautyPreferences: z.record(z.string(), z.unknown()).optional().nullable(),
   weather: z.string().min(1).max(120),
   tempF: z.number().min(-60).max(140).optional(),
   tempC: z.number().min(-50).max(60).optional(),
@@ -95,18 +101,90 @@ const tool = {
   },
 };
 
-export type DailyLook = {
-  outfit: { headline: string; description: string; styling_notes: string };
-  hair: { style: string; execution_tip: string };
-  makeup: { palette: string; details: string };
-  vibe_alignment_score: number;
+export const DailyLookSchema = z.object({
+  outfit: z.object({
+    headline: z.string().min(1),
+    description: z.string().min(1),
+    styling_notes: z.string().min(1),
+  }),
+  hair: z.object({
+    style: z.string().min(1),
+    execution_tip: z.string().min(1),
+  }),
+  makeup: z.object({
+    palette: z.string().min(1),
+    details: z.string().min(1),
+  }),
+  vibe_alignment_score: z.number().int().min(1).max(10),
+});
+export type DailyLook = z.infer<typeof DailyLookSchema>;
+
+/**
+ * The complete client-side result: the written look plus its visual (or why
+ * it's missing). Assembled client-side from two calls — generateDailyLook
+ * (Gemini) then regenerateOutfitImage (Cloudflare) — so the dashboard can
+ * render the written outfit the moment it's ready instead of waiting on the
+ * image too.
+ */
+export type GeneratedLook = DailyLook & {
+  imageDataUri: string | null;
+  imageGenerationError?: string;
 };
+
+function stripMarkdownFences(text: string): string {
+  const trimmed = text.trim();
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  return fenced ? fenced[1].trim() : trimmed;
+}
+
+/** Maps an image-generation failure to a friendly, credential-free message for the UI. */
+function friendlyImageError(err: unknown): string {
+  if (isCloudflareRateLimitError(err)) {
+    return "The visual service is temporarily busy. Your written outfit is still available.";
+  }
+  return "The outfit was created, but its visual could not be generated.";
+}
+
+/** Generates the outfit visual from an already-validated Gemini result; never throws. */
+async function tryGenerateOutfitImage(
+  outfit: DailyLook,
+): Promise<{ imageDataUri: string | null; imageGenerationError?: string }> {
+  try {
+    const imageDataUri = await generateOutfitImage(outfit);
+    return { imageDataUri };
+  } catch (error) {
+    console.error(
+      "[generateOutfitImage] failed:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return { imageDataUri: null, imageGenerationError: friendlyImageError(error) };
+  }
+}
 
 export const generateDailyLook = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((input: unknown) => Input.parse(input))
+  .validator((input: unknown) => {
+    const parsed = Input.safeParse(input);
+    if (!parsed.success) {
+      // Safe to log in full: this input is occasion/weather/profile-shape
+      // strings, never credentials or tokens.
+      console.error("[generateDailyLook] invalid input", parsed.error.flatten());
+      throw new Error("Mila couldn't prepare your style profile for this look. Please try again.");
+    }
+    return parsed.data;
+  })
   .handler(async ({ data, context }): Promise<DailyLook> => {
     await consumeAiCredit(context.supabase, context.userId);
+
+    const { data: profileRow, error: profileError } = await context.supabase
+      .from("profiles")
+      .select("beauty_preferences")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (profileError) {
+      console.error("[generateDailyLook] failed to load beauty preferences", profileError);
+    }
+    const beautyPreferences = normalizeBeautyPreferences(profileRow?.beauty_preferences);
 
     let tempF = data.tempF;
     let tempC = data.tempC;
@@ -145,9 +223,7 @@ export const generateDailyLook = createServerFn({ method: "POST" })
     const conditionLine = condition ?? "Mixed";
     const locationLine = data.location ?? "the user's location";
 
-    const beautyPrefsLine = data.beautyPreferences
-      ? JSON.stringify(data.beautyPreferences)
-      : "none specified";
+    const beautyPrefsLine = formatBeautyPreferencesForPrompt(beautyPreferences);
 
     const faceShapeValue = data.faceShape?.trim() || null;
     const hairTypeValue = data.hairType?.trim() || null;
@@ -217,7 +293,7 @@ Always call the report_daily_look tool.`;
       skinUndertone: data.skinUndertone ?? null,
       faceShape: faceShapeValue,
       hairType: hairTypeValue,
-      beautyPreferences: data.beautyPreferences ?? null,
+      beautyPreferences,
       vibe: data.vibe,
       tempF,
       tempC,
@@ -247,5 +323,35 @@ Always call the report_daily_look tool.`;
     const json = await res.json();
     const call = json.choices?.[0]?.message?.tool_calls?.[0];
     if (!call) throw new Error("AI did not return a selection.");
-    return JSON.parse(call.function.arguments) as DailyLook;
+
+    let parsedArgs: unknown;
+    try {
+      parsedArgs = JSON.parse(stripMarkdownFences(call.function.arguments));
+    } catch (err) {
+      console.error("[generateDailyLook] AI returned non-JSON arguments", err);
+      throw new Error("Mila couldn't compose a look this time. Please try again.");
+    }
+
+    const look = DailyLookSchema.safeParse(parsedArgs);
+    if (!look.success) {
+      console.error("[generateDailyLook] AI response failed validation", look.error.flatten());
+      throw new Error("Mila couldn't compose a look this time. Please try again.");
+    }
+    return look.data;
   });
+
+/**
+ * Regenerates only the visual for an already-generated outfit — does not
+ * call Gemini again. Powers the dashboard's "Retry visual" action.
+ */
+export const regenerateOutfitImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => {
+    const parsed = DailyLookSchema.safeParse(input);
+    if (!parsed.success) {
+      console.error("[regenerateOutfitImage] invalid input", parsed.error.flatten());
+      throw new Error("Mila couldn't prepare that outfit for a new visual. Please try again.");
+    }
+    return parsed.data;
+  })
+  .handler(async ({ data }) => tryGenerateOutfitImage(data));
