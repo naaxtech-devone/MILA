@@ -268,7 +268,7 @@ export function StylistConciergeDrawer({
               <div className="shrink-0 size-8 rounded-full bg-foreground text-background flex items-center justify-center">
                 <Sparkles className="size-4 text-accent" strokeWidth={1.75} />
               </div>
-              <div className="rounded-2xl bg-secondary/70 text-muted-foreground px-4 py-2.5 text-sm flex items-center gap-2 text-muted-foreground shadow-sm">
+              <div className="rounded-2xl bg-secondary/70 text-muted-foreground px-4 py-2.5 text-sm flex items-center gap shadow-sm">
                 <Loader2 className="size-3.5 animate-spin" /> Mila is composing…
               </div>
             </div>

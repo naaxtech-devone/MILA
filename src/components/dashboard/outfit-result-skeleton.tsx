@@ -38,7 +38,7 @@ export function OutfitResultSkeleton() {
       <span className="sr-only">Creating your outfit and visual…</span>
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[42fr_58fr] lg:gap-8">
         <div
-          className="relative mx-auto aspect-square w-full max-w-128 overflow-hidden rounded-card border border-border bg-card shadow-paper"
+          className="relative mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-card border border-border bg-card shadow-paper"
           aria-hidden="true"
         >
           <div className="absolute inset-0 animate-pulse bg-accent-soft/50" />
