@@ -25,6 +25,17 @@ import { isInsufficientCreditsError } from "@/lib/credits";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+// IN DEVELOPMENT [concierge-chat]:
+// This component is not currently rendered anywhere in the app — its only
+// call site (src/components/layout/app-shell.tsx) was removed because the
+// nav entry points that opened it are disabled (see desktop-nav.tsx /
+// mobile-tab-bar.tsx). The chat only produces a real AI reply when `item`
+// is non-null, and nothing in the app ever supplies a real item; without
+// one, `send()` always returns the same canned "snap a photo" message
+// regardless of what's asked. Kept in place, unwired, for whenever a real
+// item-anchoring flow (e.g. from Lens or History) is built.
+// See /IN_DEVELOPMENT.txt.
+
 export interface StylistItemContext {
   imageUrl: string;
   name?: string | null;

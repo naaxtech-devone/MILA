@@ -6,9 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
 import { CREDIT_PACKS } from "@/constants/app";
+import { DevelopmentBadge } from "@/components/ui/development-badge";
+import { DevelopmentNotice } from "@/components/ui/development-notice";
 
+// IN DEVELOPMENT [credit-purchases]:
+// No payment provider is integrated yet. Buy-pack controls are disabled so
+// the client can never trigger a fake purchase.
+// See /IN_DEVELOPMENT.txt.
 export function UpgradeSlotsDialog({
   open,
   onOpenChange,
@@ -24,10 +29,13 @@ export function UpgradeSlotsDialog({
           <div className="mx-auto sm:mx-0 mb-2 inline-flex items-center justify-center size-12 rounded-full bg-atelier-champagne/20 ring-1 ring-atelier-champagne/40">
             <Zap className="size-5 text-foreground" strokeWidth={1.75} />
           </div>
-          <DialogTitle className="font-serif text-2xl">Studio Energy Depleted</DialogTitle>
+          <div className="flex flex-wrap items-center gap-2">
+            <DialogTitle className="font-serif text-2xl">Studio Energy Depleted</DialogTitle>
+            <DevelopmentBadge />
+          </div>
           <DialogDescription>
-            Your complimentary daily styling credits have been filled for the session. Top up with a
-            Mila Premium Pack or wait for tomorrow's studio reset.
+            Your complimentary daily styling credits have been filled for the session. Credit packs
+            are previewed below — purchasing isn't available yet.
           </DialogDescription>
         </DialogHeader>
 
@@ -36,11 +44,12 @@ export function UpgradeSlotsDialog({
             <button
               key={p.id}
               type="button"
-              onClick={() => toast.info("Mila billing comes online soon — credits reset tomorrow.")}
-              className="w-full flex items-center justify-between gap-4 border border-border p-4 text-left hover:border-foreground/60 transition-colors"
+              disabled
+              aria-describedby="credit-purchases-development-message"
+              className="w-full flex items-center justify-between gap-4 border border-border p-4 text-left opacity-60 cursor-not-allowed"
             >
               <div className="flex items-start gap-3">
-                <Sparkles className="size-4 mt-0.5 text-atelier-champagne" />
+                <Sparkles className="size-4 mt-0.5 text-atelier-champagne" aria-hidden="true" />
                 <div>
                   <p className="text-sm font-medium">{p.name}</p>
                   <p className="text-xs text-muted-foreground">{p.description}</p>
@@ -51,9 +60,11 @@ export function UpgradeSlotsDialog({
           ))}
         </div>
 
-        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-4 text-center">
-          Premium billing coming soon · credits refresh daily
-        </p>
+        <DevelopmentNotice
+          id="credit-purchases-development-message"
+          className="mt-4"
+          description="This action is not available yet. Your existing daily credits still work as usual."
+        />
       </DialogContent>
     </Dialog>
   );

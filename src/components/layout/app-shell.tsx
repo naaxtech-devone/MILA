@@ -11,7 +11,6 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { DesktopNav } from "@/components/layout/desktop-nav";
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { StudioCameraDrawer } from "@/components/dashboard/studio-camera-drawer";
-import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
@@ -23,7 +22,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [isMembershipOpen, setIsMembershipOpen] = useState(false);
   const [isLensOpen, setIsLensOpen] = useState(false);
-  const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [creditPaywallOpen, setCreditPaywallOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const analyze = useServerFn(analyzeOutfit);
@@ -102,11 +100,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             Mila
           </Link>
 
-          <DesktopNav
-            path={path}
-            onOpenLens={() => setIsLensOpen(true)}
-            onOpenConcierge={() => setIsConciergeOpen(true)}
-          />
+          <DesktopNav path={path} onOpenLens={() => setIsLensOpen(true)} />
 
           <div className="flex items-center gap-2">
             {credits != null && (
@@ -145,11 +139,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <MobileTabBar
-        path={path}
-        onOpenLens={() => setIsLensOpen(true)}
-        onOpenConcierge={() => setIsConciergeOpen(true)}
-      />
+      <MobileTabBar path={path} onOpenLens={() => setIsLensOpen(true)} />
 
       <StudioMembershipDrawer
         isOpen={isMembershipOpen}
@@ -170,18 +160,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         userId={user?.id ?? null}
         onLookCapture={(file) => runLensCapture(file)}
         onPickGallery={() => fileInputRef.current?.click()}
-        onInsufficientCredits={() => setCreditPaywallOpen(true)}
-      />
-
-      <StylistConciergeDrawer
-        open={isConciergeOpen}
-        onOpenChange={setIsConciergeOpen}
-        item={null}
-        profile={{
-          bodyType: profile?.body_type ?? null,
-          colorSeason: profile?.color_season ?? null,
-          skinUndertone: profile?.skin_undertone ?? null,
-        }}
         onInsufficientCredits={() => setCreditPaywallOpen(true)}
       />
 

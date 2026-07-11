@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { HUBS } from "@/constants/climate";
 import { passwordChecks } from "@/constants/password";
 import { fetchDefaultHubId, localDefaultHubId, saveDefaultHubId } from "@/lib/default-hub";
+import { DevelopmentBadge } from "@/components/ui/development-badge";
+import { DevelopmentNotice } from "@/components/ui/development-notice";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
@@ -26,17 +28,9 @@ interface StudioMembershipDrawerProps {
     faceShape: string | null;
     hairType: string | null;
   };
-  onAcquirePasses?: () => void;
-  onWatchEditorial?: () => void;
 }
 
-export function StudioMembershipDrawer({
-  isOpen,
-  onClose,
-  user,
-  onAcquirePasses,
-  onWatchEditorial,
-}: StudioMembershipDrawerProps) {
+export function StudioMembershipDrawer({ isOpen, onClose, user }: StudioMembershipDrawerProps) {
   const [view, setView] = useState<
     "membership" | "preferences" | "location" | "privacy" | "security"
   >("membership");
@@ -233,17 +227,29 @@ export function StudioMembershipDrawer({
                     </div>
                   </div>
 
+                  {/*
+                    IN DEVELOPMENT [membership-passes]:
+                    No pass-acquisition or partner-editorial flow is wired
+                    up yet — both controls are disabled so nothing fires
+                    silently when clicked.
+                    See /IN_DEVELOPMENT.txt.
+                  */}
                   <div className="space-y-3">
                     <button
-                      onClick={onAcquirePasses}
-                      className="w-full py-3 rounded-lg bg-ink text-white text-[11px] uppercase tracking-[0.25em] font-semibold hover:bg-ink/90 transition-colors"
+                      type="button"
+                      disabled
+                      aria-describedby="membership-passes-development-message"
+                      className="w-full py-3 rounded-lg bg-ink text-white text-[11px] uppercase tracking-[0.25em] font-semibold opacity-50 cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       Acquire Passes
+                      <DevelopmentBadge className="bg-white/15 text-white border-white/25" />
                     </button>
 
                     <button
-                      onClick={onWatchEditorial}
-                      className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-accent-soft dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-3"
+                      type="button"
+                      disabled
+                      aria-describedby="membership-passes-development-message"
+                      className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink opacity-60 cursor-not-allowed flex items-center justify-center gap-3"
                     >
                       <span>View Partner Editorial</span>
                       <span className="text-[9px] text-stone normal-case tracking-normal">
@@ -251,10 +257,10 @@ export function StudioMembershipDrawer({
                       </span>
                     </button>
 
-                    <p className="text-[10px] text-stone leading-relaxed text-center px-2">
-                      Experience a brief presentation from our luxury partners to receive a
-                      complimentary styling pass.
-                    </p>
+                    <DevelopmentNotice
+                      id="membership-passes-development-message"
+                      description="Experience a brief presentation from our luxury partners to receive a complimentary styling pass. This action is not available yet."
+                    />
                   </div>
                 </div>
               </div>

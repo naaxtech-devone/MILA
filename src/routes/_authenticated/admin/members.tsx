@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { queryKeys } from "@/constants/query-keys";
 import { adminSetAdminRole, adminSetSuspended, type AdminUserRow } from "@/lib/admin.functions";
 import { adminMembersQueryOptions } from "@/lib/queries/admin";
+import { DevelopmentNotice } from "@/components/ui/development-notice";
 
 export const Route = createFileRoute("/_authenticated/admin/members")({
   component: MembersPage,
@@ -66,6 +67,18 @@ function MembersPage() {
 
   return (
     <div>
+      {/*
+        IN DEVELOPMENT [moderator-role]:
+        The `moderator` app_role exists in the database but no assignment
+        UI or moderator-specific authorization is implemented — only the
+        Steward (admin) role can be granted here.
+        See /IN_DEVELOPMENT.txt.
+      */}
+      <DevelopmentNotice
+        className="mb-4"
+        title="Moderator role — in development"
+        description="Only the Steward (admin) role can be granted in this release. Moderator-specific permissions are reserved for a future release."
+      />
       <DataTable
         columns={columns}
         data={data ?? []}
