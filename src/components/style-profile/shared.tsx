@@ -284,6 +284,7 @@ export function CardMatrix({
             <button
               key={o.value}
               type="button"
+              aria-pressed={active}
               onClick={() => onPick(o.value)}
               className={`group relative text-left rounded-card p-5 sm:p-6 min-h-30 transition-all duration-300 bg-card hover:bg-card shadow-paper ${
                 active

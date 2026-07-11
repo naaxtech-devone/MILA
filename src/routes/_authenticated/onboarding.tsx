@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useAuthenticatedViewerState } from "@/lib/queries/auth";
@@ -16,18 +16,34 @@ function OnboardingLayout() {
   const navigate = useNavigate();
   const { signingOut, handleSignOut } = useSignOut();
 
+  // Snapshot "already complete" once per mount, from the first resolved
+  // read — deliberately NOT reactive after that. The guided wizard saves
+  // each required field (color/body/face/hair) as the user completes it, so
+  // isStyleProfileComplete can flip true mid-session while beauty
+  // preferences, location, and the review step are still ahead. Without
+  // freezing this, that flip would eject the user to /dashboard before they
+  // ever see the review screen. A fresh mount (reload, or reopening this
+  // route later) takes a new snapshot and correctly bounces an already-
+  // complete user straight out, per "completed users cannot reopen
+  // mandatory onboarding."
+  const wasCompleteAtLoad = useRef<boolean | null>(null);
+  if (wasCompleteAtLoad.current === null && user && !viewer.isLoading) {
+    wasCompleteAtLoad.current = viewer.isStyleProfileComplete;
+  }
+  const shouldRedirectForComplete = wasCompleteAtLoad.current === true;
+
   useEffect(() => {
     if (!user || viewer.isLoading) return;
     if (viewer.isAdmin) {
       navigate({ to: "/admin", replace: true });
       return;
     }
-    if (viewer.isStyleProfileComplete) {
+    if (shouldRedirectForComplete) {
       navigate({ to: "/dashboard", replace: true });
     }
-  }, [user, viewer.isLoading, viewer.isAdmin, viewer.isStyleProfileComplete, navigate]);
+  }, [user, viewer.isLoading, viewer.isAdmin, shouldRedirectForComplete, navigate]);
 
-  if (!user || viewer.isLoading || viewer.isAdmin || viewer.isStyleProfileComplete) {
+  if (!user || viewer.isLoading || viewer.isAdmin || shouldRedirectForComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-stone">
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />

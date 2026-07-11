@@ -9,7 +9,7 @@ export interface StyleProfileRow {
   color_profile: unknown;
 }
 
-function isNonEmptyColorProfile(value: unknown): boolean {
+export function isNonEmptyColorProfile(value: unknown): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const obj = value as Record<string, unknown>;
   return "season" in obj || "primarySwatches" in obj;

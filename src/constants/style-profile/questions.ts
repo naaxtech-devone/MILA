@@ -30,6 +30,62 @@ export const BODY_OPTIONS: MatrixOption[] = [
   },
 ];
 
+export const FACE_SHAPE_OPTIONS: MatrixOption[] = [
+  {
+    value: "Oval",
+    title: "Oval",
+    description: "Balanced proportions, with a jaw slightly narrower than the cheekbones.",
+  },
+  {
+    value: "Round",
+    title: "Round",
+    description: "Soft curves, with cheeks and jaw of similar width and few sharp angles.",
+  },
+  {
+    value: "Square",
+    title: "Square",
+    description: "A strong, angular jawline that's close in width to the forehead.",
+  },
+  {
+    value: "Heart",
+    title: "Heart",
+    description: "A wider forehead and cheekbones that taper to a narrower, often pointed chin.",
+  },
+  {
+    value: "Diamond",
+    title: "Diamond",
+    description: "Narrow forehead and jaw with the width concentrated at the cheekbones.",
+  },
+  {
+    value: "Oblong",
+    title: "Oblong",
+    description: "A longer face shape with a forehead, cheeks, and jaw of similar width.",
+  },
+];
+
+export const HAIR_TYPE_OPTIONS: MatrixOption[] = [
+  {
+    value: "Straight/Fine",
+    title: "Straight",
+    description: "Falls smooth from root to end with little to no natural bend.",
+  },
+  {
+    value: "Wavy",
+    title: "Wavy",
+    description: "Forms loose S-shaped waves, somewhere between straight and curly.",
+  },
+  {
+    value: "Curly",
+    title: "Curly",
+    description: "Defined spirals or coils that hold their shape from root to end.",
+  },
+  {
+    value: "Coily/Textured",
+    title: "Coily",
+    description: "Tightly coiled or zig-zag texture with a lot of natural volume.",
+  },
+];
+
 export const BEAUTY_PREFERENCE_TAGS = [
   "Dewy Base",
   "Glass Skin",
