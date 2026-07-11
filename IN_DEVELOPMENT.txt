@@ -167,6 +167,53 @@ Remaining work:
 - Add the corresponding INSERT policy scoped to that trusted path only.
 
 ======================================================================
+FEATURE: concierge-chat
+STATUS: DEVELOPMENT
+
+User-facing area:
+- "Concierge" entry in the desktop top nav and mobile tab bar (opens
+  "Mila's Styling Studio" chat drawer).
+
+Routes:
+- All authenticated routes (nav is part of the shared app shell)
+
+Source files:
+- src/components/layout/desktop-nav.tsx
+- src/components/layout/mobile-tab-bar.tsx
+- src/components/layout/app-shell.tsx (removed the now-dead
+  isConciergeOpen state and StylistConciergeDrawer render — nothing could
+  open it anymore once both nav triggers were disabled)
+- src/components/dashboard/stylist-concierge-drawer.tsx (documentation
+  comment only — component left intact and unwired for future use)
+
+Deployment behavior:
+- The Concierge nav button is rendered with the native `disabled`
+  attribute on desktop and mobile, with a compact "In development"
+  indicator and an accessible description via `aria-describedby`/
+  `aria-label`.
+- The drawer can no longer be opened from anywhere in the app, so no AI
+  chat request can be triggered in a broken state.
+
+Reason:
+- Found during manual testing (not caught by static audit): the chat
+  only calls the real AI backend (`fixOutfitChat`) when it has an
+  anchored outfit photo (`item.imageUrl`). `StylistConciergeDrawer` was
+  rendered in exactly one place in the whole app
+  (src/components/layout/app-shell.tsx), always with `item={null}`. With
+  no `item`, `send()` never calls the AI at all — it always returns the
+  same canned "Snap or upload an outfit through the Studio Lens" reply,
+  regardless of what's asked. Since the UI's own quick-prompt suggestions
+  (e.g. "Which neutrals anchor a [season] palette?") imply general
+  styling Q&A works, this was actively misleading rather than merely
+  incomplete.
+
+Remaining work:
+- Build a real path to anchor an item (e.g. open Concierge from a Lens
+  result or a History item with its photo attached).
+- Re-enable the nav entry once general (photo-less) questions either get
+  a real answer or the UI stops implying they will.
+
+======================================================================
 FEATURE: moderator-role
 STATUS: DEVELOPMENT
 
@@ -249,6 +296,14 @@ ALL FILES MODIFIED FOR DEVELOPMENT MARKERS
 - src/lib/credits.ts
 - src/lib/credits.server.ts
 - src/routes/_authenticated/admin/members.tsx
+- src/components/layout/desktop-nav.tsx
+- src/components/layout/mobile-tab-bar.tsx
+- src/components/dashboard/stylist-concierge-drawer.tsx
+
+FILES MODIFIED TO REMOVE NOW-DEAD WIRING (no marker themselves — the
+disabled entry points they wired up were removed)
+------------------------------------------------------------------------
+- src/components/layout/app-shell.tsx
 
 SUPPORTING INFRASTRUCTURE ADDED (no feature markers themselves — shared
 plumbing the files above depend on)

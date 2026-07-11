@@ -51,6 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       toast.error("Complete your Style Profile first.");
       return;
     }
+    const toastId = toast.loading("Analyzing your photo…");
     try {
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
       const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
@@ -74,12 +75,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         analysis_result: result,
         match_score: result.overall_score,
       });
-      toast.success("Analysis saved to your history.");
+      toast.success("Analysis saved to your history.", { id: toastId });
     } catch (e) {
       if (isInsufficientCreditsError(e)) {
+        toast.dismiss(toastId);
         setCreditPaywallOpen(true);
       } else {
-        toast.error(e instanceof Error ? e.message : "Something went wrong.");
+        toast.error(e instanceof Error ? e.message : "Something went wrong.", { id: toastId });
       }
     }
   }

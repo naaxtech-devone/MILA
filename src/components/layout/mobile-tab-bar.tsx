@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Camera, LayoutGrid, Palette, Images, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DevelopmentBadge } from "@/components/ui/development-badge";
 
 const mobileTabItems: { to: string; label: string; icon: typeof LayoutGrid }[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -68,7 +67,7 @@ export function MobileTabBar({ path, onOpenLens }: { path: string; onOpenLens: (
     text-surface/40
   "
       >
-        <MessageCircle className="size-[19px]" strokeWidth={1.75} aria-hidden="true" />
+        <MessageCircle className="size-4.75" strokeWidth={1.75} aria-hidden="true" />
 
         <span className="text-[9px] uppercase leading-none tracking-[0.18em]">Concierge</span>
 
@@ -76,7 +75,7 @@ export function MobileTabBar({ path, onOpenLens }: { path: string; onOpenLens: (
           aria-hidden="true"
           className="
       whitespace-nowrap rounded-full
-      border border-surface/15 bg-surface/[0.06]
+      border border-surface/15 bg-surface/6
       px-1.5 py-0.5
       text-[6px] font-medium uppercase
       leading-none tracking-[0.16em]
