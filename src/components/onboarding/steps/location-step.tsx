@@ -3,7 +3,6 @@ import { Check, MapPin } from "lucide-react";
 import { HUBS } from "@/constants/climate";
 import { saveDefaultHubId } from "@/lib/default-hub";
 import { useAuth } from "@/hooks/use-auth";
-import { StepFooter } from "@/components/onboarding/step-shell";
 import { Button } from "@/components/ui/button";
 
 export function LocationStep({
