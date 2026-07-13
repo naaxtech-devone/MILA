@@ -17,11 +17,12 @@ import { passwordChecks } from "@/constants/password";
 import { fetchDefaultHubId, localDefaultHubId, saveDefaultHubId } from "@/lib/default-hub";
 import { DevelopmentBadge } from "@/components/ui/development-badge";
 import { DevelopmentNotice } from "@/components/ui/development-notice";
-import { MembershipPlans } from "@/components/account/membership-plans";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Current AI credit balance from the app shell; null while unknown. */
+  credits: number | null;
   user: {
     fullName: string;
     username: string;
@@ -31,7 +32,12 @@ interface StudioMembershipDrawerProps {
   };
 }
 
-export function StudioMembershipDrawer({ isOpen, onClose, user }: StudioMembershipDrawerProps) {
+export function StudioMembershipDrawer({
+  isOpen,
+  onClose,
+  credits,
+  user,
+}: StudioMembershipDrawerProps) {
   const [view, setView] = useState<
     "membership" | "preferences" | "location" | "privacy" | "security"
   >("membership");
@@ -228,9 +234,35 @@ export function StudioMembershipDrawer({ isOpen, onClose, user }: StudioMembersh
                     </div>
                   </div>
 
-                  {/* Live plan catalog from Supabase (subscription_plans) —
-                      display only until purchasing ships. */}
-                  <MembershipPlans />
+                  {/* Full plan comparison lives on /pricing — the drawer keeps
+                      a compact membership summary instead of duplicating the
+                      catalog UI. */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="uppercase tracking-[0.2em] text-stone">Current Tier</span>
+                      <span className="font-semibold text-ink">Free</span>
+                    </div>
+                    {credits != null && (
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="uppercase tracking-[0.2em] text-stone">
+                          Styling Credits
+                        </span>
+                        <span className="font-semibold text-ink tabular-nums">{credits}</span>
+                      </div>
+                    )}
+                    <p className="pt-1 text-xs leading-relaxed text-stone">
+                      Compare Atelier memberships and their included styling credits on the plans
+                      page.
+                    </p>
+                    <Link
+                      to="/pricing"
+                      onClick={onClose}
+                      className="w-full py-3 rounded-lg border border-stone/20 bg-background/60 text-[11px] uppercase tracking-[0.25em] text-ink hover:bg-accent-soft dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                    >
+                      View Membership Plans
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
 
                   {/*
                     IN DEVELOPMENT [membership-passes]:

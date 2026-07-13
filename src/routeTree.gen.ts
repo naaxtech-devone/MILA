@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminSubscriptionPlansRouteImport } from './route
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin/moderation'
 import { Route as AuthenticatedAdminMembersRouteImport } from './routes/_authenticated/admin/members'
 import { Route as AuthenticatedAppStyleProfileRouteImport } from './routes/_authenticated/_app/style-profile'
+import { Route as AuthenticatedAppPricingRouteImport } from './routes/_authenticated/_app/pricing'
 import { Route as AuthenticatedAppHistoryRouteImport } from './routes/_authenticated/_app/history'
 import { Route as AuthenticatedAppFeedRouteImport } from './routes/_authenticated/_app/feed'
 import { Route as AuthenticatedAppDashboardRouteImport } from './routes/_authenticated/_app/dashboard'
@@ -101,6 +102,11 @@ const AuthenticatedAppStyleProfileRoute =
     path: '/style-profile',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppPricingRoute = AuthenticatedAppPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppHistoryRoute = AuthenticatedAppHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedAppDashboardRoute
   '/feed': typeof AuthenticatedAppFeedRoute
   '/history': typeof AuthenticatedAppHistoryRoute
+  '/pricing': typeof AuthenticatedAppPricingRoute
   '/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/admin/members': typeof AuthenticatedAdminMembersRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedAppDashboardRoute
   '/feed': typeof AuthenticatedAppFeedRoute
   '/history': typeof AuthenticatedAppHistoryRoute
+  '/pricing': typeof AuthenticatedAppPricingRoute
   '/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/admin/members': typeof AuthenticatedAdminMembersRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/_authenticated/_app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/_authenticated/_app/feed': typeof AuthenticatedAppFeedRoute
   '/_authenticated/_app/history': typeof AuthenticatedAppHistoryRoute
+  '/_authenticated/_app/pricing': typeof AuthenticatedAppPricingRoute
   '/_authenticated/_app/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/_authenticated/admin/members': typeof AuthenticatedAdminMembersRoute
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/feed'
     | '/history'
+    | '/pricing'
     | '/style-profile'
     | '/admin/members'
     | '/admin/moderation'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/feed'
     | '/history'
+    | '/pricing'
     | '/style-profile'
     | '/admin/members'
     | '/admin/moderation'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_app/dashboard'
     | '/_authenticated/_app/feed'
     | '/_authenticated/_app/history'
+    | '/_authenticated/_app/pricing'
     | '/_authenticated/_app/style-profile'
     | '/_authenticated/admin/members'
     | '/_authenticated/admin/moderation'
@@ -333,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppStyleProfileRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/pricing': {
+      id: '/_authenticated/_app/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof AuthenticatedAppPricingRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/history': {
       id: '/_authenticated/_app/history'
       path: '/history'
@@ -361,6 +380,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppDashboardRoute: typeof AuthenticatedAppDashboardRoute
   AuthenticatedAppFeedRoute: typeof AuthenticatedAppFeedRoute
   AuthenticatedAppHistoryRoute: typeof AuthenticatedAppHistoryRoute
+  AuthenticatedAppPricingRoute: typeof AuthenticatedAppPricingRoute
   AuthenticatedAppStyleProfileRoute: typeof AuthenticatedAppStyleProfileRoute
 }
 
@@ -368,6 +388,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppDashboardRoute: AuthenticatedAppDashboardRoute,
   AuthenticatedAppFeedRoute: AuthenticatedAppFeedRoute,
   AuthenticatedAppHistoryRoute: AuthenticatedAppHistoryRoute,
+  AuthenticatedAppPricingRoute: AuthenticatedAppPricingRoute,
   AuthenticatedAppStyleProfileRoute: AuthenticatedAppStyleProfileRoute,
 }
 

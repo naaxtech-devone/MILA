@@ -11,6 +11,13 @@ export const VIBES = [
   "Date Night",
 ] as const;
 
+/**
+ * One-time credit purchase concept, still in development — distinct from
+ * subscription plans (the recurring membership catalog in Supabase's
+ * `subscription_plans` table, shown on /pricing). Only previewed in the
+ * "Studio Energy Depleted" dialog when a generation genuinely runs out of
+ * credits.
+ */
 export const CREDIT_PACKS: { id: string; name: string; description: string; price: string }[] = [
   {
     id: "mila_pack_small",

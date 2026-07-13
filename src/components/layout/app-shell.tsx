@@ -106,15 +106,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-2">
             {credits != null && (
-              <button
-                type="button"
-                onClick={() => setCreditPaywallOpen(true)}
-                aria-label={`${credits} AI credits — get more`}
+              <Link
+                to="/pricing"
+                aria-label={`${credits} AI credits — view membership plans and credits`}
                 className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
               >
-                <Coins className="size-3.5 text-accent" strokeWidth={1.75} />
+                <Coins className="size-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
                 {credits}
-              </button>
+              </Link>
             )}
             <ThemeToggle />
             <button
@@ -146,6 +145,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <StudioMembershipDrawer
         isOpen={isMembershipOpen}
         onClose={() => setIsMembershipOpen(false)}
+        credits={credits ?? null}
         user={{
           fullName: displayName,
           username,
@@ -165,6 +165,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onInsufficientCredits={() => setCreditPaywallOpen(true)}
       />
 
+      {/* Credit-pack paywall — only reachable from genuine
+          insufficient-credit failures (Lens capture above and the camera
+          drawer's onInsufficientCredits). The header coin now links to
+          /pricing instead of opening this. */}
       <UpgradeSlotsDialog
         open={creditPaywallOpen}
         onOpenChange={setCreditPaywallOpen}

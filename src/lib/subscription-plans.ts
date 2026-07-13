@@ -62,6 +62,19 @@ export type PublicSubscriptionPlan = Pick<
 export const PUBLIC_PLAN_COLUMNS =
   "id,slug,title,description,price_amount,currency,billing_interval,credits_included,features,is_featured";
 
+/**
+ * `features` is jsonb in Postgres — the admin form writes a validated
+ * string[], but the column itself can hold anything. Normalize before
+ * rendering so malformed rows degrade to an empty list instead of crashing.
+ */
+export function normalizePlanFeatures(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((f): f is string => typeof f === "string")
+    .map((f) => f.trim())
+    .filter(Boolean);
+}
+
 export const planSlugSchema = z
   .string()
   .trim()

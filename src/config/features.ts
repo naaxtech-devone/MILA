@@ -31,6 +31,12 @@ export const FEATURES = {
     label: "In development",
     description: "Acquiring extra Studio passes is not yet available in this release.",
   },
+  membershipPurchasing: {
+    status: "development",
+    label: "In development",
+    description:
+      "Membership purchasing is still in development. Your existing daily credits continue to work as usual.",
+  },
   creditEnforcement: {
     status: "development",
     label: "In development",

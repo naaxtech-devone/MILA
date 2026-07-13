@@ -19,8 +19,11 @@ FEATURE: credit-purchases
 STATUS: DEVELOPMENT
 
 User-facing area:
-- "Studio Energy Depleted" credit-pack dialog (opened when a credit
-  paywall would trigger, and from the header credit counter).
+- "Studio Energy Depleted" credit-pack dialog (opened only when a credit
+  paywall would trigger — i.e. a genuine insufficient-credits failure from
+  the Studio Lens or dashboard generation). The header credit counter no
+  longer opens this dialog; it now navigates to the /pricing membership
+  page (see the membership-passes update below).
 
 Routes:
 - /dashboard (and any other authenticated page via the shared app shell)
@@ -94,12 +97,17 @@ Remaining work:
 - Re-add typed callback props once real handlers exist.
 
 Update 2026-07-13:
-- The Concierge Access panel now lists the live subscription-plan
-  catalog from the new `subscription_plans` table (managed at
-  /admin/subscription-plans; see docs/subscription-plans.md). This is
-  display-only: purchasing, checkout, webhooks, recurring billing,
-  entitlement granting, and credit fulfillment remain UNIMPLEMENTED and
-  the acquire/editorial buttons stay disabled as described above.
+- The live subscription-plan catalog from the `subscription_plans` table
+  (managed at /admin/subscription-plans; see docs/subscription-plans.md)
+  is now presented on a dedicated member-facing /pricing page
+  (src/routes/_authenticated/_app/pricing.tsx), reached from the header
+  credit counter and from a "View Membership Plans" link in the Concierge
+  Access panel. The drawer itself shows only a compact tier/credits
+  summary instead of the full catalog. This is display-only: purchasing,
+  checkout, webhooks, recurring billing, entitlement granting, and credit
+  fulfillment remain UNIMPLEMENTED — the /pricing "Choose Plan" CTAs are
+  disabled (FEATURES.membershipPurchasing) and the acquire/editorial
+  buttons stay disabled as described above.
 
 ======================================================================
 FEATURE: credit-enforcement

@@ -2,7 +2,11 @@ import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/constants/query-keys";
 import { supabase } from "@/integrations/supabase/client";
 import { adminListSubscriptionPlans } from "@/lib/subscription-plans.functions";
-import { PUBLIC_PLAN_COLUMNS, type PublicSubscriptionPlan } from "@/lib/subscription-plans";
+import {
+  normalizePlanFeatures,
+  PUBLIC_PLAN_COLUMNS,
+  type PublicSubscriptionPlan,
+} from "@/lib/subscription-plans";
 
 export function adminSubscriptionPlansQueryOptions() {
   return queryOptions({
@@ -29,7 +33,10 @@ export function publicSubscriptionPlansQueryOptions() {
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
       if (error) throw new Error("Couldn't load membership plans.");
-      return (data ?? []) as PublicSubscriptionPlan[];
+      return ((data ?? []) as PublicSubscriptionPlan[]).map((plan) => ({
+        ...plan,
+        features: normalizePlanFeatures(plan.features),
+      }));
     },
     staleTime: 60_000,
   });
