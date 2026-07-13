@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
     const userId = data.session?.user.id;
     if (!userId) return;
     const viewer = await loadAuthenticatedViewerState(context.queryClient, userId);
-    if (!viewer.isAdmin) {
+    if (!viewer.canAccessStaffArea) {
       throw redirect({ to: viewer.destination, replace: true });
     }
   },

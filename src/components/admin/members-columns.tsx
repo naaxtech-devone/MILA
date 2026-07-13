@@ -15,14 +15,16 @@ import type { AdminUserRow } from "@/lib/admin.functions";
 
 interface MembersColumnsOptions {
   currentUserId?: string;
-  onToggleAdmin: (id: string, grant: boolean) => void;
+  pendingRoleChange: boolean;
+  onToggleRole: (member: AdminUserRow, role: "admin" | "moderator", grant: boolean) => void;
   onToggleSuspended: (id: string, suspended: boolean) => void;
   onEdit: (member: AdminUserRow) => void;
 }
 
 export function getMembersColumns({
   currentUserId,
-  onToggleAdmin,
+  pendingRoleChange,
+  onToggleRole,
   onToggleSuspended,
   onEdit,
 }: MembersColumnsOptions): ColumnDef<AdminUserRow>[] {
@@ -62,8 +64,25 @@ export function getMembersColumns({
         <div className="flex justify-center">
           <Switch
             checked={row.original.is_admin}
-            disabled={row.original.id === currentUserId && row.original.is_admin}
-            onCheckedChange={(v) => onToggleAdmin(row.original.id, v)}
+            disabled={
+              pendingRoleChange || (row.original.id === currentUserId && row.original.is_admin)
+            }
+            aria-label={`Steward role for ${row.original.full_name || row.original.username || "member"}`}
+            onCheckedChange={(v) => onToggleRole(row.original, "admin", v)}
+          />
+        </div>
+      ),
+    },
+    {
+      id: "moderator",
+      header: () => <div className="text-center">Moderator</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <Switch
+            checked={row.original.is_moderator}
+            disabled={pendingRoleChange}
+            aria-label={`Moderator role for ${row.original.full_name || row.original.username || "member"}`}
+            onCheckedChange={(v) => onToggleRole(row.original, "moderator", v)}
           />
         </div>
       ),

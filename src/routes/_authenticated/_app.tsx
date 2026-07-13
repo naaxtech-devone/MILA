@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/_app")({
     const userId = data.session?.user.id;
     if (!userId) return;
     const viewer = await loadAuthenticatedViewerState(context.queryClient, userId);
-    if (viewer.isAdmin) {
+    if (viewer.canAccessStaffArea) {
       throw redirect({ to: "/admin", replace: true });
     }
     if (!viewer.isStyleProfileComplete) {
@@ -34,19 +34,19 @@ function AppLayout() {
 
   useEffect(() => {
     if (!user || viewer.isLoading) return;
-    if (viewer.isAdmin) {
+    if (viewer.canAccessStaffArea) {
       navigate({ to: "/admin", replace: true });
       return;
     }
     if (!viewer.isStyleProfileComplete) {
       navigate({ to: "/onboarding/style-profile", replace: true });
     }
-  }, [user, viewer.isLoading, viewer.isAdmin, viewer.isStyleProfileComplete, navigate]);
+  }, [user, viewer.isLoading, viewer.canAccessStaffArea, viewer.isStyleProfileComplete, navigate]);
 
   // Withhold member content until the client has confirmed this viewer
   // belongs here — SSR can't resolve this (session lives in localStorage),
   // so this render gate, not beforeLoad, is the real protection.
-  if (!user || viewer.isLoading || viewer.isAdmin || !viewer.isStyleProfileComplete) {
+  if (!user || viewer.isLoading || viewer.canAccessStaffArea || !viewer.isStyleProfileComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="font-serif text-2xl tracking-[0.2em] text-muted-foreground animate-pulse">

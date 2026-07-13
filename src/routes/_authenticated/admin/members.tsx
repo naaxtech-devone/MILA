@@ -10,21 +10,28 @@ import { getMembersColumns } from "@/components/admin/members-columns";
 import { MemberFormDialog } from "@/components/admin/member-form-dialog";
 import { useAuth } from "@/hooks/use-auth";
 import { queryKeys } from "@/constants/query-keys";
-import { adminSetAdminRole, adminSetSuspended, type AdminUserRow } from "@/lib/admin.functions";
+import { adminSetUserRole, adminSetSuspended, type AdminUserRow } from "@/lib/admin.functions";
 import { adminMembersQueryOptions } from "@/lib/queries/admin";
-import { DevelopmentNotice } from "@/components/ui/development-notice";
+import { requireStaffRoutePermission } from "@/lib/staff-route";
+import {
+  RoleConfirmationDialog,
+  type PendingRoleChange,
+} from "@/components/admin/role-confirmation-dialog";
 
 export const Route = createFileRoute("/_authenticated/admin/members")({
+  beforeLoad: ({ context }) => requireStaffRoutePermission(context.queryClient, "members.view"),
   component: MembersPage,
 });
 
 function MembersPage() {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const setRole = useServerFn(adminSetAdminRole);
+  const setRole = useServerFn(adminSetUserRole);
   const setSuspended = useServerFn(adminSetSuspended);
   const [formOpen, setFormOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<AdminUserRow | undefined>(undefined);
+  const [roleChange, setRoleChange] = useState<PendingRoleChange | null>(null);
+  const [rolePending, setRolePending] = useState(false);
 
   const { data, isLoading } = useQuery(adminMembersQueryOptions());
 
@@ -38,13 +45,36 @@ function MembersPage() {
     setFormOpen(true);
   }
 
-  async function toggleAdmin(id: string, grant: boolean) {
+  function requestRoleChange(member: AdminUserRow, role: "admin" | "moderator", grant: boolean) {
+    setRoleChange({
+      userId: member.id,
+      memberName: member.full_name || member.username || member.email || "This member",
+      role,
+      grant,
+    });
+  }
+
+  async function confirmRoleChange() {
+    if (!roleChange) return;
+    setRolePending(true);
     try {
-      await setRole({ data: { user_id: id, grant } });
-      toast.success(grant ? "Steward role granted." : "Steward role revoked.");
-      qc.invalidateQueries({ queryKey: queryKeys.adminUsers });
+      const result = await setRole({
+        data: { user_id: roleChange.userId, role: roleChange.role, grant: roleChange.grant },
+      });
+      const label = roleChange.role === "admin" ? "Steward" : "Moderator";
+      toast.success(
+        result.status === "already_assigned"
+          ? `This member already has the ${label} role.`
+          : result.status === "not_assigned"
+            ? `This member does not have the ${label} role.`
+            : `${label} role ${roleChange.grant ? "granted" : "revoked"}.`,
+      );
+      await qc.invalidateQueries({ queryKey: queryKeys.adminUsers });
+      setRoleChange(null);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't update role.");
+    } finally {
+      setRolePending(false);
     }
   }
 
@@ -60,25 +90,24 @@ function MembersPage() {
 
   const columns = getMembersColumns({
     currentUserId: user?.id,
-    onToggleAdmin: toggleAdmin,
+    pendingRoleChange: rolePending,
+    onToggleRole: requestRoleChange,
     onToggleSuspended: toggleSuspended,
     onEdit: openEdit,
   });
 
   return (
     <div>
-      {/*
-        IN DEVELOPMENT [moderator-role]:
-        The `moderator` app_role exists in the database but no assignment
-        UI or moderator-specific authorization is implemented — only the
-        Steward (admin) role can be granted here.
-        See /IN_DEVELOPMENT.txt.
-      */}
-      <DevelopmentNotice
-        className="mb-4"
-        title="Moderator role — in development"
-        description="Only the Steward (admin) role can be granted in this release. Moderator-specific permissions are reserved for a future release."
-      />
+      <div className="mb-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-panel border border-porcelain/60 px-4 py-3 text-xs text-stone">
+          <strong className="block text-ink">Steward</strong>
+          Full administrative access, including member and role management.
+        </div>
+        <div className="rounded-panel border border-porcelain/60 px-4 py-3 text-xs text-stone">
+          <strong className="block text-ink">Moderator</strong>
+          Access to moderation and support tools without full administrative control.
+        </div>
+      </div>
       <DataTable
         columns={columns}
         data={data ?? []}
@@ -101,6 +130,12 @@ function MembersPage() {
         onOpenChange={setFormOpen}
         member={editingMember}
         onSaved={() => qc.invalidateQueries({ queryKey: queryKeys.adminUsers })}
+      />
+      <RoleConfirmationDialog
+        change={roleChange}
+        pending={rolePending}
+        onOpenChange={(open) => !open && !rolePending && setRoleChange(null)}
+        onConfirm={confirmRoleChange}
       />
     </div>
   );

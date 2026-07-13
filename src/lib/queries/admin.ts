@@ -1,17 +1,17 @@
 import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/constants/query-keys";
 import {
-  adminAmIAdmin,
+  getStaffAuthorization,
   adminDashboardStats,
   adminListUsers,
   adminListPosts,
   adminListSupportMessages,
 } from "@/lib/admin.functions";
 
-export function adminGateQueryOptions() {
+export function staffGateQueryOptions() {
   return queryOptions({
-    queryKey: queryKeys.isAdminGate,
-    queryFn: () => adminAmIAdmin(),
+    queryKey: queryKeys.staffGate,
+    queryFn: () => getStaffAuthorization(),
   });
 }
 

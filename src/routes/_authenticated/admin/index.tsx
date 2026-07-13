@@ -3,8 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Users, ShieldCheck, Coins, Images, EyeOff, LifeBuoy, Loader2, Inbox } from "lucide-react";
 import { adminDashboardQueryOptions } from "@/lib/queries/admin";
 import { AdminStatCard } from "@/components/admin/admin-stat-card";
+import { requireStaffRoutePermission } from "@/lib/staff-route";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
+  beforeLoad: ({ context }) =>
+    requireStaffRoutePermission(context.queryClient, "admin.dashboard.view"),
   component: AdminDashboard,
 });
 

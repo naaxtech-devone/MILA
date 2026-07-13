@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAuthenticatedViewerState } from "@/lib/queries/auth";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { hasPermission, STAFF_ROUTE_PERMISSIONS } from "@/lib/authorization";
 
 export function AdminShell() {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -13,6 +14,8 @@ export function AdminShell() {
   const viewer = useAuthenticatedViewerState(user?.id);
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const routePermission = STAFF_ROUTE_PERMISSIONS[path as keyof typeof STAFF_ROUTE_PERMISSIONS];
+  const canAccessPath = !routePermission || hasPermission(viewer.roles, routePermission);
 
   useEffect(() => {
     if (!sidebarOpen) return;
@@ -28,9 +31,14 @@ export function AdminShell() {
   // protects this route tree once hydrated. See _app.tsx for the same
   // pattern and why beforeLoad alone isn't sufficient in this SSR app.
   useEffect(() => {
-    if (!user || viewer.isLoading || viewer.isAdmin) return;
+    if (!user || viewer.isLoading || viewer.canAccessStaffArea) return;
     navigate({ to: viewer.destination, replace: true });
-  }, [user, viewer.isLoading, viewer.isAdmin, viewer.destination, navigate]);
+  }, [user, viewer.isLoading, viewer.canAccessStaffArea, viewer.destination, navigate]);
+
+  useEffect(() => {
+    if (!user || viewer.isLoading || !viewer.canAccessStaffArea || canAccessPath) return;
+    navigate({ to: "/admin/moderation", replace: true });
+  }, [user, viewer.isLoading, viewer.canAccessStaffArea, canAccessPath, navigate]);
 
   if (!user || viewer.isLoading) {
     return (
@@ -40,7 +48,7 @@ export function AdminShell() {
     );
   }
 
-  if (!viewer.isAdmin) {
+  if (!viewer.canAccessStaffArea || !canAccessPath) {
     return (
       <div className="h-dvh flex items-center justify-center bg-background px-6">
         <div className="max-w-md text-center">
@@ -49,7 +57,7 @@ export function AdminShell() {
             Restricted
           </h1>
           <p className="mt-3 text-sm text-stone">
-            The Atelier admin suite is reserved for authorized stewards.
+            The Atelier staff suite is reserved for authorized Stewards and Moderators.
           </p>
         </div>
       </div>
@@ -59,7 +67,7 @@ export function AdminShell() {
   return (
     <div className="h-dvh overflow-hidden bg-background flex">
       <div className="hidden lg:flex">
-        <AdminSidebar path={path} />
+        <AdminSidebar path={path} roles={viewer.roles} />
       </div>
 
       <AnimatePresence>
@@ -82,7 +90,11 @@ export function AdminShell() {
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
               className="relative h-full w-[min(22rem,88vw)]"
             >
-              <AdminSidebar path={path} onNavigate={() => setSidebarOpen(false)} />
+              <AdminSidebar
+                path={path}
+                roles={viewer.roles}
+                onNavigate={() => setSidebarOpen(false)}
+              />
             </motion.aside>
           </div>
         )}
@@ -91,6 +103,7 @@ export function AdminShell() {
       <div className="flex min-w-0 flex-1 flex-col min-h-0">
         <AdminHeader
           path={path}
+          roleLabel={viewer.isAdmin ? "Steward" : "Moderator"}
           sidebarOpen={sidebarOpen}
           onOpenSidebar={() => setSidebarOpen(true)}
         />

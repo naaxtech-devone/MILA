@@ -14,10 +14,12 @@ const PAGE_META: Record<string, { title: string; subtitle: string }> = {
 
 export function AdminHeader({
   path,
+  roleLabel,
   sidebarOpen,
   onOpenSidebar,
 }: {
   path: string;
+  roleLabel: "Steward" | "Moderator";
   sidebarOpen: boolean;
   onOpenSidebar: () => void;
 }) {
@@ -43,7 +45,7 @@ export function AdminHeader({
 
           <div className="min-w-0">
             <div className="text-[9px] uppercase tracking-[0.28em] text-stone lg:hidden">
-              Atelier · Steward
+              Atelier · {roleLabel}
             </div>
             <h1 className="mt-1 lg:mt-0 font-serif text-xl md:text-2xl tracking-[0.12em] uppercase text-ink truncate">
               {meta.title}

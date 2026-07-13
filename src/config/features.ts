@@ -49,9 +49,9 @@ export const FEATURES = {
     description: "Rewarded advertisements are not yet integrated.",
   },
   moderatorRole: {
-    status: "development",
-    label: "In development",
-    description: "The moderator role is reserved for a future release and cannot yet be assigned.",
+    status: "available",
+    label: "Available",
+    description: "Stewards can assign restricted moderation and support access.",
   },
   passwordReset: {
     status: "development",

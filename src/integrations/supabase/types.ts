@@ -422,6 +422,39 @@ export type Database = {
           },
         ];
       };
+      staff_audit_log: {
+        Row: {
+          action: string;
+          actor_user_id: string;
+          created_at: string;
+          id: string;
+          metadata: Json;
+          target_id: string | null;
+          target_type: string;
+          target_user_id: string | null;
+        };
+        Insert: {
+          action: string;
+          actor_user_id: string;
+          created_at?: string;
+          id?: string;
+          metadata?: Json;
+          target_id?: string | null;
+          target_type: string;
+          target_user_id?: string | null;
+        };
+        Update: {
+          action?: string;
+          actor_user_id?: string;
+          created_at?: string;
+          id?: string;
+          metadata?: Json;
+          target_id?: string | null;
+          target_type?: string;
+          target_user_id?: string | null;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           created_at: string;
@@ -454,6 +487,23 @@ export type Database = {
           _user_id: string;
         };
         Returns: boolean;
+      };
+      manage_user_role: {
+        Args: {
+          _actor_user_id: string;
+          _grant: boolean;
+          _role: Database["public"]["Enums"]["app_role"];
+          _target_user_id: string;
+        };
+        Returns: string;
+      };
+      set_user_suspended: {
+        Args: {
+          _actor_user_id: string;
+          _suspended: boolean;
+          _target_user_id: string;
+        };
+        Returns: undefined;
       };
     };
     Enums: {

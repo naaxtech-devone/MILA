@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { queryKeys } from "@/constants/query-keys";
 import { adminHidePost, adminDeletePost } from "@/lib/admin.functions";
 import { adminModerationQueryOptions } from "@/lib/queries/admin";
+import { requireStaffRoutePermission } from "@/lib/staff-route";
 
 export const Route = createFileRoute("/_authenticated/admin/moderation")({
+  beforeLoad: ({ context }) => requireStaffRoutePermission(context.queryClient, "moderation.view"),
   component: ModerationPage,
 });
 

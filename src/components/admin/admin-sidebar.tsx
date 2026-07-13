@@ -12,22 +12,62 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useSignOut } from "@/hooks/use-sign-out";
+import {
+  hasPermission,
+  STAFF_ROUTE_PERMISSIONS,
+  type AppPermission,
+  type AppRole,
+} from "@/lib/authorization";
 
 interface AdminNavItem {
   to: string;
   label: string;
   icon: LucideIcon;
+  permission: AppPermission;
 }
 
-export const ADMIN_LINKS: AdminNavItem[] = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/admin/members", label: "Members", icon: Users },
-  { to: "/admin/subscription-plans", label: "Plans", icon: CreditCard },
-  { to: "/admin/moderation", label: "Moderation", icon: ShieldAlert },
-  { to: "/admin/support", label: "Support", icon: LifeBuoy },
+const ADMIN_LINKS: AdminNavItem[] = [
+  {
+    to: "/admin",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    permission: STAFF_ROUTE_PERMISSIONS["/admin"],
+  },
+  {
+    to: "/admin/members",
+    label: "Members",
+    icon: Users,
+    permission: STAFF_ROUTE_PERMISSIONS["/admin/members"],
+  },
+  {
+    to: "/admin/subscription-plans",
+    label: "Plans",
+    icon: CreditCard,
+    permission: STAFF_ROUTE_PERMISSIONS["/admin/subscription-plans"],
+  },
+  {
+    to: "/admin/moderation",
+    label: "Moderation",
+    icon: ShieldAlert,
+    permission: STAFF_ROUTE_PERMISSIONS["/admin/moderation"],
+  },
+  {
+    to: "/admin/support",
+    label: "Support",
+    icon: LifeBuoy,
+    permission: STAFF_ROUTE_PERMISSIONS["/admin/support"],
+  },
 ];
 
-export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
+export function AdminSidebar({
+  path,
+  roles,
+  onNavigate,
+}: {
+  path: string;
+  roles: AppRole[];
+  onNavigate?: () => void;
+}) {
   const { user } = useAuth();
   const { signingOut, handleSignOut } = useSignOut();
 
@@ -43,26 +83,28 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
       </div>
 
       <nav className="flex flex-col gap-1.5" aria-label="Admin sections">
-        {ADMIN_LINKS.map(({ to, label, icon: Icon }) => {
-          const active = path === to;
-          return (
-            <Link
-              key={to}
-              to={to}
-              onClick={() => onNavigate?.()}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
-                active
-                  ? "bg-ink text-background"
-                  : "text-stone hover:text-ink hover:bg-background/60",
-              )}
-            >
-              <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
-              {label}
-            </Link>
-          );
-        })}
+        {ADMIN_LINKS.filter(({ permission }) => hasPermission(roles, permission)).map(
+          ({ to, label, icon: Icon }) => {
+            const active = path === to;
+            return (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => onNavigate?.()}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
+                  active
+                    ? "bg-ink text-background"
+                    : "text-stone hover:text-ink hover:bg-background/60",
+                )}
+              >
+                <Icon className="size-[18px] shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                {label}
+              </Link>
+            );
+          },
+        )}
       </nav>
 
       <div className="mt-auto border-t border-porcelain/50 pt-4">
@@ -72,7 +114,9 @@ export function AdminSidebar({ path, onNavigate }: { path: string; onNavigate?: 
           </div>
           <div className="min-w-0">
             <div className="text-xs text-ink truncate">{user?.email ?? "Steward"}</div>
-            <div className="text-[9px] uppercase tracking-[0.18em] text-stone">Administrator</div>
+            <div className="text-[9px] uppercase tracking-[0.18em] text-stone">
+              {roles.includes("admin") ? "Steward" : "Moderator"}
+            </div>
           </div>
         </div>
         <button

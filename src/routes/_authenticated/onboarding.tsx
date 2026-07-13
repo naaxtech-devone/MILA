@@ -34,16 +34,16 @@ function OnboardingLayout() {
 
   useEffect(() => {
     if (!user || viewer.isLoading) return;
-    if (viewer.isAdmin) {
+    if (viewer.canAccessStaffArea) {
       navigate({ to: "/admin", replace: true });
       return;
     }
     if (shouldRedirectForComplete) {
       navigate({ to: "/dashboard", replace: true });
     }
-  }, [user, viewer.isLoading, viewer.isAdmin, shouldRedirectForComplete, navigate]);
+  }, [user, viewer.isLoading, viewer.canAccessStaffArea, shouldRedirectForComplete, navigate]);
 
-  if (!user || viewer.isLoading || viewer.isAdmin || shouldRedirectForComplete) {
+  if (!user || viewer.isLoading || viewer.canAccessStaffArea || shouldRedirectForComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-stone">
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />

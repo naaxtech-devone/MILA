@@ -8,8 +8,10 @@ import { getSupportColumns } from "@/components/admin/support-columns";
 import { queryKeys } from "@/constants/query-keys";
 import { adminResolveSupportMessage } from "@/lib/admin.functions";
 import { adminSupportQueryOptions } from "@/lib/queries/admin";
+import { requireStaffRoutePermission } from "@/lib/staff-route";
 
 export const Route = createFileRoute("/_authenticated/admin/support")({
+  beforeLoad: ({ context }) => requireStaffRoutePermission(context.queryClient, "support.view"),
   component: SupportPage,
 });
 
