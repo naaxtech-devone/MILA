@@ -250,10 +250,6 @@ export const analyzePersonalColor = createServerFn({ method: "POST" })
       | { success: false; error: string; detail?: string }
     > => {
       try {
-        console.log(
-          "Mila Studio Sensor Calibration — base64 payload received. Length:",
-          data.imageBase64?.length,
-        );
         if (!isAiConfigured()) {
           console.error(
             "[analyzePersonalColor] AI provider not configured (AI_API_KEY / AI_BASE_URL / AI_MODEL)",
@@ -292,7 +288,6 @@ export const analyzePersonalColor = createServerFn({ method: "POST" })
         const forced = data.diagnostics?.forceCalibration;
         let pass1Parsed: { success: true; data: z.infer<typeof CalibrationSchema> };
         if (forced) {
-          console.log("[analyzePersonalColor] DIAGNOSTIC OVERRIDE — Pass 1 forced:", forced);
           pass1Parsed = { success: true, data: forced };
         } else {
           const calibrationPrompt = `You are the front-end CALIBRATION sensor for a Seoul color studio. Your only job is to read the raw environment + skin of THIS portrait and return three normalized metrics. You DO NOT pick a seasonal palette — a second model handles that downstream.
@@ -399,8 +394,6 @@ Return ONLY by calling the report_calibration tool.`;
             `Conflicting ambient (${calibration.ambientLighting}) vs biological (${calibration.biologicalUndertone}) — sensorClippingEvent.`,
           );
         }
-
-        console.log("[analyzePersonalColor] Pass1 calibration:", calibration);
 
         const calibrationBlock = `=== VALIDATED PASS-1 CALIBRATION OVERRIDES (AUTHORITATIVE) ===
 ambientLighting        : ${calibration.ambientLighting}
@@ -722,11 +715,6 @@ Return ONLY the slim raw vision read by calling the report_studio_color_profile 
           },
           forcedDiagnostic: Boolean(forced),
         };
-        console.log(
-          "Hydration Check: 5x4 Grid Hex Array Loaded Safely ->",
-          (parsed.data.fullPalette ?? []).slice(0, 3),
-        );
-
         try {
           const { supabase, userId } = context;
           const { error: persistError } = await supabase.from("profiles").upsert(

@@ -287,22 +287,6 @@ ${hairRule}
 
 Always call the report_daily_look tool.`;
 
-    console.log("[generateDailyLook] resolved profile inputs", {
-      bodyType: data.bodyType,
-      colorSeason: colorSeasonValue,
-      skinUndertone: data.skinUndertone ?? null,
-      faceShape: faceShapeValue,
-      hairType: hairTypeValue,
-      beautyPreferences,
-      vibe: data.vibe,
-      tempF,
-      tempC,
-      condition,
-      location: locationLine,
-    });
-
-    console.log("[generateDailyLook] full system prompt →\n" + systemPrompt);
-
     const res = await aiChatCompletion({
       messages: [
         { role: "system", content: systemPrompt },

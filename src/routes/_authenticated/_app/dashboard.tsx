@@ -153,7 +153,6 @@ function Dashboard() {
         vibe,
       };
 
-      console.log("[Dashboard] generateDailyLook payload →", payload);
       outfit = await generate({ data: payload });
     } catch (e) {
       setGenerating(false);

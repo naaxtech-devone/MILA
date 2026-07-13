@@ -145,11 +145,6 @@ export function StyleProfile() {
           const resolvedHair = topHair ?? normHair(jbHairRaw);
           const needsBackfill = (!topFace && resolvedFace) || (!topHair && resolvedHair);
           if (needsBackfill) {
-            console.log("[StyleProfile] backfilling top-level columns from JSONB →", {
-              face_shape: resolvedFace,
-              hair_type: resolvedHair,
-              from: { jbFaceRaw, jbHairRaw },
-            });
             void supabase
               .from("profiles")
               .update({
@@ -160,7 +155,6 @@ export function StyleProfile() {
               .eq("id", user.id)
               .then(({ error }) => {
                 if (error) console.error("[StyleProfile] backfill FAILED", error);
-                else console.log("[StyleProfile] backfill OK");
               });
           }
           setHolistic({
@@ -203,26 +197,6 @@ export function StyleProfile() {
           if (persistedSeason) {
             setSyncStatus("synced");
           }
-
-          console.log("[StyleProfile] hydrated profile", {
-            color_season: (json?.season ?? data.color_season) || null,
-            subSeason: json?.subSeason ?? null,
-            skin_undertone: (json?.undertone ?? data.skin_undertone) || null,
-            body_type: (json?.bodyType ?? data.body_type) || null,
-            face_shape: resolvedFace,
-            face_shape_source: topFace
-              ? "profiles column"
-              : resolvedFace
-                ? "color_profile JSONB backfill"
-                : "null",
-            hair_type: resolvedHair,
-            hair_type_source: topHair
-              ? "profiles column"
-              : resolvedHair
-                ? "color_profile JSONB backfill"
-                : "null",
-            beauty_preferences: bp ?? null,
-          });
         }
         setLoading(false);
         initialLoadedRef.current = true;
