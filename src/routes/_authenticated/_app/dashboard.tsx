@@ -30,10 +30,18 @@ import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
 import { isStyleProfileComplete } from "@/lib/style-profile/completion";
 import { useConcierge } from "@/hooks/use-concierge";
-import { greet } from "@/lib/greet";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
-import { VIBES } from "@/constants/app";
+
+const VIBES = ["Casual", "Business Casual", "Business Attire", "Formal", "Date Night"] as const;
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 5) return "Still up";
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
 
 const cardContainerVariants: Variants = {
   hidden: { opacity: 1 },
@@ -223,7 +231,7 @@ function Dashboard() {
             <div>
               <p className="atelier-kicker">Today</p>
               <h2 className="atelier-title mt-2">
-                {greet()}
+                {getGreeting()}
                 {profile?.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}.
               </h2>
               <p className="text-sm text-muted-foreground mt-2 max-w-md">
