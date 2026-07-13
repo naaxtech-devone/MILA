@@ -11,7 +11,9 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { DesktopNav } from "@/components/layout/desktop-nav";
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { StudioCameraDrawer } from "@/components/dashboard/studio-camera-drawer";
+import { StylistConciergeDrawer } from "@/components/dashboard/stylist-concierge-drawer";
 import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog";
+import { ConciergeContext, type ConciergeLook } from "@/hooks/use-concierge";
 import { analyzeOutfit } from "@/lib/analyze-outfit.functions";
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
@@ -23,6 +25,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [isMembershipOpen, setIsMembershipOpen] = useState(false);
   const [isLensOpen, setIsLensOpen] = useState(false);
   const [creditPaywallOpen, setCreditPaywallOpen] = useState(false);
+  const [isConciergeOpen, setIsConciergeOpen] = useState(false);
+  const [conciergeLook, setConciergeLook] = useState<ConciergeLook | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const analyze = useServerFn(analyzeOutfit);
 
@@ -69,13 +73,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           colorSeason: profile.color_season,
         },
       });
-      await supabase.from("outfits").insert({
-        user_id: user.id,
-        image_url: publicUrl,
-        analysis_result: result,
-        match_score: result.overall_score,
+      const { data: savedLook } = await supabase
+        .from("outfits")
+        .insert({
+          user_id: user.id,
+          image_url: publicUrl,
+          analysis_result: result,
+          match_score: result.overall_score,
+        })
+        .select("id")
+        .single();
+      toast.success("Analysis saved to your history.", {
+        id: toastId,
+        action: savedLook
+          ? {
+              label: "Ask Mila",
+              onClick: () =>
+                openConcierge({
+                  lookId: savedLook.id,
+                  imageUrl: publicUrl,
+                  title: "Outfit analysis",
+                  source: "Studio Lens",
+                }),
+            }
+          : undefined,
       });
-      toast.success("Analysis saved to your history.", { id: toastId });
     } catch (e) {
       if (isInsufficientCreditsError(e)) {
         toast.dismiss(toastId);
@@ -90,104 +112,132 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const username = user?.email?.split("@")[0] ?? "member";
   const initial = (displayName[0] ?? "M").toUpperCase();
 
+  function openConcierge(look?: ConciergeLook | null) {
+    // Opened from the nav (no argument) the Concierge is a general styling
+    // conversation; entry points on saved looks pass an anchor instead.
+    setConciergeLook(look ?? null);
+    setIsConciergeOpen(true);
+  }
+
   return (
-    <div className="min-h-screen flex flex-col w-full">
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-porcelain/30">
-        <div className="max-w-7xl mx-auto h-16 px-5 md:px-8 flex items-center justify-between gap-6 relative">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 font-serif text-xl md:text-2xl uppercase tracking-[0.32em] text-ink"
-          >
-            <img src="/favicon.svg" alt="" className="size-6 md:h-7 md:w-7" />
-            Mila
-          </Link>
+    <ConciergeContext.Provider value={{ openConcierge }}>
+      <div className="min-h-screen flex flex-col w-full">
+        <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-porcelain/30">
+          <div className="max-w-7xl mx-auto h-16 px-5 md:px-8 flex items-center justify-between gap-6 relative">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 font-serif text-xl md:text-2xl uppercase tracking-[0.32em] text-ink"
+            >
+              <img src="/favicon.svg" alt="" className="size-6 md:h-7 md:w-7" />
+              Mila
+            </Link>
 
-          <DesktopNav path={path} onOpenLens={() => setIsLensOpen(true)} />
+            <DesktopNav
+              path={path}
+              onOpenLens={() => setIsLensOpen(true)}
+              onOpenConcierge={() => openConcierge()}
+            />
 
-          <div className="flex items-center gap-2">
-            {credits != null && (
-              <Link
-                to="/pricing"
-                aria-label={`${credits} AI credits — view membership plans and credits`}
-                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
+            <div className="flex items-center gap-2">
+              {credits != null && (
+                <Link
+                  to="/pricing"
+                  aria-label={`${credits} AI credits — view membership plans and credits`}
+                  className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
+                >
+                  <Coins className="size-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
+                  {credits}
+                </Link>
+              )}
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => setIsLensOpen(true)}
+                aria-label="Open the Studio Lens"
+                className="md:hidden inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
               >
-                <Coins className="size-3.5 text-accent" strokeWidth={1.75} aria-hidden="true" />
-                {credits}
-              </Link>
-            )}
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={() => setIsLensOpen(true)}
-              aria-label="Open the Studio Lens"
-              className="md:hidden inline-flex items-center gap-1.5 h-9 px-3 rounded-full border border-porcelain/60 bg-background/60 backdrop-blur text-[10px] uppercase tracking-[0.22em] text-ink hover:border-porcelain transition-colors"
-            >
-              <Camera className="size-3.5" strokeWidth={1.75} />
-              Lens
-            </button>
-            <button
-              onClick={() => setIsMembershipOpen(true)}
-              aria-label="Open membership"
-              className="size-10 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
-            >
-              {initial}
-            </button>
+                <Camera className="size-3.5" strokeWidth={1.75} />
+                Lens
+              </button>
+              <button
+                onClick={() => setIsMembershipOpen(true)}
+                aria-label="Open membership"
+                className="size-10 rounded-full border border-porcelain/60 bg-linear-to-br from-atelier-champagne/30 to-porcelain/20 flex items-center justify-center font-serif text-sm text-ink tracking-wide transition-all duration-300 hover:shadow-atelier-soft hover:border-porcelain"
+              >
+                {initial}
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="flex-1 min-w-0 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
-        {children}
-      </main>
+        <main className="flex-1 min-w-0 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+          {children}
+        </main>
 
-      <MobileTabBar path={path} onOpenLens={() => setIsLensOpen(true)} />
+        <MobileTabBar
+          path={path}
+          onOpenLens={() => setIsLensOpen(true)}
+          onOpenConcierge={() => openConcierge()}
+        />
 
-      <StudioMembershipDrawer
-        isOpen={isMembershipOpen}
-        onClose={() => setIsMembershipOpen(false)}
-        credits={credits ?? null}
-        user={{
-          fullName: displayName,
-          username,
-          season: profile?.color_season ?? null,
-          faceShape: profile?.face_shape ?? null,
-          hairType: profile?.hair_type ?? null,
-        }}
-      />
+        <StylistConciergeDrawer
+          open={isConciergeOpen}
+          onOpenChange={setIsConciergeOpen}
+          look={conciergeLook}
+          onClearLook={() => setConciergeLook(null)}
+          profile={{
+            bodyType: profile?.body_type ?? null,
+            colorSeason: profile?.color_season ?? null,
+          }}
+        />
 
-      <StudioCameraDrawer
-        isOpen={isLensOpen}
-        onClose={() => setIsLensOpen(false)}
-        initialMode="look-analysis"
-        userId={user?.id ?? null}
-        onLookCapture={(file) => runLensCapture(file)}
-        onPickGallery={() => fileInputRef.current?.click()}
-        onInsufficientCredits={() => setCreditPaywallOpen(true)}
-      />
+        <StudioMembershipDrawer
+          isOpen={isMembershipOpen}
+          onClose={() => setIsMembershipOpen(false)}
+          credits={credits ?? null}
+          user={{
+            fullName: displayName,
+            username,
+            season: profile?.color_season ?? null,
+            faceShape: profile?.face_shape ?? null,
+            hairType: profile?.hair_type ?? null,
+          }}
+        />
 
-      {/* Credit-pack paywall — only reachable from genuine
+        <StudioCameraDrawer
+          isOpen={isLensOpen}
+          onClose={() => setIsLensOpen(false)}
+          initialMode="look-analysis"
+          userId={user?.id ?? null}
+          onLookCapture={(file) => runLensCapture(file)}
+          onPickGallery={() => fileInputRef.current?.click()}
+          onInsufficientCredits={() => setCreditPaywallOpen(true)}
+        />
+
+        {/* Credit-pack paywall — only reachable from genuine
           insufficient-credit failures (Lens capture above and the camera
           drawer's onInsufficientCredits). The header coin now links to
           /pricing instead of opening this. */}
-      <UpgradeSlotsDialog
-        open={creditPaywallOpen}
-        onOpenChange={setCreditPaywallOpen}
-        variant="credits"
-      />
+        <UpgradeSlotsDialog
+          open={creditPaywallOpen}
+          onOpenChange={setCreditPaywallOpen}
+          variant="credits"
+        />
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) {
-            runLensCapture(f);
-            e.target.value = "";
-          }
-        }}
-      />
-    </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) {
+              runLensCapture(f);
+              e.target.value = "";
+            }
+          }}
+        />
+      </div>
+    </ConciergeContext.Provider>
   );
 }

@@ -29,6 +29,7 @@ import { UpgradeSlotsDialog } from "@/components/dashboard/upgrade-slots-dialog"
 import { isInsufficientCreditsError } from "@/lib/credits";
 import { profileQueryOptions } from "@/lib/queries/profile";
 import { isStyleProfileComplete } from "@/lib/style-profile/completion";
+import { useConcierge } from "@/hooks/use-concierge";
 import { greet } from "@/lib/greet";
 import { DailyPaletteGenerator } from "@/components/wardrobe/DailyPaletteGenerator";
 import { motion, type Variants } from "framer-motion";
@@ -78,11 +79,13 @@ function Dashboard() {
       : null,
   );
 
+  const { openConcierge } = useConcierge();
   const [generating, setGenerating] = useState(false);
   const [look, setLook] = useState<GeneratedLook | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [savingLook, setSavingLook] = useState(false);
-  const [lookSaved, setLookSaved] = useState(false);
+  const [savedLook, setSavedLook] = useState<{ id: string; imageUrl: string } | null>(null);
+  const lookSaved = !!savedLook;
   const [vibe, setVibe] = useState<Vibe>("Casual");
   const [creditPaywallOpen, setCreditPaywallOpen] = useState(false);
   const [climate, setClimate] = useState<ClimateState | null>(null);
@@ -123,7 +126,7 @@ function Dashboard() {
     }
     setGenerating(true);
     setLook(null);
-    setLookSaved(false);
+    setSavedLook(null);
     let outfit: DailyLook;
     try {
       const payload = {
@@ -179,7 +182,7 @@ function Dashboard() {
     }
     setSavingLook(true);
     try {
-      await saveOutfit({
+      const row = await saveOutfit({
         data: {
           imageDataUri: look.imageDataUri,
           weather: `${climate.label} (${climate.location})`,
@@ -190,7 +193,7 @@ function Dashboard() {
           vibe_alignment_score: look.vibe_alignment_score,
         },
       });
-      setLookSaved(true);
+      setSavedLook({ id: row.id, imageUrl: row.image_url });
       toast.success("Saved to your history.");
     } catch (e) {
       toast.error(
@@ -371,6 +374,22 @@ function Dashboard() {
                   >
                     <Sparkles className="size-4 mr-2 text-accent" /> Try another
                   </Button>
+                  {savedLook && (
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        openConcierge({
+                          lookId: savedLook.id,
+                          imageUrl: savedLook.imageUrl,
+                          title: look.outfit.headline,
+                          source: "Today's look",
+                        })
+                      }
+                      className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
+                    >
+                      <Sparkles className="size-4 mr-2 text-accent" /> Ask Mila about this look
+                    </Button>
+                  )}
                 </motion.div>
               </motion.div>
             ) : (

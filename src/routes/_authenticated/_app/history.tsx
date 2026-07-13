@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Images, ImageOff } from "lucide-react";
+import { Images, ImageOff, Sparkles } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { GeneratedLookDetail } from "@/components/dashboard/generated-look-detail";
+import { useConcierge } from "@/hooks/use-concierge";
 import { cn } from "@/lib/utils";
 import type { DailyLook } from "@/lib/generate-outfit.functions";
 
@@ -247,6 +249,7 @@ function HistoryDetailBody({ item, analysis }: { item: OutfitRow; analysis: Norm
 
 function History() {
   const { user } = useAuth();
+  const { openConcierge } = useConcierge();
   const [items, setItems] = useState<OutfitRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -332,6 +335,26 @@ function History() {
               <HistoryDetailBody item={selected} analysis={selectedAnalysis} />
             ) : null}
           </div>
+          {selected && selectedAnalysis ? (
+            <div className="shrink-0 border-t border-border px-5 py-3 sm:px-6">
+              <Button
+                variant="outline"
+                className="rounded-full h-10 px-5 uppercase tracking-[0.2em] text-[11px]"
+                onClick={() => {
+                  openConcierge({
+                    lookId: selected.id,
+                    imageUrl: selected.image_url,
+                    title: historyItemTitle(selectedAnalysis),
+                    source: "From History",
+                  });
+                  setSelected(null);
+                }}
+              >
+                <Sparkles className="size-4 mr-2 text-accent" aria-hidden="true" />
+                Ask Mila about this look
+              </Button>
+            </div>
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>
