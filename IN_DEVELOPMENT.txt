@@ -1,5 +1,5 @@
 MILA — IN DEVELOPMENT FEATURES
-Last updated: 2026-07-11
+Last updated: 2026-07-13
 
 Purpose
 -------
@@ -92,6 +92,14 @@ Remaining work:
   credit-purchases above).
 - Build or license the "partner editorial" content flow.
 - Re-add typed callback props once real handlers exist.
+
+Update 2026-07-13:
+- The Concierge Access panel now lists the live subscription-plan
+  catalog from the new `subscription_plans` table (managed at
+  /admin/subscription-plans; see docs/subscription-plans.md). This is
+  display-only: purchasing, checkout, webhooks, recurring billing,
+  entitlement granting, and credit fulfillment remain UNIMPLEMENTED and
+  the acquire/editorial buttons stay disabled as described above.
 
 ======================================================================
 FEATURE: credit-enforcement

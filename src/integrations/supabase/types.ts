@@ -291,6 +291,60 @@ export type Database = {
         };
         Relationships: [];
       };
+      subscription_plans: {
+        Row: {
+          archived_at: string | null;
+          billing_interval: string;
+          created_at: string;
+          credits_included: number;
+          currency: string;
+          description: string;
+          features: string[];
+          id: string;
+          is_active: boolean;
+          is_featured: boolean;
+          price_amount: number;
+          slug: string;
+          sort_order: number;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          archived_at?: string | null;
+          billing_interval?: string;
+          created_at?: string;
+          credits_included?: number;
+          currency?: string;
+          description?: string;
+          features?: string[];
+          id?: string;
+          is_active?: boolean;
+          is_featured?: boolean;
+          price_amount?: number;
+          slug: string;
+          sort_order?: number;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          archived_at?: string | null;
+          billing_interval?: string;
+          created_at?: string;
+          credits_included?: number;
+          currency?: string;
+          description?: string;
+          features?: string[];
+          id?: string;
+          is_active?: boolean;
+          is_featured?: boolean;
+          price_amount?: number;
+          slug?: string;
+          sort_order?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       support_messages: {
         Row: {
           created_at: string;

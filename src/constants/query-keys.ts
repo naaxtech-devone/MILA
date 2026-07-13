@@ -8,4 +8,6 @@ export const queryKeys = {
   adminPosts: ["admin:posts"] as const,
   adminSupportMessages: ["admin:support-messages"] as const,
   adminDashboard: ["admin:dashboard"] as const,
+  adminSubscriptionPlans: ["admin:subscription-plans"] as const,
+  subscriptionPlans: ["subscription-plans"] as const,
 };

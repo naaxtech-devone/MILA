@@ -4,6 +4,10 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 const PAGE_META: Record<string, { title: string; subtitle: string }> = {
   "/admin": { title: "Dashboard", subtitle: "Overview & analytics" },
   "/admin/members": { title: "Members", subtitle: "Manage accounts & stewardship" },
+  "/admin/subscription-plans": {
+    title: "Subscription Plans",
+    subtitle: "Manage the membership plan catalog",
+  },
   "/admin/moderation": { title: "Moderation", subtitle: "Review and moderate the feed" },
   "/admin/support": { title: "Support", subtitle: "Help desk & feedback" },
 };

@@ -17,6 +17,7 @@ import { passwordChecks } from "@/constants/password";
 import { fetchDefaultHubId, localDefaultHubId, saveDefaultHubId } from "@/lib/default-hub";
 import { DevelopmentBadge } from "@/components/ui/development-badge";
 import { DevelopmentNotice } from "@/components/ui/development-notice";
+import { MembershipPlans } from "@/components/account/membership-plans";
 
 interface StudioMembershipDrawerProps {
   isOpen: boolean;
@@ -226,6 +227,10 @@ export function StudioMembershipDrawer({ isOpen, onClose, user }: StudioMembersh
                       </div>
                     </div>
                   </div>
+
+                  {/* Live plan catalog from Supabase (subscription_plans) —
+                      display only until purchasing ships. */}
+                  <MembershipPlans />
 
                   {/*
                     IN DEVELOPMENT [membership-passes]:

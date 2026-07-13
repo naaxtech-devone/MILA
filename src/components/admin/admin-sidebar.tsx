@@ -1,6 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-import { LayoutDashboard, Users, ShieldAlert, LifeBuoy, LogOut, Loader2 } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  ShieldAlert,
+  LifeBuoy,
+  CreditCard,
+  LogOut,
+  Loader2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useSignOut } from "@/hooks/use-sign-out";
@@ -14,6 +22,7 @@ interface AdminNavItem {
 export const ADMIN_LINKS: AdminNavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/members", label: "Members", icon: Users },
+  { to: "/admin/subscription-plans", label: "Plans", icon: CreditCard },
   { to: "/admin/moderation", label: "Moderation", icon: ShieldAlert },
   { to: "/admin/support", label: "Support", icon: LifeBuoy },
 ];

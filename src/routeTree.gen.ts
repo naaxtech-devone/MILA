@@ -19,6 +19,7 @@ import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_a
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedOnboardingStyleProfileRouteImport } from './routes/_authenticated/onboarding/style-profile'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin/support'
+import { Route as AuthenticatedAdminSubscriptionPlansRouteImport } from './routes/_authenticated/admin/subscription-plans'
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin/moderation'
 import { Route as AuthenticatedAdminMembersRouteImport } from './routes/_authenticated/admin/members'
 import { Route as AuthenticatedAppStyleProfileRouteImport } from './routes/_authenticated/_app/style-profile'
@@ -76,6 +77,12 @@ const AuthenticatedAdminSupportRoute =
     path: '/support',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSubscriptionPlansRoute =
+  AuthenticatedAdminSubscriptionPlansRouteImport.update({
+    id: '/subscription-plans',
+    path: '/subscription-plans',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminModerationRoute =
   AuthenticatedAdminModerationRouteImport.update({
     id: '/moderation',
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/admin/members': typeof AuthenticatedAdminMembersRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
+  '/admin/subscription-plans': typeof AuthenticatedAdminSubscriptionPlansRoute
   '/admin/support': typeof AuthenticatedAdminSupportRoute
   '/onboarding/style-profile': typeof AuthenticatedOnboardingStyleProfileRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -138,6 +146,7 @@ export interface FileRoutesByTo {
   '/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/admin/members': typeof AuthenticatedAdminMembersRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
+  '/admin/subscription-plans': typeof AuthenticatedAdminSubscriptionPlansRoute
   '/admin/support': typeof AuthenticatedAdminSupportRoute
   '/onboarding/style-profile': typeof AuthenticatedOnboardingStyleProfileRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -157,6 +166,7 @@ export interface FileRoutesById {
   '/_authenticated/_app/style-profile': typeof AuthenticatedAppStyleProfileRoute
   '/_authenticated/admin/members': typeof AuthenticatedAdminMembersRoute
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
+  '/_authenticated/admin/subscription-plans': typeof AuthenticatedAdminSubscriptionPlansRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRoute
   '/_authenticated/onboarding/style-profile': typeof AuthenticatedOnboardingStyleProfileRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/style-profile'
     | '/admin/members'
     | '/admin/moderation'
+    | '/admin/subscription-plans'
     | '/admin/support'
     | '/onboarding/style-profile'
     | '/admin/'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/style-profile'
     | '/admin/members'
     | '/admin/moderation'
+    | '/admin/subscription-plans'
     | '/admin/support'
     | '/onboarding/style-profile'
     | '/admin'
@@ -208,6 +220,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_app/style-profile'
     | '/_authenticated/admin/members'
     | '/_authenticated/admin/moderation'
+    | '/_authenticated/admin/subscription-plans'
     | '/_authenticated/admin/support'
     | '/_authenticated/onboarding/style-profile'
     | '/_authenticated/admin/'
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSupportRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/subscription-plans': {
+      id: '/_authenticated/admin/subscription-plans'
+      path: '/subscription-plans'
+      fullPath: '/admin/subscription-plans'
+      preLoaderRoute: typeof AuthenticatedAdminSubscriptionPlansRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/moderation': {
       id: '/_authenticated/admin/moderation'
       path: '/moderation'
@@ -357,6 +377,7 @@ const AuthenticatedAppRouteWithChildren =
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMembersRoute: typeof AuthenticatedAdminMembersRoute
   AuthenticatedAdminModerationRoute: typeof AuthenticatedAdminModerationRoute
+  AuthenticatedAdminSubscriptionPlansRoute: typeof AuthenticatedAdminSubscriptionPlansRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -364,6 +385,8 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMembersRoute: AuthenticatedAdminMembersRoute,
   AuthenticatedAdminModerationRoute: AuthenticatedAdminModerationRoute,
+  AuthenticatedAdminSubscriptionPlansRoute:
+    AuthenticatedAdminSubscriptionPlansRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
