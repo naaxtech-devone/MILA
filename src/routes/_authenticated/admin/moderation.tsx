@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -9,6 +10,7 @@ import { queryKeys } from "@/constants/query-keys";
 import { adminHidePost, adminDeletePost } from "@/lib/admin.functions";
 import { adminModerationQueryOptions } from "@/lib/queries/admin";
 import { requireStaffRoutePermission } from "@/lib/staff-route";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/_authenticated/admin/moderation")({
   beforeLoad: ({ context }) => requireStaffRoutePermission(context.queryClient, "moderation.view"),
@@ -19,6 +21,7 @@ function ModerationPage() {
   const qc = useQueryClient();
   const hide = useServerFn(adminHidePost);
   const del = useServerFn(adminDeletePost);
+  const [tab, setTab] = useState<"feed" | "hidden">("feed");
 
   const { data, isLoading } = useQuery(adminModerationQueryOptions());
 
@@ -45,15 +48,29 @@ function ModerationPage() {
   }
 
   const rows = data ?? [];
+  const visibleRows = rows.filter((post) => !post.hidden);
+  const hiddenRows = rows.filter((post) => post.hidden);
+  const activeRows = tab === "hidden" ? hiddenRows : visibleRows;
 
   return (
     <div>
+      <Tabs value={tab} onValueChange={(value) => setTab(value as "feed" | "hidden")}>
+        <TabsList className="mb-6 h-10">
+          <TabsTrigger value="feed" className="text-xs uppercase tracking-[0.18em]">
+            Feed ({visibleRows.length})
+          </TabsTrigger>
+          <TabsTrigger value="hidden" className="text-xs uppercase tracking-[0.18em]">
+            Hidden Feed ({hiddenRows.length})
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       <div className="mb-6 text-[10px] uppercase tracking-[0.22em] text-stone">
-        {isLoading ? "Loading…" : `${rows.length} entries`}
+        {isLoading ? "Loading…" : `${activeRows.length} entries`}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {rows.map((p) => (
+        {activeRows.map((p) => (
           <article
             key={p.id}
             className="rounded-panel border border-porcelain/60 bg-atelier-panel/40 overflow-hidden flex flex-col"
@@ -79,9 +96,13 @@ function ModerationPage() {
             </div>
             <div className="p-4 flex-1 flex flex-col gap-3">
               <div>
-                <div className="font-serif text-sm text-ink truncate">
+                <Link
+                  to="/profile/$userId"
+                  params={{ userId: p.user_id }}
+                  className="block truncate font-serif text-sm text-ink transition-colors hover:text-accent"
+                >
                   {p.author_name || "Unnamed"}
-                </div>
+                </Link>
                 <div className="text-[10px] uppercase tracking-[0.18em] text-stone truncate">
                   {p.author_email}
                 </div>
@@ -89,9 +110,9 @@ function ModerationPage() {
               {p.caption && (
                 <p className="text-xs text-stone line-clamp-3 leading-relaxed">{p.caption}</p>
               )}
-              {p.hidden_reason && (
+              {p.hidden && (
                 <p className="text-[10px] uppercase tracking-[0.18em] text-destructive/80">
-                  Reason: {p.hidden_reason}
+                  Reason: {p.hidden_reason?.trim() || "No reason was provided."}
                 </p>
               )}
               <div className="mt-auto flex items-center gap-2 pt-2 border-t border-porcelain/40">
@@ -128,10 +149,10 @@ function ModerationPage() {
           </article>
         ))}
       </div>
-      {!isLoading && rows.length === 0 && (
+      {!isLoading && activeRows.length === 0 && (
         <div className="flex flex-col items-center gap-2 px-5 py-16 text-center text-sm text-stone border border-porcelain/40 rounded-panel">
           <Inbox className="size-6 text-muted" strokeWidth={1.75} aria-hidden="true" />
-          No posts to moderate.
+          {tab === "hidden" ? "No hidden posts." : "No visible posts."}
         </div>
       )}
     </div>

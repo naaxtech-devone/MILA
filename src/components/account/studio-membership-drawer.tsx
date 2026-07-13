@@ -7,7 +7,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Link } from "@tanstack/react-router";
-import { Archive, AlertCircle, Check, Download, Loader2, X } from "lucide-react";
+import { Archive, AlertCircle, ArrowRight, Check, Download, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -182,40 +182,56 @@ export function StudioMembershipDrawer({
           </button>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-8">
+        <div className="flex-1 overflow-y-auto px-6 pb-8">
           {view === "membership" ? (
             <div className="space-y-8">
-              <div className="text-center space-y-1.5 pb-6 border-b border-porcelain/30">
-                <p className="font-serif text-xl text-ink">{user.fullName}</p>
-                <p className="text-xs text-stone">@{user.username}</p>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-stone pt-2">
-                  Prevailing Season:{" "}
-                  <span className="text-ink font-semibold">{user.season ?? "Unset"}</span>
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-3 text-[10px] uppercase tracking-[0.2em]">
-                  <span
-                    className={`px-2.5 py-1 rounded-full border ${user.faceShape ? "border-porcelain/60 text-ink bg-background/60" : "border-amber-400/40 text-amber-700 bg-amber-50/60"}`}
-                  >
-                    Face · {user.faceShape ?? "—"}
-                  </span>
-                  <span
-                    className={`px-2.5 py-1 rounded-full border ${user.hairType ? "border-porcelain/60 text-ink bg-background/60" : "border-amber-400/40 text-amber-700 bg-amber-50/60"}`}
-                  >
-                    Hair · {user.hairType ?? "—"}
-                  </span>
+              <div className="relative overflow-hidden rounded-2xl border border-porcelain/60 bg-linear-to-br from-atelier-champagne/25 via-background to-porcelain/20 p-4 shadow-atelier-soft">
+                <div className="relative grid grid-cols-[auto_1fr_auto] items-center gap-3">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-full border border-white/70 bg-background/70 font-serif text-xl text-ink shadow-atelier-soft">
+                    {(user.fullName[0] || user.username[0] || "M").toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate font-serif text-lg text-ink">{user.fullName}</p>
+                    <p className="truncate text-[11px] text-stone">@{user.username}</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5 text-[8px] uppercase tracking-[0.16em]">
+                      <span className="rounded-full border border-porcelain/70 bg-background/60 px-2 py-1 text-ink">
+                        Season · {user.season ?? "Unset"}
+                      </span>
+                      <span
+                        className={`rounded-full border px-2 py-1 ${user.faceShape ? "border-porcelain/70 bg-background/60 text-ink" : "border-amber-400/40 bg-amber-50/60 text-amber-700"}`}
+                      >
+                        Face · {user.faceShape ?? "—"}
+                      </span>
+                      <span
+                        className={`rounded-full border px-2 py-1 ${user.hairType ? "border-porcelain/70 bg-background/60 text-ink" : "border-amber-400/40 bg-amber-50/60 text-amber-700"}`}
+                      >
+                        Hair · {user.hairType ?? "—"}
+                      </span>
+                    </div>
+                  </div>
+                  {authUser && (
+                    <Link
+                      to="/profile/$userId"
+                      params={{ userId: authUser.id }}
+                      onClick={onClose}
+                      className="flex h-9 shrink-0 items-center gap-1 rounded-full border border-porcelain/70 bg-background/60 px-3 text-[8px] uppercase tracking-[0.16em] text-ink transition-colors hover:bg-background"
+                    >
+                      View Profile
+                      <ArrowRight className="size-3" aria-hidden="true" />
+                    </Link>
+                  )}
                 </div>
                 {missing.length > 0 && (
                   <Link
                     to="/style-profile"
                     onClick={onClose}
-                    className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-full border border-amber-400/40 bg-amber-50/60 text-amber-800 text-[10px] uppercase tracking-[0.2em] hover:bg-amber-50 transition-colors"
+                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-50/60 px-3 py-2 text-[9px] uppercase tracking-[0.18em] text-amber-800 transition-colors hover:bg-amber-50"
                   >
                     <AlertCircle className="size-3" strokeWidth={1.6} />
                     Complete {missing.join(", ")} in the Studio
                   </Link>
                 )}
               </div>
-
               <div className="relative overflow-hidden rounded-2xl border border-porcelain/50 bg-linear-to-br from-atelier-champagne/30 via-background to-porcelain/20 p-6 shadow-atelier-soft">
                 <div
                   aria-hidden
@@ -234,17 +250,16 @@ export function StudioMembershipDrawer({
                     </div>
                   </div>
 
-                  {/* Full plan comparison lives on /pricing — the drawer keeps
-                      a compact membership summary instead of duplicating the
-                      catalog UI. */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="uppercase tracking-[0.2em] text-stone">Current Tier</span>
+                      <span className="uppercase tracking-[0.2em] text-stone text-[10px]">
+                        Current Tier
+                      </span>
                       <span className="font-semibold text-ink">Free</span>
                     </div>
                     {credits != null && (
                       <div className="flex items-center justify-between text-xs">
-                        <span className="uppercase tracking-[0.2em] text-stone">
+                        <span className="uppercase tracking-[0.2em text-[10px] text-stone">
                           Styling Credits
                         </span>
                         <span className="font-semibold text-ink tabular-nums">{credits}</span>

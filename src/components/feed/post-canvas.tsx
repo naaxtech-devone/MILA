@@ -26,7 +26,13 @@ export function PostCanvas({ post }: { post: FeedPost }) {
             {initial}
           </div>
           <div className="min-w-0">
-            <p className="font-serif text-sm text-ink truncate">{author}</p>
+            <Link
+              to="/profile/$userId"
+              params={{ userId: post.user_id }}
+              className="font-serif text-sm text-ink truncate transition-colors hover:text-accent"
+            >
+              {author}
+            </Link>
             <p className="text-[9px] uppercase tracking-[0.3em] text-stone">
               {relativeTime(post.created_at)}
             </p>
